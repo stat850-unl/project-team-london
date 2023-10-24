@@ -4,6 +4,45 @@ format: html
 editor: visual
 ---
 
+```{R}
+# Get the Data
+install.packages("tidytuesdayR")
+
+# Read in with tidytuesdayR package 
+# Install from CRAN via: install.packages("tidytuesdayR")
+# This loads the readme and all the datasets for the week of interest
+
+# Either ISO-8601 date or year/week works!
+
+tuesdata <- tidytuesdayR::tt_load('2021-07-27')
+tuesdata <- tidytuesdayR::tt_load(2021, week = 31)
+
+olympics <- tuesdata$olympics
+
+# Or read in the data manually
+
+olympics <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-07-27/olympics.csv')
+```
+```{R}
+# Get the Data
+
+# Read in with tidytuesdayR package 
+# Install from CRAN via: install.packages("tidytuesdayR")
+# This loads the readme and all the datasets for the week of interest
+
+# Either ISO-8601 date or year/week works!
+
+tuesdata <- tidytuesdayR::tt_load('2020-08-25')
+tuesdata <- tidytuesdayR::tt_load(2020, week = 35)
+
+chopped <- tuesdata$chopped
+
+# Or read in the data manually
+
+chopped <- readr::read_tsv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-08-25/chopped.tsv')
+
+```
+
 ## Instructions
 
 Each member of your team should modify this document in some way and push their modifications to the repository in a separate commit. This will ensure that you have set your repository up in a way that ensures all group members are working with the same repository.
@@ -39,22 +78,22 @@ Here is a data dictionary showing each variable, the type of variable, units, an
 
 Note: this is an example table, please modify to actually match your data. Ensure that all of the same information is represented.
 
-+-------------+---------------------------------------------------------+-------------+-------+---------------------------------------------------------------+
-| Name        | Description                                             | Type        | Units | Range/Values                                                  |
-+=============+=========================================================+=============+=======+===============================================================+
-| day_of_week | The day of the week on which the observation took place | categorical | NA    | 0 = Sunday\                                                   |
-|             |                                                         |             |       | 1 = Monday\                                                   |
-|             |                                                         |             |       | ...\                                                          |
-|             |                                                         |             |       | 6 = Saturday\                                                 |
-|             |                                                         |             |       | 7 = Unknown                                                   |
-+-------------+---------------------------------------------------------+-------------+-------+---------------------------------------------------------------+
-| weight      | The weight of the individual                            | numeric     | lbs   | 0 - 300 (max weight measurable on the scale used)\            |
-|             |                                                         |             |       | NA indicates missing data                                     |
-+-------------+---------------------------------------------------------+-------------+-------+---------------------------------------------------------------+
-| time        | The time of the observation                             | numeric     | HHMM  | 0000 corresponds to midnight,                                 |
-|             |                                                         |             |       |                                                               |
-|             |                                                         |             |       | 2359 corresponds to 1 minute before midnight on the same day. |
-+-------------+---------------------------------------------------------+-------------+-------+---------------------------------------------------------------+
++-------------+---------------------------------------------------------+-------------+---------+---------------------------------------------------------------+
+| Name        | Description                                             | Type        | Units   | Range/Values                                                  |
++=============+=========================================================+=============+=========+===============================================================+
+| day_of_week | The day of the week on which the observation took place | categorical | NA      | 0 = Sunday\                                                   |
+|             |                                                         |             |         | 1 = Monday\                                                   |
+|             |                                                         |             |         | ...\                                                          |
+|             |                                                         |             |         | 6 = Saturday\                                                 |
+|             |                                                         |             |         | 7 = Unknown                                                   |
++-------------+---------------------------------------------------------+-------------+---------+---------------------------------------------------------------+
+| weight      | The weight of the individual                            | numeric     | lbs     | 0 - 300 (max weight measurable on the scale used)\            |
+|             |                                                         |             |         | NA indicates missing data                                     |
++-------------+---------------------------------------------------------+-------------+---------+---------------------------------------------------------------+
+| time        | The time of the observation                             | numeric     | HHMM    | 0000 corresponds to midnight,                                 |
+|             |                                                         |             |         |                                                               |
+|             |                                                         |             |         | 2359 corresponds to 1 minute before midnight on the same day. |
++-------------+---------------------------------------------------------+-------------+---------+---------------------------------------------------------------+
 
 ## Project Goals
 
