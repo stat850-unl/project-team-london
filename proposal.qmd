@@ -78,15 +78,15 @@ Describe why this data is interesting and what you hope to do with it.
 
 We will use \[dataset\] to explore the following topics:
 
--   interesting thing 1 - AC1
--   interesting thing 2 - AC2
+-   How does global conflict influence the number of nations who participate in the Olympics? 
+-   How does body weight make a difference in the ability of an athlete to medal in a sport?
 -   interesting thing 3 - SG1
 -   interesting thing 4 - SG2
 
 We expect to create
 
--   description of some of the graphs you might create
--   a shiny application
+-   I want to make a graph that displays the number of countries that participate each year in the summer and winter olympics. I then would like to color code years of conflict to see if there is any relationship present. 
+-   Id like to make some sort of app where you can choose a weight range and it outputs the sports you may preform best in. 
 -   a statistical model
 -   a statistical model
 
