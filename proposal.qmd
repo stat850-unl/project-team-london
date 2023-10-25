@@ -4,44 +4,6 @@ format: html
 editor: visual
 ---
 
-```{R}
-# Get the Data
-install.packages("tidytuesdayR")
-
-# Read in with tidytuesdayR package 
-# Install from CRAN via: install.packages("tidytuesdayR")
-# This loads the readme and all the datasets for the week of interest
-
-# Either ISO-8601 date or year/week works!
-
-tuesdata <- tidytuesdayR::tt_load('2021-07-27')
-tuesdata <- tidytuesdayR::tt_load(2021, week = 31)
-
-olympics <- tuesdata$olympics
-
-# Or read in the data manually
-
-olympics <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-07-27/olympics.csv')
-```
-```{R}
-# Get the Data
-
-# Read in with tidytuesdayR package 
-# Install from CRAN via: install.packages("tidytuesdayR")
-# This loads the readme and all the datasets for the week of interest
-
-# Either ISO-8601 date or year/week works!
-
-tuesdata <- tidytuesdayR::tt_load('2020-08-25')
-tuesdata <- tidytuesdayR::tt_load(2020, week = 35)
-
-chopped <- tuesdata$chopped
-
-# Or read in the data manually
-
-chopped <- readr::read_tsv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-08-25/chopped.tsv')
-
-```
 
 ## Instructions
 
@@ -63,6 +25,25 @@ In the proposal as in the final report, all of your code chunks should be set so
 The data we are using in this project comes from \[link to web site\].
 
 Provide some code to read in the data (either stored in the repository or read in directly from the source).
+```{R}
+# Get the Data
+install.packages("tidytuesdayR")
+
+# Read in with tidytuesdayR package 
+# Install from CRAN via: install.packages("tidytuesdayR")
+# This loads the readme and all the datasets for the week of interest
+
+# Either ISO-8601 date or year/week works!
+
+tuesdata <- tidytuesdayR::tt_load('2021-07-27')
+tuesdata <- tidytuesdayR::tt_load(2021, week = 31)
+
+olympics <- tuesdata$olympics
+
+# Or read in the data manually
+
+olympics <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-07-27/olympics.csv')
+```
 
 ### Description
 
@@ -97,22 +78,30 @@ Describe why this data is interesting and what you hope to do with it.
 
 We will use \[dataset\] to explore the following topics:
 
--   interesting thing 1
--   interesting thing 2
--   interesting thing 3
--   interesting thing 4
+-   interesting thing 1 - AC1
+-   interesting thing 2 - AC2
+-   interesting thing 3 - SG1
+-   interesting thing 4 - SG2
 
 We expect to create
 
 -   description of some of the graphs you might create
 -   a shiny application
 -   a statistical model
--   ...
+-   a statistical model
 
 ## Division of Labor
 
 Describe how you plan to work together as a team. Set intermediate deadlines - what do you plan to have done by the project check-in? The more you have done (report/slides/code), the better feedback I can give you.
 
+Collaborative effort in terms of our introduction and conclusion. We plan to meet once we get our anlaysis done to format the flow of the presentation. Independly we will work on 2 interesting aspects of the data, as well as the data wrangling that goes along with it. This will be the same in regards to the report aspect of this project. 
+-
+By November 13th (Monday) we will have our data wrangling, and two individual analysis done. We will meet that week to pull together the intro and conclusion.
+By the 21st (Tuesday) of November we aim to have the initial draft of the report done. We will turn this info in on the 24th (Friday) or earlier.
+We will make edits and be ready to film presentation on Dec 1st (Friday).
+Filming will occur on Dec 4th (Monday). 
+
 ## Additional Comments
 
 What concerns do you have about this project? This is your place to provide feedback about the project guidelines and ask clarifying questions for me to address either individually or in class, if the question is relevant to everyone.
+How quickly will we get feedback from the initial feedback on the 24th? If we turn in earlier, do we get feedback earlier? 
