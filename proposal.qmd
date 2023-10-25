@@ -22,7 +22,7 @@ In the proposal as in the final report, all of your code chunks should be set so
 
 ### Source
 
-The data we are using in this project comes from \[link to web site\].
+The data we are using in this project comes from \[https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-07-27/olympics.csv\].
 
 Provide some code to read in the data (either stored in the repository or read in directly from the source).
 ```{R}
@@ -47,9 +47,9 @@ olympics <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/t
 
 ### Description
 
-This dataset contains information about ...
+This dataset contains information about the winter and summer Olympic athletes from the years 1896 to 2016, their team, weight, placing, sport, event, age, height.
 
-It was collected from ...
+It was collected from Tidy Tuesday where the data was scraped from www.sports-reference.com. 
 
 Here is a data dictionary showing each variable, the type of variable, units, and range of values that are possible:
 
