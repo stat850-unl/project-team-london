@@ -17,8 +17,48 @@ When you click the **Render** button a document will be generated that includes:
 
 When you click the **Render** button a presentation will be generated that includes both content and the output of embedded code. You can embed code like this:
 
+# Introduction
+
+# Data Wrangling
+## Data wrangling analysis 1 - AC
 ```{r}
 1 + 1
 ```
 
+## Data wrangling analysis 2 - AC
+```{r}
+1 + 1
+```
 
+## Data wrangling analysis 3 -SG
+```{r}
+1 + 1
+```
+
+## Data wrangling analysis 4 - SG
+```{r}
+1 + 1
+```
+
+#Analysis
+## Analysis 1 - AC
+```{r}
+1 + 1
+```
+
+## Analysis 2 - AC
+```{r}
+1 + 1
+```
+
+## Analysis 3 -SG
+```{r}
+1 + 1
+```
+
+## Analysis 4 - SG
+```{r}
+1 + 1
+```
+
+#Conclusions
