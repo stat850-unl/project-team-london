@@ -20,9 +20,32 @@ When you click the **Render** button a presentation will be generated that inclu
 # Introduction
 
 # Data Wrangling
+## Import data
+```{R}
+install.packages("tidytuesdayR")
+
+# Read in with tidytuesdayR package 
+# Install from CRAN via: install.packages("tidytuesdayR")
+# This loads the readme and all the datasets for the week of interest
+
+# Either ISO-8601 date or year/week works!
+
+tuesdata <- tidytuesdayR::tt_load('2021-07-27')
+tuesdata <- tidytuesdayR::tt_load(2021, week = 31)
+
+olympics <- tuesdata$olympics
+
+# Or read in the data manually
+
+olympics <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-07-27/olympics.csv')
+```
 ## Data wrangling analysis 1 - AC
 ```{r}
-1 + 1
+#So the winter and summer were held in the same year up until 1992.
+#We are going to look at the data from 1896 - 1992. first we filter
+library(dplyr)
+subolympics <- olympics %>% filter(year < 1992)
+
 ```
 
 ## Data wrangling analysis 2 - AC
@@ -43,7 +66,7 @@ When you click the **Render** button a presentation will be generated that inclu
 #Analysis
 ## Analysis 1 - AC
 ```{r}
-1 + 1
+#split the data into two frames summer and winter
 ```
 
 ## Analysis 2 - AC
