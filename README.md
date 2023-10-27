@@ -7,7 +7,7 @@ format: md
 
 In this team we have Addison Carroll a PhD in the Animal Science department with a focus in ruminant nutrition, and Sydney Graham a PhD in the Agronomy department with a focus in plant breeding and genetics. 
 
-In this project we are planning to explore the Olympics. This datset includes the athelete name, athlete sex, athlete age, athlete height, athlete weight, team, noc region, the olympic games name, the year, the season, city hosting the games, sport, specific event, medal.
+In this project we are planning to explore the Olympics. This data set includes the athlete name, athlete sex, athlete age, athlete height, athlete weight, team, noc region, the Olympic games name, the year, the season, city hosting the games, sport, specific event, medal.
 
 Some potential topics we aim to look at include:
 -   How does global conflict influence the number of nations who participate in the Olympics?
