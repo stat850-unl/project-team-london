@@ -3,7 +3,7 @@ title: "Stat 850 Project"
 author: "Addison Carroll, Sydney Graham"
 format: md
 ---
-##Our Project (Addison Carroll & Sydney Graham)
+Our Project (Addison Carroll & Sydney Graham)
 
 In this team we have Addison Carroll a PhD in the Animal Science department with a focus in ruminant nutrition, and Sydney Graham a PhD in the Agronomy department with a focus in plant breeding and genetics. 
 
