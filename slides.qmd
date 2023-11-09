@@ -48,8 +48,6 @@ subolympics <- olympics %>% filter(year < 1992)
 # create data set that sums the countries by year..
 countries <- subolympics %>% group_by(year)
 countries <- transform(subolympics, countriesnum = ave(seq(nrow(subolympics)), year, FUN = length))
-
-
 ```
 
 ## Data wrangling analysis 2 - AC
