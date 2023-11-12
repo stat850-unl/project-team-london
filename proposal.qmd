@@ -98,15 +98,15 @@ Here is a data dictionary showing each variable, the type of variable, units, an
 
 Below is the data for the supplementary data in the regions dataframe
 
-+---------+----------------------------+-----------+---------+----------------------------------------+
-| Name    | Description                | Type      | Units   | Range/Values                           |
-+=========+============================+===========+=========+========================================+
-| NOC     | National Olympic Committee | character | NA      | 3 letter code of NOC (ex. CAN)         |
-+---------+----------------------------+-----------+---------+----------------------------------------+
-| region  | Region associated with NOC | character | NA      | Region name (ex. Canada)               |
-+---------+----------------------------+-----------+---------+----------------------------------------+
-| notes   | Comments & alternate names | character | NA      | NA or alternate name (ex. Australasia) |
-+---------+----------------------------+-----------+---------+----------------------------------------+
++----------+----------------------------+-----------+----------+----------------------------------------+
+| Name     | Description                | Type      | Units    | Range/Values                           |
++==========+============================+===========+==========+========================================+
+| NOC      | National Olympic Committee | character | NA       | 3 letter code of NOC (ex. CAN)         |
++----------+----------------------------+-----------+----------+----------------------------------------+
+| region   | Region associated with NOC | character | NA       | Region name (ex. Canada)               |
++----------+----------------------------+-----------+----------+----------------------------------------+
+| notes    | Comments & alternate names | character | NA       | NA or alternate name (ex. Australasia) |
++----------+----------------------------+-----------+----------+----------------------------------------+
 
 ## Project Goals
 

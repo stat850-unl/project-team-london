@@ -22,7 +22,7 @@ When you click the **Render** button a presentation will be generated that inclu
 # Data Wrangling
 ## Import data
 ```{R}
-install.packages("tidytuesdayR")
+#install.packages("tidytuesdayR")
 
 # Read in with tidytuesdayR package 
 # Install from CRAN via: install.packages("tidytuesdayR")
@@ -57,12 +57,30 @@ countries <- transform(subolympics, countriesnum = ave(seq(nrow(subolympics)), y
 
 ## Data wrangling analysis 3 -SG
 ```{r}
-1 + 1
+#Are athletes with nicknames more likely to medal in Olympic events?
+
+library(stringr)
+
+#Need to consider the most robust way to filter for nicknames
+sub_nickname <- olympics %>% filter(str_detect(name, '"'))
+sub_nickname_2 <- olympics %>% filter(str_count(name, '"') == 2 | str_count(name, "'") == 2)
+
+list1 <- unique(sub_nickname$name)
+list2 <- unique(sub_nickname_2$name)
+
+difference <- list1[!list1 %in% list2]
+difference
+
+#Going with the OR filter
+sub_nickname <- sub_nickname_2
+
 ```
 
 ## Data wrangling analysis 4 - SG
 ```{r}
-1 + 1
+# How has participation in track events changed over time? Are athletes competing in fewer events more recently? Has the length of their Olympic careers changed?
+
+
 ```
 
 #Analysis
