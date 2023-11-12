@@ -1,0 +1,54 @@
+```{r}
+#Load pacakges and Data
+library(dplyr)
+library(stringr)
+library(ggplot2)
+library(tidyr)
+
+olympics <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-07-27/olympics.csv')
+```
+
+
+```{r}
+#Are athletes with nicknames more likely to medal in Olympic events?
+summary(olympics)
+
+#Need to consider the most robust way to filter for nicknames
+sub_nickname <- olympics %>% filter(str_detect(name, '"'))
+sub_nickname_2 <- olympics %>% filter(str_count(name, '"') == 2 | str_count(name, "'") == 2)
+
+list1 <- unique(sub_nickname$name)
+list2 <- unique(sub_nickname_2$name)
+
+difference <- list1[!list1 %in% list2]
+difference
+
+#Going with the OR filter
+sub_nickname <- sub_nickname_2
+
+olympics_nicknames <- olympics %>% mutate(nickname = as.integer(str_count(name, '"') == 2 | str_count(name, "'") == 2))
+olympics_nicknames$nickname <- as.factor(olympics_nicknames$nickname)
+
+nickname <- olympics_nicknames %>% filter(nickname == 1) %>% group_by(medal) %>% summarize(count = n())
+no_nickname <- olympics_nicknames %>% filter(nickname == 0) %>% group_by(medal) %>% summarize(count = n())
+
+ggplot(nickname, aes(x = "", y = count, fill = medal)) + coord_polar("y", start = 0) +
+  geom_bar(width = 1, stat="identity") + theme_void()
+
+ggplot(no_nickname, aes(x = "", y = count, fill = medal)) + coord_polar("y", start = 0) +
+  geom_bar(width = 1, stat="identity") + theme_void()
+
+medalcount_nickname <- olympics_nicknames %>% filter(nickname == 1) %>% group_by(name) %>% summarize(Gold = sum(medal == "Gold"), Silver = sum(medal == "Silver"), Bronze = (sum(medal == "Bronze")), None = sum(is.na(medal)))
+
+medalcount_no_nickname <- olympics_nicknames %>% filter(nickname == 0) %>% group_by(name) %>% summarize(Gold = sum(medal == "Gold"), Silver = sum(medal == "Silver"), Bronze = (sum(medal == "Bronze")), None = sum(is.na(medal)))
+
+medalcount_nickname$nickname <- 1
+medalcount_no_nickname$nickname <- 0
+
+MergeMedalCount <- rbind(medalcount_nickname, medalcount_no_nickname)
+MergeMedalCount_long_noNA <- MergeMedalCount %>% pivot_longer(cols = `Gold`:`None`, names_to = "Medal", values_to = "Count") %>% filter(!Medal == "None", !is.na(Count))
+
+ggplot(MergeMedalCount_long_noNA, aes(x = Count, fill = Medal)) + geom_histogram(binwidth = 1, alpha=0.2, position="identity") + facet_wrap(~nickname) #This did not look as good as it did in my sketch, because of the skew of the data
+
+```
+

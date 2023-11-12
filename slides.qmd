@@ -61,6 +61,8 @@ countries <- transform(subolympics, countriesnum = ave(seq(nrow(subolympics)), y
 
 library(stringr)
 
+summary(olympics)
+
 #Need to consider the most robust way to filter for nicknames
 sub_nickname <- olympics %>% filter(str_detect(name, '"'))
 sub_nickname_2 <- olympics %>% filter(str_count(name, '"') == 2 | str_count(name, "'") == 2)
@@ -73,6 +75,8 @@ difference
 
 #Going with the OR filter
 sub_nickname <- sub_nickname_2
+
+olympics_nicknames <- olympics %>% mutate(nickname = as.integer(str_count(name, '"') == 2 | str_count(name, "'") == 2))
 
 ```
 
