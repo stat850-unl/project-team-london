@@ -1,0 +1,194 @@
+---
+title: "Participation & global conflict"
+format: html
+editor: visual
+---
+
+```{R}
+install.packages("tidytuesdayR")
+# Read in with tidytuesdayR package 
+# Install from CRAN via: install.packages("tidytuesdayR")
+# This loads the readme and all the datasets for the week of interest
+
+# Either ISO-8601 date or year/week works!
+
+tuesdata <- tidytuesdayR::tt_load('2021-07-27')
+tuesdata <- tidytuesdayR::tt_load(2021, week = 31)
+
+olympics <- tuesdata$olympics
+
+# Or read in the data manually
+
+olympics <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-07-27/olympics.csv')
+```
+## Data wrangling analysis 1 - AC
+```{r}
+#So the winter and summer were held in the same year up until 1992.
+#We are going to look at the data from 1896 - 1992. first we filter
+library(dplyr)
+subolympics <- olympics %>% filter(year < 1992)
+# create data set that sums the countries by year..
+countries <- subolympics %>% group_by(year)
+countries <- transform(subolympics, participantnum = ave(seq(nrow(subolympics)), year, FUN = length)) 
+
+```
+
+## Data wrangling analysis 2 - AC
+```{r}
+1 + 1
+```
+
+## Data wrangling analysis 3 -SG
+```{r}
+#Are athletes with nicknames more likely to medal in Olympic events?
+
+library(stringr)
+
+summary(olympics)
+
+#Need to consider the most robust way to filter for nicknames
+sub_nickname <- olympics %>% filter(str_detect(name, '"'))
+sub_nickname_2 <- olympics %>% filter(str_count(name, '"') == 2 | str_count(name, "'") == 2)
+
+list1 <- unique(sub_nickname$name)
+list2 <- unique(sub_nickname_2$name)
+
+difference <- list1[!list1 %in% list2]
+difference
+
+#Going with the OR filter
+sub_nickname <- sub_nickname_2
+
+olympics_nicknames <- olympics %>% mutate(nickname = as.integer(str_count(name, '"') == 2 | str_count(name, "'") == 2))
+
+```
+
+## Data wrangling analysis 4 - SG
+```{r}
+# How has participation in track events changed over time? Are athletes competing in fewer events more recently? Has the length of their Olympic careers changed?
+
+
+```
+
+#Analysis
+## Analysis 1 - AC: How does global conflict influence the number of nations who participate in the Olympics?
+```{r}
+#split the data into two frames summer and winter
+```
+
+## Analysis 2 - AC: How does body weight make a difference in the ability of an athlete to medal in a sport?
+```{r}
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+runtime: shiny
+```
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+```
+
+Column {data-width=1000}
+-----------------------------------------------------------------------
+
+### Part 1
+
+```{r}
+library(dplyr)
+library(tibble)
+library(shiny)
+library(purrr)
+library(DT)
+library(shinydashboard)
+library(rsconnect)
+library(ggplot2)
+
+
+
+# Define UI for application that draws a histogram
+ui <- fluidPage(
+
+    # Application title
+    titlePanel("Cocktail Data"),
+
+    # Sidebar with a slider input for number of bins 
+    sidebarLayout(
+        sidebarPanel(
+            sliderInput("bins",
+                        "Number of bins:",
+                        min = 1,
+                        max = 100,
+                        value = 30)
+        ),
+
+        # Show a plot of the generated distribution
+        mainPanel(tabPanel("plots",
+           plotOutput("distPlot"),
+           tableOutput("drop down")
+        )
+    )
+)
+)
+
+# Define server logic required to draw a histogram
+server <- function(input, output) {
+
+    output$distPlot <- renderPlot({
+        # generate bins based on input$bins from ui.R
+        x    <- glassnum$n
+        bins <- seq(min(x), max(x), length.out = input$bins + 1)
+
+        # draw the histogram with the specified number of bins
+        hist(x, breaks = bins, col = 'darkgray', border = 'white',
+             xlab = 'Number of times a glass was used in a cocktail',
+             main = 'Histogram of number of times a glass was used')
+    })
+}
+
+shinyApp(ui, server)
+```
+```{r}
+newlook <- cocktails %>% 
+  group_by(ingredient) %>% 
+  summarise(drinks = list(drink))
+
+ui <- fluidRow(
+  titlePanel("What Are You Making This Week?"),
+  fluidRow(column(2,
+                  selectInput("ingr",
+                              "ingredient:",
+                              c("all", 
+                                unique(as.character(newlook$ingredient)))))
+                  ),
+
+DT::dataTableOutput("table")
+)
+
+server <-function(input, output) {
+  
+  # Filter data based on selections
+  output$table <- DT::renderDataTable(DT::datatable({
+    data <- newlook
+    if (input$ingr != "All") {
+      data <- data[data$ingredient == input$ingr,]
+    }
+    data
+  }))
+}
+
+
+shinyApp(ui, server)
+```
+
+## Analysis 3 -SG
+```{r}
+1 + 1
+```
+
+## Analysis 4 - SG
+```{r}
+1 + 1
+```
+
+#Conclusions
