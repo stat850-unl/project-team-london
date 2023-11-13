@@ -166,8 +166,6 @@ server <- function(input, output) {
 
 shinyApp(ui, server)
 ```
-
-
 ```{r}
 newlook <- cocktails %>% 
   group_by(ingredient) %>% 
