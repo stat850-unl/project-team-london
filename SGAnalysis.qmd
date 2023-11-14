@@ -69,9 +69,18 @@ Use this [wikipedia list](https://en.wikipedia.org/wiki/Track_and_field) for def
 #Get track and field events
 t_f <- olympics %>% filter(sport == "Athletics")
 unique(t_f$event) #need to remove vaults, throws, puts, and athalons
-track <- t_f %>% filter(!str_detect(event, "Jump|Put|Throw|Vault|Decathlon|Pentathlon|Heptathlon"))
+track <- t_f %>% filter(!str_detect(event, "Walk|Jump|Put|Throw|Vault|Decathlon|Pentathlon|Heptathlon"))
 unique(track$event)
 
 #Add sub-categories
 track$category <- NA
+for (i in 1:nrow(track)) {
+  if(str_detect(track$event[i], "Relay")) {
+    track$category[i] <- "relay"
+  }
+  if(str_detect(track$event[i], "Hurdle|Steeplechase")) {
+    track$category[i] <- "hurdles"
+  }
+}
+
 ```
