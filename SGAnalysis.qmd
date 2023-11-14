@@ -4,13 +4,14 @@ library(dplyr)
 library(stringr)
 library(ggplot2)
 library(tidyr)
+library(stringr)
 
 olympics <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-07-27/olympics.csv')
 ```
 
+## Analysis 1: Are athletes with nicknames more likely to medal in Olympic events?
 
 ```{r}
-#Are athletes with nicknames more likely to medal in Olympic events?
 summary(olympics)
 
 #Need to consider the most robust way to filter for nicknames
@@ -52,3 +53,25 @@ ggplot(MergeMedalCount_long_noNA, aes(x = Count, fill = Medal)) + geom_histogram
 
 ```
 
+```{r}
+#Statistical Analysis of Nicknames here
+
+
+```
+
+## Analysis 2: How has participation in track events changed over time? Are athletes competing in fewer events more recently? Has the length of their Olympic careers changed?
+
+Use this [wikipedia list](https://en.wikipedia.org/wiki/Track_and_field) for defining events.
+
+![](Track_Field.png)
+
+```{r}
+#Get track and field events
+t_f <- olympics %>% filter(sport == "Athletics")
+unique(t_f$event) #need to remove vaults, throws, puts, and athalons
+track <- t_f %>% filter(!str_detect(event, "Jump|Put|Throw|Vault|Decathlon|Pentathlon|Heptathlon"))
+unique(track$event)
+
+#Add sub-categories
+track$category <- NA
+```
