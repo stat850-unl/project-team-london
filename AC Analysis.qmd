@@ -130,107 +130,43 @@ library(DT)
 library(shinydashboard)
 library(rsconnect)
 library(ggplot2)
-
-#Need gender option
-#Need weight option
-#need height option
-#need age option
-#output which events they could medal in
+library(shinythemes)
+library(shinyWidgets)
+library(shinydashboard)
 
 
-# Define UI
-#ui <- fluidPage(
 
-#Navbar structure for UI
-  #navbarPage("Options for best sport based on height, weight, age and gender", theme = shinytheme("lumen"),
-            # tabPanel("Sport Finder", fluid = TRUE, icon = icon("globe-americas"),
-                    #  tags$style(button_color_css),
-                      # Sidebar layout with a input and output definitions
-                    #  sidebarLayout(
-                     #   sidebarPanel(
-
-                     #     titlePanel("Characteristics of athelete"),
-                       #   fluidRow(column(3,
-
-                 # Select which Gender(s) to plot
-                          #  checkboxGroupInput(inputId = "Sex",
-                                            #  label = "Select Gender(s):",
-                                             #   choices = c("Male" = "M", "Female" = "F"),
-                                                #             selected = "M"),
-
-                                    
-                # Set Age Range
-                    #      fluidRow(column(5,
-                                      #    textInput(inputId = "Agemin",
-                                           #         label = "From:",
-                                            #        value = "10",
-                                             #       width = "100px")
-                        #  ),
-                          #column(5, ofset = 3,
-                           #      textInput(inputId = "AgeMax",
-                                     #      label = "To:",
-                                      #     value = "96",
-                                       #    width = "100px")
-                        #  )),
-                         # actionButton(inputId = "Age", label = "Age"),
-                        # hr(),
-                      
-                  # Set Height Range
-                         # fluidRow(column(5,
-                                        #  textInput(inputId = "Heightmin",
-                                             #       label = "From:",
-                                             #       value = "127",
-                                              #      width = "100px")
-                         # ),
-                        #  column(5, ofset = 3,
-                            #     textInput(inputId = "HeightMax",
-                                 #          label = "To:",
-                                #           value = "226",
-                                  #         width = "100px")
-                      #    )),
-                         # actionButton(inputId = "Height (cm)", label = "Height (cm)"),
-                      
-                # Set weight Range
-                          #fluidRow(column(5,
-                                        #  textInput(inputId = "Weightmin",
-                                          #          label = "From:",
-                                              #      value = "25",
-                                              #      width = "100px")
-                      #    ),
-                        #  column(5, ofset = 3,
-                       #          textInput(inputId = "WeightMax",
-                         #                  label = "To:",
-                          #                 value = "215",
-                           #                width = "100px")
-                        #  )),
-                       #   actionButton(inputId = "Weight (kg)", label = "Weight (kg)"),
-                
-           #     DT::dataTableOutput("table")
-             #             )
-              #            )))
-          #   )))
-             
-
-
-library(ggplot2)
-
-ui <- fluidPage(
-  titlePanel("Basic DataTable"),
+ui <- 
+  dashboardPage(
+  dashboardHeader("Physical characteristics of Olympians"),
+  dashboardBody(
+    tabItem(tabName = Controls,
+     fluidPage(
+      titlePanel("Influence of physical characteristics on medaling in Olympic games"),
 
   # Create a new Row in the UI for selectInputs
-  fluidRow(
-    column(4,
+ fluidRow(
+        column(4,
         selectInput("sex",
                     "Gender:",
                     c("All",
                       unique(as.character(medalist$sex))))
     ),
-    column(4,
-        selectInput("age",
-                    "Age",
+         column(4,
+        selectInput("season",
+                    "Summer or Winter season:",
                     c("All",
-                      unique(as.character(medalist$age))))
+                      unique(as.character(medalist$season))))
     ),
+     column(4,
+      chooseSliderSkin("Shiny", color = "#112446"),
+        sliderInput("age",
+                    "Age range", 
+                    min= min(medalist$age),
+                    max = max(medalist$age), 
+                    value = c(min(medalist$age), max(medalist$age))),
+                    br()
+     ),
       column(4,
         selectInput("weight",
                     "Weight (kg)",
@@ -247,17 +183,25 @@ ui <- fluidPage(
   # Create a new row for the table.
   DT::dataTableOutput("table")
 )
+)
+tabItem(tabName = "English to metric conversion",
+        h2("All data is in metric.. Here is the conversion for us dummies who dont use it!")
+        )
+)
+)
+
 
 server <- function(input, output) {
 
   # Filter data based on selections
   output$table <- DT::renderDataTable(DT::datatable({
-    data <- medalist
+    data <- medalist[medalist$age >= input$age[1] & medalist$age <= input$age[2],
+                     ]
     if (input$sex != "All") {
       data <- data[data$sex == input$sex,]
     }
-    if (input$age != "All") {
-      data <- data[data$age == input$age,]
+    if (input$season != "All") {
+      data <- data[data$season == input$season,]
     }
     if (input$weight != "All") {
       data <- data[data$weight == input$weight,]
@@ -270,7 +214,7 @@ server <- function(input, output) {
 
 }
 # Run the application
-shinyApp(ui = ui, server = server)
+shinyApp(ui= ui, server = server)
 ```
 
 #Conclusions
