@@ -121,7 +121,7 @@ library(flexdashboard)
 Column {data-width=1000}
 
 ```{r}
-
+a
 library(dplyr)
 library(tibble)
 library(shiny)
@@ -134,19 +134,20 @@ library(shinythemes)
 library(shinyWidgets)
 library(shinydashboard)
 
-ui <- dashboardPage(
-  dashboardHeader(title = "Physical characteristics of Olympians"
-),
+#ui <- dashboardPage(
+ # dashboardHeader(title = "Physical characteristics of Olympians"
+#),
 
-  dashboardSidebar(
+sidebar <-  dashboardSidebar(
       sidebarMenu(
        menuItem("Dashboard",tabName = "dashboard"),
-        menuItem("Imperial to metric",  tabName = "English to metric conversion")
+        menuItem("Imperial to metric",  tabName = "Imperial to metric")
   )
-),
+)#,
   
- dashboardBody(
-  tabItem(tabName = "dashboard"),
+ body <- dashboardBody(
+  tabItems(
+  tabItem(tabName = "dashboard", class='active',
     fluidPage(
       titlePanel("Influence of physical characteristics on medaling in Olympic games"),
        fluidRow(
@@ -184,21 +185,28 @@ ui <- dashboardPage(
                       unique(as.character(medalist$height))))
     )
   ),
-  # Create a new row for the table.
-    DT::dataTableOutput("table")
-),
+  
+     DT::dataTableOutput("table")
+  ),
 
-tabItem(tabName = "English to metric conversion",
-        h2("All data is in metric.. Here is the conversion for us dummies who dont use it!"),
+  tabItem(tabName = "Imperial to metric",
+        h2("All data is in metric.. Here is the conversion for us dummies who don't use it!"),
           fluidPage(
             mainPanel(
-              numericInput("myInput1", label = "Number", value = 1),
-               uiOutput("ui"),
+              numericInput("myInput1", label = "Type in height in inches", value = 1),
+              numericInput("myInput2", label = "Type in weight in lbs", value = 1),
+               uiOutput("ui1"),
                uiOutput("ui2")
-  )
+  ),
 )
 )
 )
+)
+)
+ui <- dashboardPage(skin = "red",
+  dashboardHeader(title = "olympics"),
+  sidebar,
+  body
 )
 
 
@@ -222,18 +230,22 @@ server <- function(input, output) {
     }
     data
   }))
-  output$ui <- renderUI( {
+  
+  output$ui1 <- renderUI( {
     tagList(
-      tags$h2("Display Result in %"),
-      numericInput("obs1", "B", value = input$myInput1+2))
+      tags$h2("Height in cm"),
+      numericInput("obs1", "B", value = input$myInput1*2.54))
   })
     output$ui2 <- renderUI( {
-    C <- input$myInput1 + 2
-    D <- C^2
-    tags$div(paste("The processed input is", D))})
+    tagList(
+      tags$h2("Weight in kg"),
+      numericInput("obs1", "B", value = input$myInput2*0.453592))
+    })
 }
+
+
 # Run the application
-shinyApp(ui= ui, server = server)
+shinyApp(ui, server)
 ```
 
 #Conclusions
