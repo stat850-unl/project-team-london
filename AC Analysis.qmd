@@ -43,7 +43,7 @@ medalist <- olympics %>% na.omit()
 
 ```
 
-#Analysis \## Analysis 1 - AC: How does global conflict influence the number of nations who participate in the Olympics?
+#Analysis 1 - AC: How does global conflict influence the number of nations who participate in the Olympics?
 
 ```{r fig.align="center", echo=FALSE, fig.width=14}
 #split the data into two frames summer and winter
@@ -134,46 +134,50 @@ library(shinythemes)
 library(shinyWidgets)
 library(shinydashboard)
 
+ui <- dashboardPage(
+  dashboardHeader(title = "Physical characteristics of Olympians"
+),
 
-
-ui <- 
-  dashboardPage(
-  dashboardHeader("Physical characteristics of Olympians"),
-  dashboardBody(
-    tabItem(tabName = Controls,
-     fluidPage(
+  dashboardSidebar(
+      sidebarMenu(
+       menuItem("Dashboard",tabName = "dashboard"),
+        menuItem("Imperial to metric",  tabName = "English to metric conversion")
+  )
+),
+  
+ dashboardBody(
+  tabItem(tabName = "dashboard"),
+    fluidPage(
       titlePanel("Influence of physical characteristics on medaling in Olympic games"),
-
-  # Create a new Row in the UI for selectInputs
- fluidRow(
+       fluidRow(
         column(4,
         selectInput("sex",
                     "Gender:",
                     c("All",
                       unique(as.character(medalist$sex))))
-    ),
+        ),
          column(4,
-        selectInput("season",
+          selectInput("season",
                     "Summer or Winter season:",
                     c("All",
                       unique(as.character(medalist$season))))
-    ),
-     column(4,
-      chooseSliderSkin("Shiny", color = "#112446"),
-        sliderInput("age",
+      ),
+       column(4,
+        chooseSliderSkin("Shiny", color = "#112446"),
+          sliderInput("age",
                     "Age range", 
                     min= min(medalist$age),
                     max = max(medalist$age), 
                     value = c(min(medalist$age), max(medalist$age))),
                     br()
-     ),
+       ),
       column(4,
         selectInput("weight",
                     "Weight (kg)",
                     c("All",
                       unique(as.character(medalist$weight))))
-    ),
-    column(4,
+     ),
+      column(4,
         selectInput("height",
                     "Height (cm):",
                     c("All",
@@ -181,12 +185,19 @@ ui <-
     )
   ),
   # Create a new row for the table.
-  DT::dataTableOutput("table")
-)
-)
+    DT::dataTableOutput("table")
+),
+
 tabItem(tabName = "English to metric conversion",
-        h2("All data is in metric.. Here is the conversion for us dummies who dont use it!")
-        )
+        h2("All data is in metric.. Here is the conversion for us dummies who dont use it!"),
+          fluidPage(
+            mainPanel(
+              numericInput("myInput1", label = "Number", value = 1),
+               uiOutput("ui"),
+               uiOutput("ui2")
+  )
+)
+)
 )
 )
 
@@ -211,7 +222,15 @@ server <- function(input, output) {
     }
     data
   }))
-
+  output$ui <- renderUI( {
+    tagList(
+      tags$h2("Display Result in %"),
+      numericInput("obs1", "B", value = input$myInput1+2))
+  })
+    output$ui2 <- renderUI( {
+    C <- input$myInput1 + 2
+    D <- C^2
+    tags$div(paste("The processed input is", D))})
 }
 # Run the application
 shinyApp(ui= ui, server = server)
