@@ -158,11 +158,11 @@ sidebar <-  dashboardSidebar(
               h2("Info about developers"),
             column(6,
             h3("Addison Carroll: PhD student in ruminant nutrition with a focus in dairy cattle metabolism"),
-            img(src = 'imagefile.png', height = '100px' )
+            img(src = 'Screenshot_20211011-112034_Gallery (1).jpg', height = '100px', width = "100px" )
             ),
             column(6,
                   h3("Sydney Graham: PhD student in Plant breeding and genetics"),
-                  img(src = 'imagefile.png', height = '100px' ))
+                  img(src = 'Screenshot_20211011-112034_Gallery (1).jpg', height = '100px', width = "100px" ))
           )
           )
   ),
