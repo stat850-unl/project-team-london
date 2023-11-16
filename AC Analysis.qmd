@@ -134,20 +134,23 @@ library(shinythemes)
 library(shinyWidgets)
 library(shinydashboard)
 
-#ui <- dashboardPage(
- # dashboardHeader(title = "Physical characteristics of Olympians"
-#),
 
 sidebar <-  dashboardSidebar(
-      sidebarMenu(
-       menuItem("Dashboard",tabName = "dashboard"),
-        menuItem("Imperial to metric",  tabName = "Imperial to metric")
+      sidebarMenu(id = "tabs",
+       menuItem("Dashboard",
+                tabName = "dashboard", 
+                selected = TRUE, 
+                startExpanded = TRUE,
+       menuItem("Olympic Characteristics", tabName = "subitem1"),
+       menuItem("Imperial to metric",  tabName = "Imperial")
+       
   )
-)#,
+)
+)
   
  body <- dashboardBody(
   tabItems(
-  tabItem(tabName = "dashboard", class='active',
+  tabItem(tabName = "subitem1", 
     fluidPage(
       titlePanel("Influence of physical characteristics on medaling in Olympic games"),
        fluidRow(
@@ -187,22 +190,22 @@ sidebar <-  dashboardSidebar(
   ),
   
      DT::dataTableOutput("table")
+    )
   ),
 
-  tabItem(tabName = "Imperial to metric",
+  tabItem(tabName = "Imperial",
         h2("All data is in metric.. Here is the conversion for us dummies who don't use it!"),
-          fluidPage(
-            mainPanel(
+          #fluidRow(
+            #mainPanel(
               numericInput("myInput1", label = "Type in height in inches", value = 1),
               numericInput("myInput2", label = "Type in weight in lbs", value = 1),
                uiOutput("ui1"),
                uiOutput("ui2")
-  ),
 )
 )
 )
-)
-)
+#)
+#)
 ui <- dashboardPage(skin = "red",
   dashboardHeader(title = "olympics"),
   sidebar,
@@ -210,7 +213,7 @@ ui <- dashboardPage(skin = "red",
 )
 
 
-server <- function(input, output) {
+server <- function(input, output, session) {
 
   # Filter data based on selections
   output$table <- DT::renderDataTable(DT::datatable({
@@ -241,6 +244,7 @@ server <- function(input, output) {
       tags$h2("Weight in kg"),
       numericInput("obs1", "B", value = input$myInput2*0.453592))
     })
+    observe({print(input$tabs)})
 }
 
 
