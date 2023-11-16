@@ -27,7 +27,7 @@ library(stringr)
 subolympics <- olympics %>% filter(year < 1994)
 # create data set that sums the countries by year. 
 countries <- subolympics %>%
-  group_by(noc,year,season) %>%
+  group_by(noc,year,sex) %>%
   summarise(participantnum = n(), .groups = "drop")
 
 ```
@@ -51,7 +51,7 @@ conflict = "Start of Iran and Iraq War,
                           Soviet-Afgan War, 
                           Cold War tension"
 
-ggplot(countries, aes(x=year, y=participantnum, fill = season)) +
+ggplot(countries, aes(x=year, y=participantnum, fill = sex)) +
   geom_col() +
   scale_x_continuous(n.breaks = 49) +
   scale_y_continuous(n.breaks = 35, expand = c(0,0)) +
@@ -121,7 +121,7 @@ library(flexdashboard)
 Column {data-width=1000}
 
 ```{r}
-a
+
 library(dplyr)
 library(tibble)
 library(shiny)
@@ -141,8 +141,9 @@ sidebar <-  dashboardSidebar(
                 tabName = "dashboard", 
                 selected = TRUE, 
                 startExpanded = TRUE,
-       menuItem("Olympic Characteristics", tabName = "subitem1"),
-       menuItem("Imperial to metric",  tabName = "Imperial")
+       menuItem("About us", tabName = "about"),
+       menuItem("Olympians physical characteristics", tabName = "subitem1"),
+       menuItem(HTML("Help desk:<br/> imperial to metric conversion"),  tabName = "Imperial")
        
   )
 )
@@ -150,9 +151,24 @@ sidebar <-  dashboardSidebar(
   
  body <- dashboardBody(
   tabItems(
-  tabItem(tabName = "subitem1", 
+  tabItem(tabName = "about",
+          fluidPage(
+            titlePanel("Welcome to our project! The goal of this app is to allow you to compare both your and your friends physcial characteristics with historical olympic medalists."),
+            fluidRow(
+              h2("Info about developers"),
+            column(6,
+            h3("Addison Carroll: PhD student in ruminant nutrition with a focus in dairy cattle metabolism"),
+            img(src = 'imagefile.png', height = '100px' )
+            ),
+            column(6,
+                  h3("Sydney Graham: PhD student in Plant breeding and genetics"),
+                  img(src = 'imagefile.png', height = '100px' ))
+          )
+          )
+  ),
+ tabItem(tabName = "subitem1", 
     fluidPage(
-      titlePanel("Influence of physical characteristics on medaling in Olympic games"),
+      titlePanel("Influence of physical characteristics on medaling in Olympic games.. See how you stack up!"),
        fluidRow(
         column(4,
         selectInput("sex",
@@ -176,27 +192,27 @@ sidebar <-  dashboardSidebar(
                     br()
        ),
       column(4,
-        selectInput("weight",
-                    "Weight (kg)",
-                    c("All",
-                      unique(as.character(medalist$weight))))
+        pickerInput(inputId = "weight",
+                    label ="Weight (kg)",
+                    choices = unique(sort(medalist$weight)),
+                    multiple = FALSE
+        )
+
      ),
       column(4,
-        selectInput("height",
-                    "Height (cm):",
-                    c("All",
-                      unique(as.character(medalist$height))))
+             pickerInput(inputId = "height",
+                    label ="Height (cm)",
+                    choices = unique(sort(medalist$height)),
+                    multiple = FALSE
     )
   ),
   
      DT::dataTableOutput("table")
     )
+    )
   ),
-
   tabItem(tabName = "Imperial",
         h2("All data is in metric.. Here is the conversion for us dummies who don't use it!"),
-          #fluidRow(
-            #mainPanel(
               numericInput("myInput1", label = "Type in height in inches", value = 1),
               numericInput("myInput2", label = "Type in weight in lbs", value = 1),
                uiOutput("ui1"),
@@ -204,8 +220,6 @@ sidebar <-  dashboardSidebar(
 )
 )
 )
-#)
-#)
 ui <- dashboardPage(skin = "red",
   dashboardHeader(title = "olympics"),
   sidebar,
@@ -237,12 +251,12 @@ server <- function(input, output, session) {
   output$ui1 <- renderUI( {
     tagList(
       tags$h2("Height in cm"),
-      numericInput("obs1", "B", value = input$myInput1*2.54))
+      numericInput("obs1", "Output", value = input$myInput1*2.54))
   })
     output$ui2 <- renderUI( {
     tagList(
       tags$h2("Weight in kg"),
-      numericInput("obs1", "B", value = input$myInput2*0.453592))
+      numericInput("obs1", "Output", value = input$myInput2*0.453592))
     })
     observe({print(input$tabs)})
 }
