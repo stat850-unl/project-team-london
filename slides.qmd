@@ -247,7 +247,7 @@ sidebar <-  dashboardSidebar(
           title = "Sydney Graham",
           subtitle = "PhD Plant Breeding and Genetics",
           type = 2,
-          image = "ACwJerseys.png",
+          image = "https://lh3.googleusercontent.com/drive-viewer/AK7aPaAPCKrWGfEz9fVP6iwkkrl6Lkb066jRR4UF4fRosVyGdnxSew6GQFdBpWPWyZ8e-dvaQACNiEK1b1PJmgclP_waJ54www=s1600?source=screenshot.guru",
         ),
         status = "primary",
         gradient = TRUE,
