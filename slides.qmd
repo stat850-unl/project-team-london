@@ -186,7 +186,7 @@ ggplot(countries, aes(x=year, y=participantnum, fill = sex)) +
 ## Shiny application. The goal of this application is to have fun using family members physical characteristics and compare them relative to olympic athletes who have metaled.
 
 ```{r echo=FALSE}
-## Analysis 2 - AC: Shiny app: Input your age, weight, height and gender. Spits out who medaled in what sport with those characteristics.
+#Analysis 2 - AC: Shiny app: Input your age, weight, height and gender. Spits out who medaled in what sport with those characteristics.
 #essentially we need to omit anyone who hasn't medaled. 
 medalist <- olympics %>% na.omit()
 ```
@@ -209,6 +209,7 @@ library(shinydashboardPlus)
 
 
 # start of application
+#Get sidebar ready and tab names set fot the body.
 sidebar <-  dashboardSidebar(
       width = 250,
       sidebarMenu(id = "tabs", 
@@ -226,6 +227,7 @@ sidebar <-  dashboardSidebar(
   
  body <- dashboardBody(
   tabItems(
+    #setting about us tab for fun!
   tabItem(tabName = "about",
           userBox(
           title = userDescription(
@@ -259,11 +261,14 @@ sidebar <-  dashboardSidebar(
         "Some text here!",
         footer = NULL
       )),
+  #setting second sub item which will be the main focus/game.
  tabItem(tabName = "subitem1", 
     fluidPage(
       titlePanel(div("Influence of physical characteristics on medaling in Olympic games.. See how you stack up!",
                  style = "color: #000000")),
        fluidRow(
+      #Age slider to explore the influence of age on medaling.
+      #Slider is a red color 
             column(12,
         chooseSliderSkin("Shiny", color = "red"),
           sliderInput("age",
@@ -274,7 +279,8 @@ sidebar <-  dashboardSidebar(
                     width = '100%'),
                     br()
     ),
-         
+      #Gender input with unique so values aren't repeated .
+      #background red color and text white  
         column(6,
         wellPanel(style = "background-color: #960018; color: #FFFFFF;",
         selectInput("sex",
@@ -282,6 +288,8 @@ sidebar <-  dashboardSidebar(
                     c("All",
                       unique(as.character(medalist$sex)))))
         ),
+      #Season input with unique so values aren't repeated 
+      #background red color and text white
          column(6,
           wellPanel(style = "background-color: #960018; color: #FFFFFF;",
           selectInput("season",
@@ -290,7 +298,8 @@ sidebar <-  dashboardSidebar(
                       unique(as.character(medalist$season))))),
                        br()
       ),
-
+    #weight picker with unique so values aren't repeated and sorted.
+    #background red color and text white
       column(6,
         wellPanel(style = "background-color: #960018; color: #FFFFFF;",
         pickerInput(inputId = "weight",
@@ -300,6 +309,8 @@ sidebar <-  dashboardSidebar(
         )))
 
      ),
+    #height picker with unique so values aren't repeated and sorted.
+    #background red color and text white
       column(6,
              wellPanel(style = "background-color: #960018; color: #FFFFFF;",
              pickerInput(inputId = "height",
@@ -309,12 +320,13 @@ sidebar <-  dashboardSidebar(
          )
         )
     ),
+    #giveing the tab a background color
     tags$style('.container-fluid { background-color: #FFFFFF;}'),
      tabsetPanel(tabPanel("outcome", DT::dataTableOutput("table")))
        )
     )
        ),
-    
+ #This is our tab to do imperial to metric conversions   
   tabItem(tabName = "Imperial",
         h2("All data is in metric.. Here is the conversion for us dummies who don't use it!"),
             wellPanel(style = "background-color: grey;",
@@ -327,7 +339,7 @@ sidebar <-  dashboardSidebar(
 )
 )
 
-
+#Pulling together the dashboard with the sideboard and body.
 ui <- dashboardPage(skin = "midnight", 
   dashboardHeader(title =  span(tagList(icon("earth-americas"), "olympics"))),
   sidebar,
@@ -340,6 +352,7 @@ server <- function(input, output, session) {
   # Filter data based on selections
   output$table <- DT::renderDataTable(DT::datatable({
     data <- medalist[medalist$age >= input$age[1] & medalist$age <= input$age[2],]
+  #now give the option to look at all or specific values
     if (input$sex != "All") {
       data <- data[data$sex == input$sex,]
     }
@@ -354,11 +367,12 @@ server <- function(input, output, session) {
     }
     data 
   }) %>%
+    #puts a background on the table so it isn't tansparent
       DT::formatStyle(colnames(data), target = 'cell', backgroundColor = 'white', opacity = 1) 
   
   ) 
  
-  
+  #Inputs and output for height and weight calculations
   output$ui1 <- renderUI( {
     tagList(
       numericInput("obs1", "Height in cm", value = input$myInput1*2.54))
