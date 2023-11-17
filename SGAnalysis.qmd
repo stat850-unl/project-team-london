@@ -83,7 +83,7 @@ for (i in 1:nrow(track)) {
   if(str_detect(track$event[i], "Hurdle|Steeplechase")) {
     track$category[i] <- "hurdles"
   }
-  if(str_detect(track$event[i], "Marathon|mile")) {
+  if(str_detect(track$event[i], "Marathon|mile|Cross")) {
     track$category[i] <- "long"
   }
   else{
@@ -100,5 +100,26 @@ for (i in 1:nrow(track)) {
     }
   }
 }
+
+skimr::skim(track)
+```
+
+##Figures to Examine Trends
+
+```{r}
+library(forcats)
+#How has participation in track events changed over time? 
+track <- track %>% arrange(category, event)
+track %>% ggplot(aes(x = year, y = reorder(event, category))) + geom_point(na.rm=T) +
+  labs(title = "Participation in Track Events Over Time", x = "Year", y = "Event") + theme_minimal()
+
+#Are athletes competing in fewer events more recently? 
+track %>% group_by(id, year) %>% summarize(count = n()) %>% ggplot(aes(x = as.factor(year), y = count, fill = as.factor(year))) + labs(title = "Multiple Event Participation", x = "Year", y = "Number of Events by Althlete") +geom_violin()
+
+#Has the length of their Olympic careers changed?
+duration <- track %>% group_by(id) %>% summarise(min = min(year), max = max(year)) %>% mutate(duration = max-min) %>% filter(duration > 0)
+
+ggplot(duration, aes(x = duration))+ geom_histogram(binwidth = 4)
+
 
 ```
