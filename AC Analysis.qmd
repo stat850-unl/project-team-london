@@ -38,9 +38,6 @@ countries <- subolympics %>%
 ## Analysis 2 - AC: Shiny app: Input your age, weight, height and gender. Spits out who medaled in what sport with those characteristics.
 #essentially we need to omit anyone with out the data we need. 
 medalist <- olympics %>% na.omit()
-
-
-
 ```
 
 #Analysis 1 - AC: How does global conflict influence the number of nations who participate in the Olympics?
@@ -110,7 +107,6 @@ ggplot(countries, aes(x=year, y=participantnum, fill = sex)) +
 library(flexdashboard)
 ```
 
-```{r}
 ---
 title: "How do your physical characteristics match up with historical olympians"
 output: 
@@ -119,7 +115,6 @@ output:
     vertical_layout: fill
 runtime: shiny
 ---
-```
 
 Column {data-width=1000}
 
@@ -218,16 +213,16 @@ sidebar <-  dashboardSidebar(
       column(4,
         pickerInput(inputId = "weight",
                     label ="Weight (kg)",
-                    choices = unique(sort(medalist$weight)),
-                    multiple = FALSE
+                    choices = c("All", unique(sort(medalist$weight)),
+                    multiple = TRUE
         )
 
      ),
       column(4,
              pickerInput(inputId = "height",
                     label ="Height (cm)",
-                    choices = unique(sort(medalist$height)),
-                    multiple = FALSE
+                    choices = c("All", unique(sort(medalist$height)),
+                    multiple = TRUE
     )
   ),
   
@@ -235,6 +230,8 @@ sidebar <-  dashboardSidebar(
                DT::dataTableOutput("table"))
    
                 )
+    )
+  )
     )
   ),
   tabItem(tabName = "Imperial",
@@ -250,8 +247,9 @@ sidebar <-  dashboardSidebar(
 )
 
 
-ui <- dashboardPage(skin = "midnight",
-  dashboardHeader(title = "olympics"),
+
+ui <- dashboardPage(skin = "midnight", 
+  dashboardHeader(title =  span(tagList(icon("earth-americas"), "olympics"))),
   sidebar,
   body
 )
