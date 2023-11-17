@@ -188,33 +188,38 @@ sidebar <-  dashboardSidebar(
       )),
  tabItem(tabName = "subitem1", 
     fluidPage(
-      titlePanel("Influence of physical characteristics on medaling in Olympic games.. See how you stack up!"),
+      titlePanel(div("Influence of physical characteristics on medaling in Olympic games.. See how you stack up!",
+                 style = "color: #000000")),
        fluidRow(
-        column(4,
-        wellPanel(style = "background-color: white;",
-        selectInput("sex",
-                    "Gender:",
-                    c("All",
-                      unique(as.character(medalist$sex)))))
-        ),
-         column(4,
-          wellPanel(style = "background-color: white;",
-          selectInput("season",
-                    "Summer or Winter season:",
-                    c("All",
-                      unique(as.character(medalist$season)))))
-      ),
-       column(4,
+            column(12,
         chooseSliderSkin("Shiny", color = "red"),
           sliderInput("age",
                     "Age range", 
                     min= min(medalist$age),
                     max= max(medalist$age), 
-                    value = c(min(medalist$age), max(medalist$age))),
+                    value = c(min(medalist$age), max(medalist$age)),
+                    width = '100%'),
                     br()
-       ),
+    ),
+         
+        column(6,
+        wellPanel(style = "background-color: #960018; color: #FFFFFF;",
+        selectInput("sex",
+                    "Gender:",
+                    c("All",
+                      unique(as.character(medalist$sex)))))
+        ),
+         column(6,
+          wellPanel(style = "background-color: #960018; color: #FFFFFF;",
+          selectInput("season",
+                    "Summer or Winter season:",
+                    c("All",
+                      unique(as.character(medalist$season))))),
+                       br()
+      ),
+
       column(6,
-        wellPanel(style = "background-color: #960018;",
+        wellPanel(style = "background-color: #960018; color: #FFFFFF;",
         pickerInput(inputId = "weight",
                     label ="Weight (kg)",
                     choices = c("All", unique(sort(medalist$weight)),
@@ -223,7 +228,7 @@ sidebar <-  dashboardSidebar(
 
      ),
       column(6,
-             wellPanel(style = "background-color: #960018;",
+             wellPanel(style = "background-color: #960018; color: #FFFFFF;",
              pickerInput(inputId = "height",
                     label ="Height (cm)",
                     choices = c("All", unique(sort(medalist$height))),
@@ -231,10 +236,12 @@ sidebar <-  dashboardSidebar(
          )
         )
     ),
-     DT::dataTableOutput("table")
+    tags$style('.container-fluid { background-color: #FFFFFF;}'),
+     tabsetPanel(tabPanel("outcome", DT::dataTableOutput("table")))
        )
-       )
+    )
        ),
+    
   tabItem(tabName = "Imperial",
         h2("All data is in metric.. Here is the conversion for us dummies who don't use it!"),
             wellPanel(style = "background-color: grey;",
