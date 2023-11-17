@@ -141,13 +141,14 @@ library(shinydashboardPlus)
 
 # start of application
 sidebar <-  dashboardSidebar(
-      sidebarMenu(id = "tabs",
+      width = 250,
+      sidebarMenu(id = "tabs", 
        menuItem("Dashboard",
                 tabName = "dashboard", 
                 selected = TRUE, 
                 startExpanded = TRUE,
        menuItem("About us", tabName = "about"),
-       menuItem("Olympians physical characteristics", tabName = "subitem1"),
+       menuItem("Olympian's physical characteristics", tabName = "subitem1"),
        menuItem(HTML("Help desk:<br/> imperial to metric conversion"),  tabName = "Imperial")
        
   )
