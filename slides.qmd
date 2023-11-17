@@ -20,7 +20,9 @@ When you click the **Render** button a presentation will be generated that inclu
 # Introduction
 
 # Data Wrangling
+
 ## Import data
+
 ```{R}
 #install.packages("tidytuesdayR")
 
@@ -39,8 +41,8 @@ olympics <- tuesdata$olympics
 
 olympics <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-07-27/olympics.csv')
 ```
-##Data set description
-This dataset contains information about the winter and summer Olympic athletes from the years 1896 to 2016, their team, weight, placing, sport, event, age, height.
+
+##Data set description This dataset contains information about the winter and summer Olympic athletes from the years 1896 to 2016, their team, weight, placing, sport, event, age, height.
 
 It was collected from Tidy Tuesday where the data was scraped from www.sports-reference.com.
 
@@ -98,24 +100,283 @@ Below is the data for the supplementary data in the regions dataframe
 | notes    | Comments & alternate names | character | NA       | NA or alternate name (ex. Australasia) |
 +----------+----------------------------+-----------+----------+----------------------------------------+
 
-## Data wrangling analysis 1 - AC
-```{r}
-#So the winter and summer were held in the same year up until 1992.
-#We are going to look at the data from 1896 - 1992. first we filter
-library(dplyr)
-subolympics <- olympics %>% filter(year < 1992)
-# create data set that sums the countries by year..
-countries <- subolympics %>% group_by(year)
-countries <- transform(subolympics, participantnum = ave(seq(nrow(subolympics)), year, FUN = length)) 
+## Analyzing the influence of global conflict on male and female participation in the olympic games
 
+```{r echo=FALSE}
+library(dplyr)
+# create data set that sums the countries by year.This only works for the years up until 1992 where games were held in the same year. 
+summary(olympics)
+countries <- olympics %>%
+  group_by(noc,year,sex) %>%
+  summarise(participantnum = n(), .groups = "drop")
 ```
 
-## Data wrangling analysis 2 - AC
-```{r}
-1 + 1
+```{R fig.align="center", echo=FALSE, fig.width=14}
+conflict = "Start of Iran and Iraq War, 
+                          Soviet-Afgan War, 
+                          Cold War tension"
+nowinter = "No winter olympics. (1896-1923)"
+splitup = "Summer and winter olympics split. (1993- current)"
+
+ggplot(countries, aes(x=year, y=participantnum, fill = sex)) +
+  geom_col() + 
+  scale_x_continuous(n.breaks = 60) +
+  coord_cartesian(xlim = c(1895, 2017), expand = FALSE) +
+  scale_y_continuous(n.breaks = 35, expand = c(0,0)) +
+  theme(axis.text.x = element_text(angle=90, vjust = 0.5, hjust = 1))+
+  theme(legend.position = "bottom") +
+  labs(title = "Influence of global conflict on the number of male and female olympic participants", x="Year of olympic games", y= "Total number of participants")+
+   geom_rect(data=NULL,aes(xmin=1895,xmax=1923,ymin=-Inf,ymax=Inf),
+            fill="lightgreen", alpha=0.01) +
+  geom_rect(data=NULL,aes(xmin=1992,xmax=2017,ymin=-Inf,ymax=Inf),
+            fill="lightblue", alpha=0.01)+
+  theme(plot.title = element_text(size = 16, face= "bold", hjust = 0.5)) +
+     geom_label(label = "World War 1", x=1916, y = 4700, 
+             label.padding = unit(0.55, "lines"),
+             label.size = 0.35,
+             color = "black",
+             fill = "#69b3a2")+
+      geom_segment(aes(x = 1916, y = 4350, xend = 1916, yend = 500),
+                  arrow = arrow(length = unit(0.5, "cm")))+
+
+     geom_label(label = "Great Depression", x=1932, y = 8000, 
+             label.padding = unit(0.55, "lines"),
+             label.size = 0.35,
+             color = "black",
+             fill = "#69b3a2") +
+    geom_segment(aes(x = 1932, y = 7650, xend = 1932, yend = 3500),
+                  arrow = arrow(length = unit(0.5, "cm")))+
+  
+  geom_label(label = "World War 2", x=1942, y = 9000, 
+             label.padding = unit(0.55, "lines"),
+             label.size = 0.35,
+             color = "black",
+             fill = "#69b3a2")+
+     geom_segment(aes(x = 1942, y = 8650, xend = 1942, yend = 0),
+                  arrow = arrow(length = unit(0.5, "cm")))+
+  
+     geom_label(label = "Suez Conflict", x=1956, y = 10000, 
+             label.padding = unit(0.55, "lines"),
+             label.size = 0.35,
+             color = "black",
+             fill = "#69b3a2")+
+    geom_segment(aes(x = 1956, y = 9650, xend = 1956, yend = 6500),
+                  arrow = arrow(length = unit(0.5, "cm")))+
+  geom_label(label = str_wrap(conflict,20), x=1980, y = 13000, 
+             label.padding = unit(0.55, "lines"),
+             label.size = 0.35,
+             color = "black",
+             fill = "#69b3a2") +
+   geom_segment(aes(x = 1980, y = 12000, xend = 1980, yend = 9500),
+                  arrow = arrow(length = unit(0.5, "cm")))+
+
+     geom_label(label = str_wrap(nowinter,20), x=1909, y = 15500, 
+             label.padding = unit(0.55, "lines"),
+             label.size = 0.35,
+             color = "black",
+             fill = "#69b3a2") + 
+       geom_label(label = str_wrap(splitup,20), x=2006, y = 15500, 
+             label.padding = unit(0.55, "lines"),
+             label.size = 0.35,
+             color = "black",
+             fill = "#69b3a2")
+
+```
+## Shiny application. Looking at family members physical characteristics relative to olympic athletes who have metaled
+
+```{r echo=FALSE}
+## Analysis 2 - AC: Shiny app: Input your age, weight, height and gender. Spits out who medaled in what sport with those characteristics.
+#essentially we need to omit anyone who hasn't medaled. 
+medalist <- olympics %>% na.omit()
+```
+
+```{r picture, echo=F, outwidth='100%'}
+library(flexdashboard)
+library(dplyr)
+library(tibble)
+library(shiny)
+library(purrr)
+library(DT)
+library(shinydashboard)
+library(rsconnect)
+library(ggplot2)
+library(shinythemes)
+library(shinyWidgets)
+library(shinydashboard)
+library(shinydashboardPlus)
+
+
+
+# start of application
+sidebar <-  dashboardSidebar(
+      width = 250,
+      sidebarMenu(id = "tabs", 
+       menuItem("Dashboard",
+                tabName = "dashboard", 
+                selected = TRUE, 
+                startExpanded = TRUE,
+       menuItem("About us", tabName = "about"),
+       menuItem("Olympian's physical characteristics", tabName = "subitem1"),
+       menuItem(HTML("Help desk:<br/> imperial to metric conversion"),  tabName = "Imperial")
+       
+  )
+)
+)
+  
+ body <- dashboardBody(
+  tabItems(
+  tabItem(tabName = "about",
+          userBox(
+          title = userDescription(
+          title = "Addison Carroll",
+          subtitle = "PhD Animal Science",
+          type = 2,
+          image = "https://lh3.googleusercontent.com/drive-viewer/AK7aPaBIIZV2XU74yuhj4R5lPX64CaCUVSttH8XY3ZrIJ0fqAhA5U7rre_nbHLA_xB_89CGqvb7LTTf_w71QerBAMYIinqaJWw=s1600?source=screenshot.guru",
+        ),
+        status = "primary",
+        gradient = TRUE,
+        background = "black",
+        collapsible = FALSE,
+        width = 6,
+        boxToolSize = "xl",
+        "Hi! I'm Addison a PhD with a focus in dairy cattle nutrition. I enjoy metalcore music,  my Aussie Bear, and exploring data for hidden relationships.",
+        footer = NULL
+        ),
+         userBox(
+          title = userDescription(
+          title = "Sydney Graham",
+          subtitle = "PhD Plant Breeding and Genetics",
+          type = 2,
+          image = "ACwJerseys.png",
+        ),
+        status = "primary",
+        gradient = TRUE,
+        background = "maroon",
+        collapsible = FALSE,
+        width = 6,
+        boxToolSize = "xl",
+        "Some text here!",
+        footer = NULL
+      )),
+ tabItem(tabName = "subitem1", 
+    fluidPage(
+      titlePanel(div("Influence of physical characteristics on medaling in Olympic games.. See how you stack up!",
+                 style = "color: #000000")),
+       fluidRow(
+            column(12,
+        chooseSliderSkin("Shiny", color = "red"),
+          sliderInput("age",
+                    "Age range", 
+                    min= min(medalist$age),
+                    max= max(medalist$age), 
+                    value = c(min(medalist$age), max(medalist$age)),
+                    width = '100%'),
+                    br()
+    ),
+         
+        column(6,
+        wellPanel(style = "background-color: #960018; color: #FFFFFF;",
+        selectInput("sex",
+                    "Gender:",
+                    c("All",
+                      unique(as.character(medalist$sex)))))
+        ),
+         column(6,
+          wellPanel(style = "background-color: #960018; color: #FFFFFF;",
+          selectInput("season",
+                    "Summer or Winter season:",
+                    c("All",
+                      unique(as.character(medalist$season))))),
+                       br()
+      ),
+
+      column(6,
+        wellPanel(style = "background-color: #960018; color: #FFFFFF;",
+        pickerInput(inputId = "weight",
+                    label ="Weight (kg)",
+                    choices = c("All", unique(sort(medalist$weight)),
+                    multiple = FALSE
+        )))
+
+     ),
+      column(6,
+             wellPanel(style = "background-color: #960018; color: #FFFFFF;",
+             pickerInput(inputId = "height",
+                    label ="Height (cm)",
+                    choices = c("All", unique(sort(medalist$height))),
+                    multiple = FALSE
+         )
+        )
+    ),
+    tags$style('.container-fluid { background-color: #FFFFFF;}'),
+     tabsetPanel(tabPanel("outcome", DT::dataTableOutput("table")))
+       )
+    )
+       ),
+    
+  tabItem(tabName = "Imperial",
+        h2("All data is in metric.. Here is the conversion for us dummies who don't use it!"),
+            wellPanel(style = "background-color: grey;",
+                      numericInput("myInput1", label = "Type in height in inches", value = 1),
+                       uiOutput("ui1")),
+             wellPanel(style ="background-color: #960018;",
+                       numericInput("myInput2", label = "Type in weight in lbs", value = 1),
+                       uiOutput("ui2"))
+)
+)
+)
+
+
+ui <- dashboardPage(skin = "midnight", 
+  dashboardHeader(title =  span(tagList(icon("earth-americas"), "olympics"))),
+  sidebar,
+  body
+)
+
+
+server <- function(input, output, session) {
+
+  # Filter data based on selections
+  output$table <- DT::renderDataTable(DT::datatable({
+    data <- medalist[medalist$age >= input$age[1] & medalist$age <= input$age[2],]
+    if (input$sex != "All") {
+      data <- data[data$sex == input$sex,]
+    }
+    if (input$season != "All") {
+      data <- data[data$season == input$season,]
+    }
+    if (input$weight != "All") {
+      data <- data[data$weight == input$weight,]
+    }
+    if (input$height != "All") {
+      data <- data[data$height == input$height,]
+    }
+    data 
+  }) %>%
+      DT::formatStyle(colnames(data), target = 'cell', backgroundColor = 'white', opacity = 1) 
+  
+  ) 
+ 
+  
+  output$ui1 <- renderUI( {
+    tagList(
+      numericInput("obs1", "Height in cm", value = input$myInput1*2.54))
+  })
+    output$ui2 <- renderUI( {
+    tagList(
+      numericInput("obs1", "Weight in kg", value = input$myInput2*0.453592))
+    })
+    observe({print(input$tabs)})
+}
+
+
+# Run the application
+shinyApp(ui, server)
+```
 ```
 
 ## Data wrangling analysis 3 -SG
+
 ```{r}
 #Are athletes with nicknames more likely to medal in Olympic events?
 
@@ -141,19 +402,21 @@ olympics_nicknames <- olympics %>% mutate(nickname = as.integer(str_count(name, 
 ```
 
 ## Data wrangling analysis 4 - SG
+
 ```{r}
 # How has participation in track events changed over time? Are athletes competing in fewer events more recently? Has the length of their Olympic careers changed?
 
 
 ```
 
-#Analysis
-## Analysis 1 - AC: How does global conflict influence the number of male vs female participation in the Olympics?
+#Analysis \## Analysis 1 - AC: How does global conflict influence the number of male vs female participation in the Olympics?
+
 ```{r}
 #split the data into two frames summer and winter
 ```
 
 ## Analysis 2 - AC: How do your physical characteristics match up with historical olympians?
+
 ```{r}
 output: 
   flexdashboard::flex_dashboard:
@@ -166,8 +429,7 @@ runtime: shiny
 library(flexdashboard)
 ```
 
-Column {data-width=1000}
------------------------------------------------------------------------
+## Column {data-width="1000"}
 
 ### Part 1
 
@@ -225,6 +487,7 @@ server <- function(input, output) {
 
 shinyApp(ui, server)
 ```
+
 ```{r}
 newlook <- cocktails %>% 
   group_by(ingredient) %>% 
@@ -259,11 +522,13 @@ shinyApp(ui, server)
 ```
 
 ## Analysis 3 -SG
+
 ```{r}
 1 + 1
 ```
 
 ## Analysis 4 - SG
+
 ```{r}
 1 + 1
 ```
