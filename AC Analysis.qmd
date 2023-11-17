@@ -137,6 +137,8 @@ library(shinythemes)
 library(shinyWidgets)
 library(shinydashboard)
 library(shinydashboardPlus)
+
+
 # start of application
 sidebar <-  dashboardSidebar(
       sidebarMenu(id = "tabs",
@@ -160,14 +162,16 @@ sidebar <-  dashboardSidebar(
           title = "Addison Carroll",
           subtitle = "PhD Animal Science",
           type = 2,
-          image = "https://github.com/stat850-unl/project-team-london/blob/main/ACwJerseys.png",
+          image = "https://lh3.googleusercontent.com/drive-viewer/AK7aPaBIIZV2XU74yuhj4R5lPX64CaCUVSttH8XY3ZrIJ0fqAhA5U7rre_nbHLA_xB_89CGqvb7LTTf_w71QerBAMYIinqaJWw=s1600?source=screenshot.guru",
         ),
         status = "primary",
         gradient = TRUE,
-        background = "light-blue",
+        background = "black",
+        collapsible = FALSE,
+        width = 6,
         boxToolSize = "xl",
-        "Hi! I'm Addison a PhD with a focus in dairy cattle nutrition.",
-        footer = "The footer here!"
+        "Hi! I'm Addison a PhD with a focus in dairy cattle nutrition. I enjoy metalcore music, tattoos, my australian shepherd bear, and science",
+        footer = NULL
         ),
          userBox(
           title = userDescription(
@@ -178,10 +182,12 @@ sidebar <-  dashboardSidebar(
         ),
         status = "primary",
         gradient = TRUE,
-        background = "light-blue",
+        background = "maroon",
+        collapsible = FALSE,
+        width = 6,
         boxToolSize = "xl",
         "Some text here!",
-        footer = "The footer here!"
+        footer = NULL
       )),
  tabItem(tabName = "subitem1", 
     fluidPage(
@@ -200,7 +206,7 @@ sidebar <-  dashboardSidebar(
                       unique(as.character(medalist$season))))
       ),
        column(4,
-        chooseSliderSkin("Shiny", color = "#960018"),
+        chooseSliderSkin("Shiny", color = "white"),
           sliderInput("age",
                     "Age range", 
                     min= min(medalist$age),
@@ -224,7 +230,7 @@ sidebar <-  dashboardSidebar(
     )
   ),
   
-     box("border", 123, background = "maroon",
+     wellPanel(style = "background-color: #960018;",
                DT::dataTableOutput("table"))
    
                 )
@@ -243,7 +249,7 @@ sidebar <-  dashboardSidebar(
 )
 
 
-ui <- dashboardPage(skin = "red",
+ui <- dashboardPage(skin = "midnight",
   dashboardHeader(title = "olympics"),
   sidebar,
   body
