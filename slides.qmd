@@ -105,6 +105,8 @@ Below is the data for the supplementary data in the regions dataframe
 
 ```{r echo=FALSE}
 library(dplyr)
+library(ggplot2)
+library(stringr)
 # create data set that sums the countries by year.This only works for the years up until 1992 where games were held in the same year. 
 summary(olympics)
 countries <- olympics %>%
@@ -388,7 +390,11 @@ server <- function(input, output, session) {
 # Run the application
 shinyApp(ui, server)
 ```
+## These are the images from the shiny application output. I will run this scenario in real time in presentation. The first output is from Richard Carroll (Addison's dad), and the second from Sydney's dad ....
+```{R}
+
 ```
+
 
 ## Data wrangling analysis 3 -SG
 
