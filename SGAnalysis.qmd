@@ -70,16 +70,34 @@ Use this [wikipedia list](https://en.wikipedia.org/wiki/Track_and_field) for def
 t_f <- olympics %>% filter(sport == "Athletics")
 unique(t_f$event) #need to remove vaults, throws, puts, and athalons
 track <- t_f %>% filter(!str_detect(event, "Walk|Jump|Put|Throw|Vault|Decathlon|Pentathlon|Heptathlon"))
+track <- track %>% filter(!str_detect(event, "Around|Team")) #remove team events, and all-around champ
 unique(track$event)
 
-#Add sub-categories
+#Add sub-categories, 60m - 400m sprint, 800m-3000m middle, 5000m-10000m + 5mile + marathon long
 track$category <- NA
+track$distance <- NA
 for (i in 1:nrow(track)) {
   if(str_detect(track$event[i], "Relay")) {
     track$category[i] <- "relay"
   }
   if(str_detect(track$event[i], "Hurdle|Steeplechase")) {
     track$category[i] <- "hurdles"
+  }
+  if(str_detect(track$event[i], "Marathon|mile")) {
+    track$category[i] <- "long"
+  }
+  else{
+    distance <- str_extract(track$event[i], "\\d+(,\\d{3})*") #regex bad for relay but already categorized above
+    track$distance[i] <- as.numeric(gsub(",", "", distance))
+    if (is.na(track$category[i]) && !is.na(track$distance[i]) && track$distance[i] <= 400) {
+      track$category[i] <- "sprint"
+    }
+    if (is.na(track$category[i]) && !is.na(track$distance[i]) && track$distance[i] > 400 && track$distance[i] <= 3000) {
+      track$category[i] <- "middle"
+    }
+    if (is.na(track$category[i]) && !is.na(track$distance[i]) && track$distance[i] > 3000 && track$distance[i] <= 10000) {
+      track$category[i] <- "long"
+    }
   }
 }
 
