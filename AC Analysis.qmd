@@ -134,6 +134,7 @@ library(shinydashboard)
 library(shinydashboardPlus)
 
 
+
 # start of application
 sidebar <-  dashboardSidebar(
       width = 250,
@@ -190,50 +191,50 @@ sidebar <-  dashboardSidebar(
       titlePanel("Influence of physical characteristics on medaling in Olympic games.. See how you stack up!"),
        fluidRow(
         column(4,
+        wellPanel(style = "background-color: white;",
         selectInput("sex",
                     "Gender:",
                     c("All",
-                      unique(as.character(medalist$sex))))
+                      unique(as.character(medalist$sex)))))
         ),
          column(4,
+          wellPanel(style = "background-color: white;",
           selectInput("season",
                     "Summer or Winter season:",
                     c("All",
-                      unique(as.character(medalist$season))))
+                      unique(as.character(medalist$season)))))
       ),
        column(4,
-        chooseSliderSkin("Shiny", color = "white"),
+        chooseSliderSkin("Shiny", color = "red"),
           sliderInput("age",
                     "Age range", 
                     min= min(medalist$age),
-                    max = max(medalist$age), 
+                    max= max(medalist$age), 
                     value = c(min(medalist$age), max(medalist$age))),
                     br()
        ),
-      column(4,
+      column(6,
+        wellPanel(style = "background-color: #960018;",
         pickerInput(inputId = "weight",
                     label ="Weight (kg)",
                     choices = c("All", unique(sort(medalist$weight)),
-                    multiple = TRUE
-        )
+                    multiple = FALSE
+        )))
 
      ),
-      column(4,
+      column(6,
+             wellPanel(style = "background-color: #960018;",
              pickerInput(inputId = "height",
                     label ="Height (cm)",
-                    choices = c("All", unique(sort(medalist$height)),
-                    multiple = TRUE
-    )
-  ),
-  
-     wellPanel(style = "background-color: #960018;",
-               DT::dataTableOutput("table"))
-   
-                )
-    )
-  )
-    )
-  ),
+                    choices = c("All", unique(sort(medalist$height))),
+                    multiple = FALSE
+         )
+        )
+    ),
+     DT::dataTableOutput("table")
+       )
+       )
+       ),
   tabItem(tabName = "Imperial",
         h2("All data is in metric.. Here is the conversion for us dummies who don't use it!"),
             wellPanel(style = "background-color: grey;",
@@ -247,7 +248,6 @@ sidebar <-  dashboardSidebar(
 )
 
 
-
 ui <- dashboardPage(skin = "midnight", 
   dashboardHeader(title =  span(tagList(icon("earth-americas"), "olympics"))),
   sidebar,
@@ -259,8 +259,7 @@ server <- function(input, output, session) {
 
   # Filter data based on selections
   output$table <- DT::renderDataTable(DT::datatable({
-    data <- medalist[medalist$age >= input$age[1] & medalist$age <= input$age[2],
-                     ]
+    data <- medalist[medalist$age >= input$age[1] & medalist$age <= input$age[2],]
     if (input$sex != "All") {
       data <- data[data$sex == input$sex,]
     }
@@ -273,8 +272,12 @@ server <- function(input, output, session) {
     if (input$height != "All") {
       data <- data[data$height == input$height,]
     }
-    data
-  }))
+    data 
+  }) %>%
+      DT::formatStyle(colnames(data), target = 'cell', backgroundColor = 'white', opacity = 1) 
+  
+  ) 
+ 
   
   output$ui1 <- renderUI( {
     tagList(
