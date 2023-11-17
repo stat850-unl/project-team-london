@@ -120,7 +120,7 @@ library(flexdashboard)
 
 Column {data-width=1000}
 
-```{r}
+```{r picture, echo=F, outwidth='100%'}
 
 library(dplyr)
 library(tibble)
@@ -133,8 +133,10 @@ library(ggplot2)
 library(shinythemes)
 library(shinyWidgets)
 library(shinydashboard)
+#fixing imgae loading issues
 
 
+# start of application
 sidebar <-  dashboardSidebar(
       sidebarMenu(id = "tabs",
        menuItem("Dashboard",
@@ -153,16 +155,15 @@ sidebar <-  dashboardSidebar(
   tabItems(
   tabItem(tabName = "about",
           fluidPage(
-            titlePanel("Welcome to our project! The goal of this app is to allow you to compare both your and your friends physcial characteristics with historical olympic medalists."),
+            titlePanel("Welcome to our project! The goal of this app is to allow you to compare both your and your friend's physcial characteristics with historical olympic medalists."),
             fluidRow(
-              h2("Info about developers"),
             column(6,
             h3("Addison Carroll: PhD student in ruminant nutrition with a focus in dairy cattle metabolism"),
-            img(src = 'Screenshot_20211011-112034_Gallery (1).jpg', height = '100px', width = "100px" )
+            img(src = 'ACwJerseys.png', height = '100px', width = "100px" )
             ),
             column(6,
                   h3("Sydney Graham: PhD student in Plant breeding and genetics"),
-                  img(src = 'Screenshot_20211011-112034_Gallery (1).jpg', height = '100px', width = "100px" ))
+                  img(src = 'ACwJerseys.png', height = '100px', width = "100px" ))
           )
           )
   ),
