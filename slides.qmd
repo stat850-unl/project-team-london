@@ -148,7 +148,7 @@ olympics_nicknames <- olympics %>% mutate(nickname = as.integer(str_count(name, 
 ```
 
 #Analysis
-## Analysis 1 - AC: How does global conflict influence the number of nations who participate in the Olympics?
+## Analysis 1 - AC: How does global conflict influence the number of male vs female participation in the Olympics?
 ```{r}
 #split the data into two frames summer and winter
 ```
