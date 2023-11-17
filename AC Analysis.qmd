@@ -18,9 +18,6 @@ olympics <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/t
 ## Data wrangling analysis 1 - AC
 
 ```{r}
-#So the winter and summer were held in the same year up until 1992. 
-#In editing phase I'd like to
-#We are going to look at the data from 1896 - 1992. first we filter
 library(dplyr)
 library(ggplot2)
 library(stringr)
@@ -28,10 +25,6 @@ library(stringr)
 # create data set that sums the countries by year.This only works for the years up until 1992 where games were held in the same year. 
 summary(olympics)
 countries <- olympics %>%
-  group_by(noc,year,sex) %>%
-  summarise(participantnum = n(), .groups = "drop")
-subolympics <- olymppics %>%
-  year < 1994 %>%
   group_by(noc,year,sex) %>%
   summarise(participantnum = n(), .groups = "drop")
 
@@ -118,20 +111,12 @@ ggplot(countries, aes(x=year, y=participantnum, fill = sex)) +
              fill = "#69b3a2")
 
 ```
+
 ## Analysis 2 - AC: How do your physical characteristics match up with historical olympians?
 
 ```{r setup, include=FALSE}
 library(flexdashboard)
 ```
-
----
-title: "How do your physical characteristics match up with historical olympians"
-output: 
-  flexdashboard::flex_dashboard:
-    orientation: columns
-    vertical_layout: fill
-runtime: shiny
----
 
 Column {data-width=1000}
 
@@ -192,7 +177,7 @@ sidebar <-  dashboardSidebar(
           title = "Sydney Graham",
           subtitle = "PhD Plant Breeding and Genetics",
           type = 2,
-          image = "ACwJerseys.png",
+          image = "https://lh3.googleusercontent.com/drive-viewer/AK7aPaAPCKrWGfEz9fVP6iwkkrl6Lkb066jRR4UF4fRosVyGdnxSew6GQFdBpWPWyZ8e-dvaQACNiEK1b1PJmgclP_waJ54www=s1600?source=screenshot.guru",
         ),
         status = "primary",
         gradient = TRUE,
