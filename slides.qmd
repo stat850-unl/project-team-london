@@ -390,11 +390,19 @@ server <- function(input, output, session) {
 # Run the application
 shinyApp(ui, server)
 ```
-## These are the images from the shiny application output. I will run this scenario in real time in presentation. The first output is from Richard Carroll (Addison's dad), and the second from Sydney's dad ....
-```{R}
-
-```
-
+## These are the images from the shiny application output. I will run this scenario in real time in presentation. The first output is from Richard Carroll (Addison's dad), Addison's sister Nicole, from Sydney's dad ....
+#Richard is 6'3", weighs 250, and is 66 years young
+![Richard Carroll conversion](RCconversion.jpg)
+![Richard's olympians](RColympics.jpg)
+##Unfortunately Richard does not have any olympic counterparts. Let's look at Addison's sister Nicole
+#Nicole is 5'5, weighs around 155, and has told her sister she is 29 for the past 8 years.. Lets look at that age range.
+![Nicole's olympians](NColympics.jpg)
+#At the age of 37 Nicole would have not have had a counter part. However, within the range of 29 - 37 we have some:
+- Gold medal cyclist from fance
+- Bronze medal handball player from the UK
+- Gold medal Judo fighter from France
+- Gold and silver medal Ice hockey player from Canada
+- Bronze medal speed skater from China
 
 ## Data wrangling analysis 3 -SG
 
