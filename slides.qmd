@@ -1,7 +1,7 @@
 ---
 Title: "Evaluation of the olympic games from global to family perspective"
 Author: "Addison Carroll and Sydney Graham"
-format: revealjs
+format: revealjs::revealjs_presentation
 ---
 
 ## Quarto
@@ -45,6 +45,7 @@ olympics <- tuesdata$olympics
 olympics <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-07-27/olympics.csv')
 ```
 
+---
 ##Data set description This dataset contains information about the winter and summer Olympic athletes from the years 1896 to 2016, their team, weight, placing, sport, event, age, height.
 
 -It was collected from Tidy Tuesday where the data was scraped from www.sports-reference.com.
@@ -90,7 +91,7 @@ olympics <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/t
 +---------+-----------------------------------+-----------+---------+---------------------------------------------------------+
 | medal   | Medal won (if any)                | character | NA      | (Gold, Silver, Bronze or NA)                            |
 +---------+-----------------------------------+-----------+---------+---------------------------------------------------------+
-
+---
 Below is the data for the supplementary data in the regions dataframe
 
 +----------+----------------------------+-----------+----------+----------------------------------------+
@@ -102,13 +103,11 @@ Below is the data for the supplementary data in the regions dataframe
 +----------+----------------------------+-----------+----------+----------------------------------------+
 | notes    | Comments & alternate names | character | NA       | NA or alternate name (ex. Australasia) |
 +----------+----------------------------+-----------+----------+----------------------------------------+
-
+---
 ## Analyzing the influence of global conflict on male and female participation in the olympic games
-
--   What we can observe is that global conflicts do influence the level of participation in the games, particularly in the 1900's
--   Female participation may have been less affected by these conflicts
--   The olympics have had steady attendance since the 1990s
-
+  - What we can observe is that global conflicts do influence the level of participation in the games, particularly in the 1900's
+  - Female participation may have been less affected by these conflicts
+  - The olympics have had steady attendance since the 1990s
 ```{r echo=FALSE}
 library(dplyr)
 library(ggplot2)
@@ -194,7 +193,7 @@ ggplot(countries, aes(x=year, y=participantnum, fill = sex)) +
              fill = "#69b3a2")
 
 ```
-
+---
 ## Shiny application. The goal of this application is to have fun using family members physical characteristics and compare them relative to olympic athletes who have metaled.
 
 ```{r echo=FALSE}
@@ -400,15 +399,33 @@ server <- function(input, output, session) {
 # Run the application
 shinyApp(ui, server)
 ```
-
--   These are the images from the shiny application output. I will run this scenario in real time in presentation. The first output is from Richard Carroll (Addison's dad), Addison's sister Nicole, from Sydney's dad ....
-
--   Richard is 6'3", weighs 250, and is 66 years young ![Richard Carroll conversion](RCconversion.jpg) ![Richard\'s olympians](RColympics.jpg) ##Unfortunately
-
--   Richard does not have any olympic counterparts.
-
-##Let's look at Addison's sister Nicole #Nicole is 5'5, weighs around 155, and has told her sister she is 29 for the past 8 years.. Lets look at that age range. ![Nicole\'s olympians](NColympics.jpg) - At the age of 37 Nicole would have not have had a counter part. - However, within the range of 29 - 37 we have some: - Gold medal cyclist from fance - Bronze medal handball player from the UK - Gold medal Judo fighter from France - Gold and silver medal Ice hockey player from Canada - Bronze medal speed skater from China
-
+---
+## These are the images from the shiny application output. I will run this scenario in real time in presentation. The first output is from Richard Carroll (Addison's dad), and Addison's sister Nicole.
+  -Richard is 6'3", weighs 250, and is 66 years young 
+  -![Richard Carroll conversion](RCconversion.jpg) 
+  -![Richard\'s olympians](RColympics.jpg) 
+--
+## Unfortunately
+  -Richard does not have any Olympic counterparts.😕
+```{R echo = FALSE}
+library(emojifont)
+list <- c(emoji('cry'))
+print(list)
+```
+---
+## Let's look at Addison's sister Nicole
+  -Nicole is 5'5, weighs around 155, and has told her sister she is 29 for the past 8 years.. 
+  -Lets look at that age range. ![Nicole\'s olympians](NColympics.jpg) 
+---
+## Obervations from applicaiton
+  -At the age of 37 Nicole would have not have had a counter part. 
+  -However, within the range of 29 - 37 we have some: 
+  -Gold medal cyclist from France 
+  -Bronze medal handball player from the UK 
+  -Gold medal Judo fighter from France 
+  -Gold and silver medal Ice hockey player from Canada 
+  -Bronze medal speed skater from China
+---
 ## Data wrangling analysis 3 -SG
 
 ```{r}
