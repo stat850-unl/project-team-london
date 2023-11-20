@@ -174,18 +174,11 @@ ggplot(countries, aes(x=year, y=participantnum, fill = sex)) +
 
 ```
 
+Running analysis here?
+
+
 
 Nickname analysis here??
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -417,7 +410,7 @@ print(list)
   -Nicole is 5'5, weighs around 155, and has told her sister she is 29 for the past 8 years.. 
   -Lets look at that age range. ![Nicole\'s olympians](NColympics.jpg) 
 ---
-#Obervations from applicaiton
+#Obervations from application
   -At the age of 37 Nicole would have not have had a counter part. 
   -However, within the range of 29 - 37 we have some: 
   -Gold medal cyclist from France 
