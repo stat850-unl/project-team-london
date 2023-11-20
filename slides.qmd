@@ -185,7 +185,7 @@ Nickname analysis here??
 ---
 #Shiny application. 
 
-Generally people in families have nicknames. Some good..  Some bad.. 
+Generally people in families have nicknames. Many are fun and silly. Let's continue that energy.
 
 The goal of this application is to have fun using family members physical characteristics and compare them relative to Olympic athletes who have metaled.
 
