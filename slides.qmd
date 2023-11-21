@@ -246,7 +246,7 @@ sidebar <-  dashboardSidebar(
         collapsible = FALSE,
         width = 6,
         boxToolSize = "xl",
-        "Hi! I'm Addison a PhD with a focus in dairy cattle nutrition. I enjoy metalcore music,  my Aussie Bear, and exploring data for hidden relationships.",
+        "Addison Carroll is a PhD with a focus in dairy cattle nutrition. SHe enjoys metalcore music,  her Aussie Bear, and exploring data for hidden relationships.",
         footer = NULL
         ),
          userBox(
@@ -262,7 +262,7 @@ sidebar <-  dashboardSidebar(
         collapsible = FALSE,
         width = 6,
         boxToolSize = "xl",
-        "Some text here!",
+        "Sydney Graham is a PhD in plant breeding and genetics. Outside of work she enjoys cooking, spending time with her family....",
         footer = NULL
       )),
   #setting second sub item which will be the main focus/game.
