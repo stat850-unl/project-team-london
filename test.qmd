@@ -1,0 +1,92 @@
+---
+Title: "Evaluation of the olympic games from global to family perspective"
+Author: "Addison Carroll and Sydney Graham"
+format: revealjs
+---
+
+# Introduction
+
+## Data Wrangling
+
+## Import data
+
+```{R echo=FALSE}
+options(readr.show_col_types = FALSE)
+#install.packages("tidytuesdayR")
+
+# Read in with tidytuesdayR package 
+# Install from CRAN via: install.packages("tidytuesdayR")
+# This loads the readme and all the datasets for the week of interest
+
+# Either ISO-8601 date or year/week works!
+
+# tuesdata <- tidytuesdayR::tt_load('2021-07-27')
+# tuesdata <- tidytuesdayR::tt_load(2021, week = 31)
+# 
+# olympics <- tuesdata$olympics
+
+# Or read in the data manually
+
+olympics <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-07-27/olympics.csv')
+```
+
+### Data set description This dataset contains information about the winter and summer Olympic athletes from the years 1896 to 2016, their team, weight, placing, sport, event, age, height.
+
+-   It was collected from Tidy Tuesday where the data was scraped from www.sports-reference.com.
+
+-   Here is a data dictionary showing each variable, the type of variable, units, and range of values that are possible
+
+---
+
++---------+-----------------------------------+-----------+---------+---------------------------------------------------------+
+| Name    | Description                       | Type      | Units   | Range/Values                                            |
++=========+===================================+===========+=========+=========================================================+
+| id      | Athlete ID                        | numeric   | NA      | 1 - 135571                                              |
++---------+-----------------------------------+-----------+---------+---------------------------------------------------------+
+| name    | Athlete Name                      | character | NA      | Name and surname(s) (ex. Lawal Kolawole "Kola" Abdulai) |
++---------+-----------------------------------+-----------+---------+---------------------------------------------------------+
+| sex     | Athlete Sex                       | character | NA      | F or M                                                  |
++---------+-----------------------------------+-----------+---------+---------------------------------------------------------+
+| age     | Athlete Age                       | numeric   | years   | 10 - 97                                                 |
+|         |                                   |           |         |                                                         |
+|         |                                   |           |         | NA if unknown                                           |
++---------+-----------------------------------+-----------+---------+---------------------------------------------------------+
+| height  | Athlete Height                    | numeric   | cm      | 127 - 226                                               |
+|         |                                   |           |         |                                                         |
+|         |                                   |           |         | NA if unknown                                           |
++---------+-----------------------------------+-----------+---------+---------------------------------------------------------+
+| weight  | Athlete weight                    | numeric   | kg      | 25 - 214                                                |
+|         |                                   |           |         |                                                         |
+|         |                                   |           |         | NA if unknown                                           |
++---------+-----------------------------------+-----------+---------+---------------------------------------------------------+
+| team    | Country/Team competing for        | character | NA      | country name (ex. Canada)                               |
++---------+-----------------------------------+-----------+---------+---------------------------------------------------------+
+| noc     | National Olympic Committee region | character | NA      | 3 letter code of NOC (ex. CAN)                          |
++---------+-----------------------------------+-----------+---------+---------------------------------------------------------+
+| games   | Olympic games name                | character | NA      | Year and season (ex. 2000 Summer)                       |
++---------+-----------------------------------+-----------+---------+---------------------------------------------------------+
+| year    | Year of Olympics                  | numeric   | YYYY    | 1896 - 2016                                             |
++---------+-----------------------------------+-----------+---------+---------------------------------------------------------+
+| season  | Season                            | character | NA      | winter or summer                                        |
++---------+-----------------------------------+-----------+---------+---------------------------------------------------------+
+| city    | City of Olympic host              | character | NA      | City name (ex. Atlanta)                                 |
++---------+-----------------------------------+-----------+---------+---------------------------------------------------------+
+| sport   | Sport                             | character | NA      | Sport title (ex. Rowing)                                |
++---------+-----------------------------------+-----------+---------+---------------------------------------------------------+
+| event   | Specific event                    | character | NA      | Specific event title (ex. Rowing Men's Coxed Eights)    |
++---------+-----------------------------------+-----------+---------+---------------------------------------------------------+
+| medal   | Medal won (if any)                | character | NA      | (Gold, Silver, Bronze or NA)                            |
++---------+-----------------------------------+-----------+---------+---------------------------------------------------------+
+---
+
++----------+----------------------------+-----------+----------+----------------------------------------+
+| Name     | Description                | Type      | Units    | Range/Values                           |
++==========+============================+===========+==========+========================================+
+| NOC      | National Olympic Committee | character | NA       | 3 letter code of NOC (ex. CAN)         |
++----------+----------------------------+-----------+----------+----------------------------------------+
+| region   | Region associated with NOC | character | NA       | Region name (ex. Canada)               |
++----------+----------------------------+-----------+----------+----------------------------------------+
+| notes    | Comments & alternate names | character | NA       | NA or alternate name (ex. Australasia) |
++----------+----------------------------+-----------+----------+----------------------------------------+
+---
+
