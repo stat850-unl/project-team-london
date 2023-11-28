@@ -13,6 +13,7 @@ format: revealjs
 ```{R echo=FALSE}
 options(readr.show_col_types = FALSE)
 #install.packages("tidytuesdayR")
+library(tidyverse)
 
 # Read in with tidytuesdayR package 
 # Install from CRAN via: install.packages("tidytuesdayR")
@@ -89,4 +90,221 @@ olympics <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/t
 | notes    | Comments & alternate names | character | NA       | NA or alternate name (ex. Australasia) |
 +----------+----------------------------+-----------+----------+----------------------------------------+
 ---
+## Analyzing the influence of global conflict on male and female participation in the olympic games
+-   What we can observe is that global conflicts do influence the level of participation in the games, particularly in the 1900's
+-   Female participation may have been less affected by these conflicts
+-   The olympics have had steady attendance since the 1990s
 
+```{r echo=FALSE}
+library(dplyr)
+library(ggplot2)
+library(stringr)
+# create data set that sums the countries by year.This only works for the years up until 1992 where games were held in the same year. 
+countries <- olympics %>%
+  group_by(noc,year,sex) %>%
+  summarise(participantnum = n(), .groups = "drop")
+```
+<!-- --- -->
+# ```{R fig.align="center", fig.width=14}
+# #|echo: false
+# #|label: Global conflict and olympic participation
+# #|fig-cap: "Exploring the influence of global conflict on olympic participation for both males and females"
+# #|warning: FALSE
+# 
+# #look at adjusting figure dimensions
+# conflict = "Start of Iran and Iraq War, 
+#                           Soviet-Afgan War, 
+#                           Cold War tension"
+# nowinter = "No winter olympics. (1896-1923)"
+# splitup = "Summer and winter olympics split. (1993- current)"
+# 
+# ggplot(countries, aes(x=year, y=participantnum, fill = sex)) +
+#   geom_col() + 
+#   scale_x_continuous(n.breaks = 60) +
+#   coord_cartesian(xlim = c(1895, 2017), expand = FALSE) +
+#   scale_y_continuous(n.breaks = 35, expand = c(0,0)) +
+#   theme(axis.text.x = element_text(angle=90, vjust = 0.5, hjust = 1)) +
+#   theme(legend.position = "bottom") +
+#   labs(title = "Influence of global conflict on the number of male and female olympic participants", x="Year of olympic games", y= "Total number of participants")+
+#    geom_rect(data=NULL,aes(xmin=1895,xmax=1923,ymin=-Inf,ymax=Inf),
+#             fill="lightgreen", alpha=0.01) +
+#   geom_rect(data=NULL,aes(xmin=1992,xmax=2017,ymin=-Inf,ymax=Inf),
+#             fill="lightblue", alpha=0.01)+
+#   theme(plot.title = element_text(size = 16, face= "bold", hjust = 0.5)) +
+#      geom_label(label = "World War 1", x=1916, y = 4700, 
+#              label.padding = unit(0.55, "lines"),
+#              label.size = 0.35,
+#              color = "black",
+#              fill = "#69b3a2")+
+#       geom_segment(aes(x = 1916, y = 4350, xend = 1916, yend = 500),
+#                   arrow = arrow(length = unit(0.5, "cm")))+
+#   
+#      geom_label(label = "Great Depression", x=1932, y = 8000, 
+#              label.padding = unit(0.55, "lines"),
+#              label.size = 0.35,
+#              color = "black",
+#              fill = "#69b3a2") +
+#     geom_segment(aes(x = 1932, y = 7650, xend = 1932, yend = 3500),
+#                   arrow = arrow(length = unit(0.5, "cm")))+
+#   
+#   geom_label(label = "World War 2", x=1942, y = 9000, 
+#              label.padding = unit(0.55, "lines"),
+#              label.size = 0.35,
+#              color = "black",
+#              fill = "#69b3a2")+
+#      geom_segment(aes(x = 1942, y = 8650, xend = 1942, yend = 0),
+#                   arrow = arrow(length = unit(0.5, "cm")))+
+#   
+#      geom_label(label = "Suez Conflict", x=1956, y = 10000, 
+#              label.padding = unit(0.55, "lines"),
+#              label.size = 0.35,
+#              color = "black",
+#              fill = "#69b3a2")+
+#     geom_segment(aes(x = 1956, y = 9650, xend = 1956, yend = 6500),
+#                   arrow = arrow(length = unit(0.5, "cm")))+
+#   geom_label(label = str_wrap(conflict,20), x=1980, y = 13000, 
+#              label.padding = unit(0.55, "lines"),
+#              label.size = 0.35,
+#              color = "black",
+#              fill = "#69b3a2") +
+#    geom_segment(aes(x = 1980, y = 12000, xend = 1980, yend = 9500),
+#                   arrow = arrow(length = unit(0.5, "cm")))+
+# 
+#      geom_label(label = str_wrap(nowinter,20), x=1909, y = 15500, 
+#              label.padding = unit(0.55, "lines"),
+#              label.size = 0.35,
+#              color = "black",
+#              fill = "#69b3a2") + 
+#        geom_label(label = str_wrap(splitup,20), x=2006, y = 15500, 
+#              label.padding = unit(0.55, "lines"),
+#              label.size = 0.35,
+#              color = "black",
+#              fill = "#69b3a2")
+# 
+# ```
+
+---
+### How does participation in Track events change over time?
+
+Let's pull out the track events (removing field!) and add some categories based on this table.
+This [wikipedia list](https://en.wikipedia.org/wiki/Track_and_field) was used to categorize events.
+
+![](Track_Field.png)
+---
+
+```{r echo = F}
+#Get track and field events
+t_f <- olympics %>% filter(sport == "Athletics")
+unique(t_f$event) #need to remove vaults, throws, puts, and athalons
+track <- t_f %>% filter(!str_detect(event, "Walk|Jump|Put|Throw|Vault|Decathlon|Pentathlon|Heptathlon"))
+track <- track %>% filter(!str_detect(event, "Around|Team")) #remove team events, and all-around champ
+#unique(track$event)
+
+#Add sub-categories, 60m - 400m sprint, 800m-3000m middle, 5000m-10000m + 5mile + marathon long
+track$category <- NA
+track$distance <- NA
+for (i in 1:nrow(track)) {
+  if(str_detect(track$event[i], "Relay")) {
+    track$category[i] <- "relay"
+  }
+  if(str_detect(track$event[i], "Hurdle|Steeplechase")) {
+    track$category[i] <- "hurdles"
+  }
+  if(str_detect(track$event[i], "Marathon|mile|Cross")) {
+    track$category[i] <- "long"
+  }
+  else{
+    distance <- str_extract(track$event[i], "\\d+(,\\d{3})*") #regex bad for relay but already categorized above
+    track$distance[i] <- as.numeric(gsub(",", "", distance))
+    if (is.na(track$category[i]) && !is.na(track$distance[i]) && track$distance[i] <= 400) {
+      track$category[i] <- "sprint"
+    }
+    if (is.na(track$category[i]) && !is.na(track$distance[i]) && track$distance[i] > 400 && track$distance[i] <= 3000) {
+      track$category[i] <- "middle"
+    }
+    if (is.na(track$category[i]) && !is.na(track$distance[i]) && track$distance[i] > 3000 && track$distance[i] <= 10000) {
+      track$category[i] <- "long"
+    }
+  }
+}
+
+skimr::skim(track)
+```
+---
+### How do events change over time?
+
+```{r fig.align="center", fig.width=14}
+#|echo: false
+#|label: Global conflict and olympic participation
+#|fig-cap: "Exploring the influence of global conflict on olympic participation for both males and females"
+#|warning: FALSE
+library(forcats)
+#How has participation in track events changed over time? 
+track %>% ggplot(aes(x = year, y = reorder(event, year))) + geom_point(na.rm=T) +
+  labs(title = "Participation in Track Events Over Time", x = "Year", y = "Event") + theme_minimal()
+```
+---
+### Are athletes competing in fewer events more recently? 
+```{r fig.align="center", fig.width=14}
+#|echo: false
+#|label: Global conflict and olympic participation
+#|fig-cap: "Exploring the influence of global conflict on olympic participation for both males and females"
+#|warning: FALSE
+track %>% group_by(id, year) %>% summarize(count = n()) %>% ggplot(aes(x = as.factor(year), y = count, fill = as.factor(year))) + labs(title = "Multiple Event Participation", x = "Year", y = "Number of Events by Althlete") +geom_violin() + theme(legend.position="none")
+```
+---
+## Olympic Track Trends over time
+-   Women's events began in the 1930s
+-   Women's 3000m steeplechase is the most recent addition to the field
+-   While athletes have always been specialized they recent trend is to participate in fewer events, perhaps as they become more specialized
+
+## We love to give our favorite athletes nicknames, are they more likley to win the olympics if they have one?
+
+We need to figure out if people have nicknames or not, if the althete's name had two " or ', then we assume this indicates their nickname
+
+```{R echo = F}
+library(skimr)
+olympics_nicknames <- olympics %>% mutate(nickname = as.integer(str_count(name, '"') == 2 | str_count(name, "'") == 2))
+olympics_nicknames$nickname <- as.factor(olympics_nicknames$nickname)
+
+nickname <- olympics_nicknames %>% filter(nickname == 1) %>% group_by(medal) %>% summarize(count = n())
+no_nickname <- olympics_nicknames %>% filter(nickname == 0) %>% group_by(medal) %>% summarize(count = n())
+
+ggplot(nickname, aes(x = "", y = count, fill = medal)) + coord_polar("y", start = 0) +
+  geom_bar(width = 1, stat="identity") + theme_void()
+
+ggplot(no_nickname, aes(x = "", y = count, fill = medal)) + coord_polar("y", start = 0) +
+  geom_bar(width = 1, stat="identity") + theme_void()
+
+medalcount_nickname <- olympics_nicknames %>% filter(nickname == 1) %>% group_by(name) %>% summarize(Gold = sum(medal == "Gold"), Silver = sum(medal == "Silver"), Bronze = (sum(medal == "Bronze")), None = sum(is.na(medal)))
+
+medalcount_no_nickname <- olympics_nicknames %>% filter(nickname == 0) %>% group_by(name) %>% summarize(Gold = sum(medal == "Gold"), Silver = sum(medal == "Silver"), Bronze = (sum(medal == "Bronze")), None = sum(is.na(medal)))
+
+medalcount_nickname$nickname <- 1
+medalcount_no_nickname$nickname <- 0
+
+MergeMedalCount <- rbind(medalcount_nickname, medalcount_no_nickname)
+
+MergeMedalCount_long_noNA <- MergeMedalCount %>% pivot_longer(cols = `Gold`:`None`, names_to = "Medal", values_to = "Count") %>% filter(!Medal == "None", !is.na(Count))
+
+```
+---
+### It looks like there is a trend but is it statistically different?
+```{r echo=FALSE}
+str(MergeMedalCount)
+summary <- MergeMedalCount %>% group_by(nickname) %>% summarize(gold = sum(Gold, na.rm = T), silver = sum(Silver, na.rm = T), bronze = sum(Bronze, na.rm = T), total = n())
+
+data_matrix <- matrix(c(0, 5697, 4990, 4880, 122342,
+                        1, 1219, 804, 722, 12389), ncol = 5, byrow = TRUE)
+
+colnames(data_matrix) <- c("nickname", "gold", "silver", "bronze", "total")
+rownames(data_matrix) <- c("1", "2")
+
+# Perform the chi-square test
+chi_square_result <- chisq.test(data_matrix)
+
+# Print the result
+print(chi_square_result)
+
+```
+---
