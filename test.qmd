@@ -104,87 +104,86 @@ countries <- olympics %>%
   group_by(noc,year,sex) %>%
   summarise(participantnum = n(), .groups = "drop")
 ```
-<!-- --- -->
-# ```{R fig.align="center", fig.width=14}
-# #|echo: false
-# #|label: Global conflict and olympic participation
-# #|fig-cap: "Exploring the influence of global conflict on olympic participation for both males and females"
-# #|warning: FALSE
-# 
-# #look at adjusting figure dimensions
-# conflict = "Start of Iran and Iraq War, 
-#                           Soviet-Afgan War, 
-#                           Cold War tension"
-# nowinter = "No winter olympics. (1896-1923)"
-# splitup = "Summer and winter olympics split. (1993- current)"
-# 
-# ggplot(countries, aes(x=year, y=participantnum, fill = sex)) +
-#   geom_col() + 
-#   scale_x_continuous(n.breaks = 60) +
-#   coord_cartesian(xlim = c(1895, 2017), expand = FALSE) +
-#   scale_y_continuous(n.breaks = 35, expand = c(0,0)) +
-#   theme(axis.text.x = element_text(angle=90, vjust = 0.5, hjust = 1)) +
-#   theme(legend.position = "bottom") +
-#   labs(title = "Influence of global conflict on the number of male and female olympic participants", x="Year of olympic games", y= "Total number of participants")+
-#    geom_rect(data=NULL,aes(xmin=1895,xmax=1923,ymin=-Inf,ymax=Inf),
-#             fill="lightgreen", alpha=0.01) +
-#   geom_rect(data=NULL,aes(xmin=1992,xmax=2017,ymin=-Inf,ymax=Inf),
-#             fill="lightblue", alpha=0.01)+
-#   theme(plot.title = element_text(size = 16, face= "bold", hjust = 0.5)) +
-#      geom_label(label = "World War 1", x=1916, y = 4700, 
-#              label.padding = unit(0.55, "lines"),
-#              label.size = 0.35,
-#              color = "black",
-#              fill = "#69b3a2")+
-#       geom_segment(aes(x = 1916, y = 4350, xend = 1916, yend = 500),
-#                   arrow = arrow(length = unit(0.5, "cm")))+
-#   
-#      geom_label(label = "Great Depression", x=1932, y = 8000, 
-#              label.padding = unit(0.55, "lines"),
-#              label.size = 0.35,
-#              color = "black",
-#              fill = "#69b3a2") +
-#     geom_segment(aes(x = 1932, y = 7650, xend = 1932, yend = 3500),
-#                   arrow = arrow(length = unit(0.5, "cm")))+
-#   
-#   geom_label(label = "World War 2", x=1942, y = 9000, 
-#              label.padding = unit(0.55, "lines"),
-#              label.size = 0.35,
-#              color = "black",
-#              fill = "#69b3a2")+
-#      geom_segment(aes(x = 1942, y = 8650, xend = 1942, yend = 0),
-#                   arrow = arrow(length = unit(0.5, "cm")))+
-#   
-#      geom_label(label = "Suez Conflict", x=1956, y = 10000, 
-#              label.padding = unit(0.55, "lines"),
-#              label.size = 0.35,
-#              color = "black",
-#              fill = "#69b3a2")+
-#     geom_segment(aes(x = 1956, y = 9650, xend = 1956, yend = 6500),
-#                   arrow = arrow(length = unit(0.5, "cm")))+
-#   geom_label(label = str_wrap(conflict,20), x=1980, y = 13000, 
-#              label.padding = unit(0.55, "lines"),
-#              label.size = 0.35,
-#              color = "black",
-#              fill = "#69b3a2") +
-#    geom_segment(aes(x = 1980, y = 12000, xend = 1980, yend = 9500),
-#                   arrow = arrow(length = unit(0.5, "cm")))+
-# 
-#      geom_label(label = str_wrap(nowinter,20), x=1909, y = 15500, 
-#              label.padding = unit(0.55, "lines"),
-#              label.size = 0.35,
-#              color = "black",
-#              fill = "#69b3a2") + 
-#        geom_label(label = str_wrap(splitup,20), x=2006, y = 15500, 
-#              label.padding = unit(0.55, "lines"),
-#              label.size = 0.35,
-#              color = "black",
-#              fill = "#69b3a2")
-# 
-# ```
-
 ---
-### How does participation in Track events change over time?
+```{R fig.align="center", fig.width=14}
+ #|echo: false
+ #|label: Global conflict and olympic participation
+ #|fig-cap: "Exploring the influence of global conflict on olympic participation for both males and females"
+ #|warning: FALSE
+ 
+#look at adjusting figure dimensions
+conflict = "Start of Iran and Iraq War,
+                          Soviet-Afgan War,
+                          Cold War tension"
+nowinter = "No winter olympics. (1896-1923)"
+splitup = "Summer and winter olympics split. (1993- current)"
+
+ggplot(countries, aes(x=year, y=participantnum, fill = sex)) +
+  geom_col() +
+  scale_x_continuous(n.breaks = 60) +
+  coord_cartesian(xlim = c(1895, 2017), expand = FALSE) +
+  scale_y_continuous(n.breaks = 35, expand = c(0,0)) +
+  theme(axis.text.x = element_text(angle=90, vjust = 0.5, hjust = 1)) +
+  theme(legend.position = "bottom") +
+  labs(title = "Influence of global conflict on the number of male and female olympic participants", x="Year of olympic games", y= "Total number of participants")+
+   geom_rect(data=NULL,aes(xmin=1895,xmax=1923,ymin=-Inf,ymax=Inf),
+            fill="lightgreen", alpha=0.01) +
+  geom_rect(data=NULL,aes(xmin=1992,xmax=2017,ymin=-Inf,ymax=Inf),
+            fill="lightblue", alpha=0.01)+
+  theme(plot.title = element_text(size = 16, face= "bold", hjust = 0.5)) +
+     geom_label(label = "World War 1", x=1916, y = 4700,
+             label.padding = unit(0.55, "lines"),
+             label.size = 0.35,
+             color = "black",
+             fill = "#69b3a2")+
+      geom_segment(aes(x = 1916, y = 4350, xend = 1916, yend = 500),
+                  arrow = arrow(length = unit(0.5, "cm")))+
+
+     geom_label(label = "Great Depression", x=1932, y = 8000,
+             label.padding = unit(0.55, "lines"),
+             label.size = 0.35,
+             color = "black",
+             fill = "#69b3a2") +
+    geom_segment(aes(x = 1932, y = 7650, xend = 1932, yend = 3500),
+                  arrow = arrow(length = unit(0.5, "cm")))+
+
+  geom_label(label = "World War 2", x=1942, y = 9000,
+             label.padding = unit(0.55, "lines"),
+             label.size = 0.35,
+             color = "black",
+             fill = "#69b3a2")+
+     geom_segment(aes(x = 1942, y = 8650, xend = 1942, yend = 0),
+                  arrow = arrow(length = unit(0.5, "cm")))+
+
+     geom_label(label = "Suez Conflict", x=1956, y = 10000,
+             label.padding = unit(0.55, "lines"),
+             label.size = 0.35,
+             color = "black",
+             fill = "#69b3a2")+
+    geom_segment(aes(x = 1956, y = 9650, xend = 1956, yend = 6500),
+                  arrow = arrow(length = unit(0.5, "cm")))+
+  geom_label(label = str_wrap(conflict,20), x=1980, y = 13000,
+             label.padding = unit(0.55, "lines"),
+             label.size = 0.35,
+             color = "black",
+             fill = "#69b3a2") +
+   geom_segment(aes(x = 1980, y = 12000, xend = 1980, yend = 9500),
+                  arrow = arrow(length = unit(0.5, "cm")))+
+
+     geom_label(label = str_wrap(nowinter,20), x=1909, y = 15500,
+             label.padding = unit(0.55, "lines"),
+             label.size = 0.35,
+             color = "black",
+             fill = "#69b3a2") +
+       geom_label(label = str_wrap(splitup,20), x=2006, y = 15500,
+             label.padding = unit(0.55, "lines"),
+             label.size = 0.35,
+             color = "black",
+             fill = "#69b3a2")
+
+```
+
+## How does participation in Track events change over time?
 
 Let's pull out the track events (removing field!) and add some categories based on this table.
 This [wikipedia list](https://en.wikipedia.org/wiki/Track_and_field) was used to categorize events.
@@ -307,4 +306,50 @@ chi_square_result <- chisq.test(data_matrix)
 print(chi_square_result)
 
 ```
+## Shiny application. 
+
+Generally people in families have nicknames. Many are fun and silly. Let's continue that energy.
+
+The goal of this application is to have fun using family members physical characteristics and compare them relative to Olympic athletes who have metaled.
 ---
+### Home page of this app.
+![](Appopeningpage.png)
+
+## Inital view of selection page
+![](mainopeningpage.png)
+
+## Math for us dummies.
+![](Mathopening page.png)
+
+## These are the images from the shiny application output. I will run this scenario in real time in presentation. The first output is from Richard Carroll (Addison's dad), and Addison's sister Nicole.
+-   Richard is 6'3", weighs 250, and is 66 years young 
+
+![](RCconversion.jpg) 
+
+## Unfortunately
+-   Richard does not have any Olympic counterparts.
+ 
+![](RColympics.jpg) 
+
+## Let's look at Addison's sister Nicole
+-   Nicole is 5'5, weighs around 155, and has told her sister she is 29 for the past 8 years.. 
+-   Lets look at that age range. 
+
+![](NColympics.jpg) 
+
+## Obervations from application
+-   At the age of 37 Nicole would have not have had a counter part. 
+-   However, within the range of 29 - 37 we have some: 
+-   Gold medal cyclist from France 
+-   Bronze medal handball player from the UK 
+-   Gold medal Judo fighter from France 
+-   Gold and silver medal Ice hockey player from Canada 
+-   Bronze medal speed skater from China
+
+## Conclusions
+
+
+
+
+
+
