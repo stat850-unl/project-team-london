@@ -319,22 +319,23 @@ The goal of this application is to have fun using family members physical charac
 ![](RCconversion.jpg) 
 ---
 #Unfortunately
- -Richard does not have any Olympic counterparts.
+  - Richard does not have any Olympic counterparts.
+ 
 ![](RColympics.jpg) 
 ---
 #Let's look at Addison's sister Nicole
--Nicole is 5'5, weighs around 155, and has told her sister she is 29 for the past 8 years.. 
--Lets look at that age range. 
+  - Nicole is 5'5, weighs around 155, and has told her sister she is 29 for the past 8 years.. 
+  - Lets look at that age range. 
 
 ![](NColympics.jpg) 
 ---
 #Obervations from application
--At the age of 37 Nicole would have not have had a counter part. 
--However, within the range of 29 - 37 we have some: 
--Gold medal cyclist from France 
--Bronze medal handball player from the UK 
--Gold medal Judo fighter from France 
--Gold and silver medal Ice hockey player from Canada 
--Bronze medal speed skater from China
+  - At the age of 37 Nicole would have not have had a counter part. 
+  - However, within the range of 29 - 37 we have some: 
+  - Gold medal cyclist from France 
+  - Bronze medal handball player from the UK 
+  - Gold medal Judo fighter from France 
+  - Gold and silver medal Ice hockey player from Canada 
+  - Bronze medal speed skater from China
 ---
 #Conclusions
