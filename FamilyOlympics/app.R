@@ -1,5 +1,5 @@
-options(readr.show_col_types = FALSE)
-#install.packages("tidytuesdayR")
+
+library(tidytuesdayR)
 
 # Read in with tidytuesdayR package
 # Install from CRAN via: install.packages("tidytuesdayR")
@@ -7,10 +7,10 @@ options(readr.show_col_types = FALSE)
 
 # Either ISO-8601 date or year/week works!
 
-# tuesdata <- tidytuesdayR::tt_load('2021-07-27')
-# tuesdata <- tidytuesdayR::tt_load(2021, week = 31)
+ tuesdata <- tidytuesdayR::tt_load('2021-07-27')
+ tuesdata <- tidytuesdayR::tt_load(2021, week = 31)
 #
-# olympics <- tuesdata$olympics
+ olympics <- tuesdata$olympics
 
 # Or read in the data manually
 
