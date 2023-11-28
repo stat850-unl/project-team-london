@@ -6,9 +6,16 @@ format: revealjs
 
 # Introduction
 
-## Data Wrangling
+The Olympic games have been a historical icon through the ages. The games represent the best of the best in their given sports. However, the games can sometimes feel out of touch to your average athletic people! As a result, it was our goal to look at the games from a global to personal family level.
 
-## Import data
+## Objectives
+-   Evaluate the influence of historical events on the participation level of the games for both males and females
+-   Explore how participation in track events has changed over time
+-   Determine if the presence of a nickname influences a persons likelihood to medal
+-   See how family physical characteristics stack up with olympic medalists through the ages
+
+## Data Wrangling
+### Import data & Data set description 
 
 ```{R echo=FALSE}
 options(readr.show_col_types = FALSE)
@@ -31,7 +38,7 @@ library(tidyverse)
 olympics <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-07-27/olympics.csv')
 ```
 
-### Data set description This dataset contains information about the winter and summer Olympic athletes from the years 1896 to 2016, their team, weight, placing, sport, event, age, height.
+#### This dataset contains information about the winter and summer Olympic athletes from the years 1896 to 2016, their team, weight, placing, sport, event, age, height.
 
 -   It was collected from Tidy Tuesday where the data was scraped from www.sports-reference.com.
 
@@ -91,10 +98,6 @@ olympics <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/t
 +----------+----------------------------+-----------+----------+----------------------------------------+
 ---
 ## Analyzing the influence of global conflict on male and female participation in the olympic games
--   What we can observe is that global conflicts do influence the level of participation in the games, particularly in the 1900's
--   Female participation may have been less affected by these conflicts
--   The olympics have had steady attendance since the 1990s
-
 ```{r echo=FALSE}
 library(dplyr)
 library(ggplot2)
@@ -105,7 +108,7 @@ countries <- olympics %>%
   summarise(participantnum = n(), .groups = "drop")
 ```
 ---
-```{R fig.align="center", fig.width=14}
+```{R fig.align="center", fig.height=9, fig.width=14}
  #|echo: false
  #|label: Global conflict and olympic participation
  #|fig-cap: "Exploring the influence of global conflict on olympic participation for both males and females"
@@ -182,6 +185,10 @@ ggplot(countries, aes(x=year, y=participantnum, fill = sex)) +
              fill = "#69b3a2")
 
 ```
+## Analyzing the influence of global conflict on male and female participation in the olympic games
+-   What we can observe is that global conflicts do influence the level of participation in the games, particularly in the 1900's
+-   Female participation may have been less affected by these conflicts
+-   The olympics have had steady attendance since the 1990s
 
 ## How does participation in Track events change over time?
 
@@ -312,16 +319,17 @@ Generally people in families have nicknames. Many are fun and silly. Let's conti
 
 The goal of this application is to have fun using family members physical characteristics and compare them relative to Olympic athletes who have metaled.
 ---
-### Home page of this app.
+### Home page of this app
 ![](Appopeningpage.png)
 
 ## Inital view of selection page
 ![](mainopeningpage.png)
 
-## Math for us dummies.
+## Math for us dummies
 ![](Mathopening page.png)
 
-## These are the images from the shiny application output. I will run this scenario in real time in presentation. The first output is from Richard Carroll (Addison's dad), and Addison's sister Nicole.
+## These are the images from the shiny application output. 
+-   The first output is from Richard Carroll (Addison's dad), and Addison's sister Nicole.
 -   Richard is 6'3", weighs 250, and is 66 years young 
 
 ![](RCconversion.jpg) 
