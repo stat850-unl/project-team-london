@@ -246,9 +246,9 @@ track %>% group_by(id, year) %>% summarize(count = n()) %>% ggplot(aes(x = as.fa
 
 --- 
 #Olympic Track Trends over time
--Women's events began in the 1930s
--Women's 3000m steeplechase is the most recent addition to the field
--While athletes have always been specialized they recent trend is to participate in fewer events, perhaps as they become more specalized
+- Women's events began in the 1930s
+- Women's 3000m steeplechase is the most recent addition to the field
+- While athletes have always been specialized they recent trend is to participate in fewer events, perhaps as they become more specialized
 ---
 #We love to give our favorite athletes nicknames, are they more likley to win the olympics if they have one?
 We need to figure out if people have nicknames or not, if the althete's name had two " or ', then we assume this indicates their nickname
@@ -319,7 +319,7 @@ The goal of this application is to have fun using family members physical charac
 ![](RCconversion.jpg) 
 ---
 #Unfortunately
--Richard does not have any Olympic counterparts.
+ -Richard does not have any Olympic counterparts.
 ![](RColympics.jpg) 
 ---
 #Let's look at Addison's sister Nicole
@@ -327,7 +327,6 @@ The goal of this application is to have fun using family members physical charac
 -Lets look at that age range. 
 
 ![](NColympics.jpg) 
-
 ---
 #Obervations from application
 -At the age of 37 Nicole would have not have had a counter part. 
