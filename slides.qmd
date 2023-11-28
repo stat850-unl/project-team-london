@@ -5,11 +5,15 @@ format: revealjs
 ---
 
 # Introduction
+
 ## Data Wrangling
+
 ## Import data
+
 ```{R echo=FALSE}
 options(readr.show_col_types = FALSE)
 #install.packages("tidytuesdayR")
+library(tidyverse)
 
 # Read in with tidytuesdayR package 
 # Install from CRAN via: install.packages("tidytuesdayR")
@@ -26,11 +30,14 @@ options(readr.show_col_types = FALSE)
 
 olympics <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-07-27/olympics.csv')
 ```
----
-##Data set description This dataset contains information about the winter and summer Olympic athletes from the years 1896 to 2016, their team, weight, placing, sport, event, age, height.
 
--It was collected from Tidy Tuesday where the data was scraped from www.sports-reference.com.
--Here is a data dictionary showing each variable, the type of variable, units, and range of values that are possible:
+### Data set description This dataset contains information about the winter and summer Olympic athletes from the years 1896 to 2016, their team, weight, placing, sport, event, age, height.
+
+-   It was collected from Tidy Tuesday where the data was scraped from www.sports-reference.com.
+
+-   Here is a data dictionary showing each variable, the type of variable, units, and range of values that are possible
+
+---
 
 +---------+-----------------------------------+-----------+---------+---------------------------------------------------------+
 | Name    | Description                       | Type      | Units   | Range/Values                                            |
@@ -71,9 +78,7 @@ olympics <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/t
 +---------+-----------------------------------+-----------+---------+---------------------------------------------------------+
 | medal   | Medal won (if any)                | character | NA      | (Gold, Silver, Bronze or NA)                            |
 +---------+-----------------------------------+-----------+---------+---------------------------------------------------------+
-
 ---
-Below is the data for the supplementary data in the regions dataframe
 
 +----------+----------------------------+-----------+----------+----------------------------------------+
 | Name     | Description                | Type      | Units    | Range/Values                           |
@@ -85,10 +90,11 @@ Below is the data for the supplementary data in the regions dataframe
 | notes    | Comments & alternate names | character | NA       | NA or alternate name (ex. Australasia) |
 +----------+----------------------------+-----------+----------+----------------------------------------+
 ---
-#Analyzing the influence of global conflict on male and female participation in the olympic games
-  - What we can observe is that global conflicts do influence the level of participation in the games, particularly in the 1900's
-  - Female participation may have been less affected by these conflicts
-  - The olympics have had steady attendance since the 1990s
+## Analyzing the influence of global conflict on male and female participation in the olympic games
+-   What we can observe is that global conflicts do influence the level of participation in the games, particularly in the 1900's
+-   Female participation may have been less affected by these conflicts
+-   The olympics have had steady attendance since the 1990s
+
 ```{r echo=FALSE}
 library(dplyr)
 library(ggplot2)
@@ -98,20 +104,22 @@ countries <- olympics %>%
   group_by(noc,year,sex) %>%
   summarise(participantnum = n(), .groups = "drop")
 ```
-
+---
 ```{R fig.align="center", fig.width=14}
-#|echo: false
-#|label: Global conflict and olympic participation
-#|fig-cap: "Exploring the influence of global conflict on olympic participation for both males and females"
-#|warning: FALSE
-conflict = "Start of Iran and Iraq War, 
-                          Soviet-Afgan War, 
+ #|echo: false
+ #|label: Global conflict and olympic participation
+ #|fig-cap: "Exploring the influence of global conflict on olympic participation for both males and females"
+ #|warning: FALSE
+ 
+#look at adjusting figure dimensions
+conflict = "Start of Iran and Iraq War,
+                          Soviet-Afgan War,
                           Cold War tension"
 nowinter = "No winter olympics. (1896-1923)"
 splitup = "Summer and winter olympics split. (1993- current)"
 
 ggplot(countries, aes(x=year, y=participantnum, fill = sex)) +
-  geom_col() + 
+  geom_col() +
   scale_x_continuous(n.breaks = 60) +
   coord_cartesian(xlim = c(1895, 2017), expand = FALSE) +
   scale_y_continuous(n.breaks = 35, expand = c(0,0)) +
@@ -123,38 +131,38 @@ ggplot(countries, aes(x=year, y=participantnum, fill = sex)) +
   geom_rect(data=NULL,aes(xmin=1992,xmax=2017,ymin=-Inf,ymax=Inf),
             fill="lightblue", alpha=0.01)+
   theme(plot.title = element_text(size = 16, face= "bold", hjust = 0.5)) +
-     geom_label(label = "World War 1", x=1916, y = 4700, 
+     geom_label(label = "World War 1", x=1916, y = 4700,
              label.padding = unit(0.55, "lines"),
              label.size = 0.35,
              color = "black",
              fill = "#69b3a2")+
       geom_segment(aes(x = 1916, y = 4350, xend = 1916, yend = 500),
                   arrow = arrow(length = unit(0.5, "cm")))+
-  
-     geom_label(label = "Great Depression", x=1932, y = 8000, 
+
+     geom_label(label = "Great Depression", x=1932, y = 8000,
              label.padding = unit(0.55, "lines"),
              label.size = 0.35,
              color = "black",
              fill = "#69b3a2") +
     geom_segment(aes(x = 1932, y = 7650, xend = 1932, yend = 3500),
                   arrow = arrow(length = unit(0.5, "cm")))+
-  
-  geom_label(label = "World War 2", x=1942, y = 9000, 
+
+  geom_label(label = "World War 2", x=1942, y = 9000,
              label.padding = unit(0.55, "lines"),
              label.size = 0.35,
              color = "black",
              fill = "#69b3a2")+
      geom_segment(aes(x = 1942, y = 8650, xend = 1942, yend = 0),
                   arrow = arrow(length = unit(0.5, "cm")))+
-  
-     geom_label(label = "Suez Conflict", x=1956, y = 10000, 
+
+     geom_label(label = "Suez Conflict", x=1956, y = 10000,
              label.padding = unit(0.55, "lines"),
              label.size = 0.35,
              color = "black",
              fill = "#69b3a2")+
     geom_segment(aes(x = 1956, y = 9650, xend = 1956, yend = 6500),
                   arrow = arrow(length = unit(0.5, "cm")))+
-  geom_label(label = str_wrap(conflict,20), x=1980, y = 13000, 
+  geom_label(label = str_wrap(conflict,20), x=1980, y = 13000,
              label.padding = unit(0.55, "lines"),
              label.size = 0.35,
              color = "black",
@@ -162,12 +170,12 @@ ggplot(countries, aes(x=year, y=participantnum, fill = sex)) +
    geom_segment(aes(x = 1980, y = 12000, xend = 1980, yend = 9500),
                   arrow = arrow(length = unit(0.5, "cm")))+
 
-     geom_label(label = str_wrap(nowinter,20), x=1909, y = 15500, 
+     geom_label(label = str_wrap(nowinter,20), x=1909, y = 15500,
              label.padding = unit(0.55, "lines"),
              label.size = 0.35,
              color = "black",
-             fill = "#69b3a2") + 
-       geom_label(label = str_wrap(splitup,20), x=2006, y = 15500, 
+             fill = "#69b3a2") +
+       geom_label(label = str_wrap(splitup,20), x=2006, y = 15500,
              label.padding = unit(0.55, "lines"),
              label.size = 0.35,
              color = "black",
@@ -175,13 +183,13 @@ ggplot(countries, aes(x=year, y=participantnum, fill = sex)) +
 
 ```
 
----
-#How does participation in Track events change over time?
+## How does participation in Track events change over time?
 
 Let's pull out the track events (removing field!) and add some categories based on this table.
 This [wikipedia list](https://en.wikipedia.org/wiki/Track_and_field) was used to categorize events.
 
 ![](Track_Field.png)
+---
 
 ```{r echo = F}
 #Get track and field events
@@ -222,7 +230,7 @@ for (i in 1:nrow(track)) {
 skimr::skim(track)
 ```
 ---
-#How do events change over time?
+### How do events change over time?
 
 ```{r fig.align="center", fig.width=14}
 #|echo: false
@@ -235,7 +243,7 @@ track %>% ggplot(aes(x = year, y = reorder(event, year))) + geom_point(na.rm=T) 
   labs(title = "Participation in Track Events Over Time", x = "Year", y = "Event") + theme_minimal()
 ```
 ---
-#Are athletes competing in fewer events more recently? 
+### Are athletes competing in fewer events more recently? 
 ```{r fig.align="center", fig.width=14}
 #|echo: false
 #|label: Global conflict and olympic participation
@@ -243,15 +251,16 @@ track %>% ggplot(aes(x = year, y = reorder(event, year))) + geom_point(na.rm=T) 
 #|warning: FALSE
 track %>% group_by(id, year) %>% summarize(count = n()) %>% ggplot(aes(x = as.factor(year), y = count, fill = as.factor(year))) + labs(title = "Multiple Event Participation", x = "Year", y = "Number of Events by Althlete") +geom_violin() + theme(legend.position="none")
 ```
-
---- 
-#Olympic Track Trends over time
-- Women's events began in the 1930s
-- Women's 3000m steeplechase is the most recent addition to the field
-- While athletes have always been specialized they recent trend is to participate in fewer events, perhaps as they become more specialized
 ---
-#We love to give our favorite athletes nicknames, are they more likley to win the olympics if they have one?
+## Olympic Track Trends over time
+-   Women's events began in the 1930s
+-   Women's 3000m steeplechase is the most recent addition to the field
+-   While athletes have always been specialized they recent trend is to participate in fewer events, perhaps as they become more specialized
+
+## We love to give our favorite athletes nicknames, are they more likley to win the olympics if they have one?
+
 We need to figure out if people have nicknames or not, if the althete's name had two " or ', then we assume this indicates their nickname
+
 ```{R echo = F}
 library(skimr)
 olympics_nicknames <- olympics %>% mutate(nickname = as.integer(str_count(name, '"') == 2 | str_count(name, "'") == 2))
@@ -279,7 +288,7 @@ MergeMedalCount_long_noNA <- MergeMedalCount %>% pivot_longer(cols = `Gold`:`Non
 
 ```
 ---
-#It looks like there is a trend but is it statistically different?
+### It looks like there is a trend but is it statistically different?
 ```{r echo=FALSE}
 str(MergeMedalCount)
 summary <- MergeMedalCount %>% group_by(nickname) %>% summarize(gold = sum(Gold, na.rm = T), silver = sum(Silver, na.rm = T), bronze = sum(Bronze, na.rm = T), total = n())
@@ -297,45 +306,50 @@ chi_square_result <- chisq.test(data_matrix)
 print(chi_square_result)
 
 ```
----
-#Shiny application. 
+## Shiny application. 
 
 Generally people in families have nicknames. Many are fun and silly. Let's continue that energy.
 
 The goal of this application is to have fun using family members physical characteristics and compare them relative to Olympic athletes who have metaled.
 ---
-#Home page of this app.
+### Home page of this app.
 ![](Appopeningpage.png)
----
-#Inital view of selection page
+
+## Inital view of selection page
 ![](mainopeningpage.png)
----
-#Math for us dummies.
+
+## Math for us dummies.
 ![](Mathopening page.png)
----
-#These are the images from the shiny application output. I will run this scenario in real time in presentation. The first output is from Richard Carroll (Addison's dad), and Addison's sister Nicole.
--Richard is 6'3", weighs 250, and is 66 years young 
+
+## These are the images from the shiny application output. I will run this scenario in real time in presentation. The first output is from Richard Carroll (Addison's dad), and Addison's sister Nicole.
+-   Richard is 6'3", weighs 250, and is 66 years young 
 
 ![](RCconversion.jpg) 
----
-#Unfortunately
-  - Richard does not have any Olympic counterparts.
+
+## Unfortunately
+-   Richard does not have any Olympic counterparts.
  
 ![](RColympics.jpg) 
----
-#Let's look at Addison's sister Nicole
-  - Nicole is 5'5, weighs around 155, and has told her sister she is 29 for the past 8 years.. 
-  - Lets look at that age range. 
+
+## Let's look at Addison's sister Nicole
+-   Nicole is 5'5, weighs around 155, and has told her sister she is 29 for the past 8 years.. 
+-   Lets look at that age range. 
 
 ![](NColympics.jpg) 
----
-#Obervations from application
-  - At the age of 37 Nicole would have not have had a counter part. 
-  - However, within the range of 29 - 37 we have some: 
-  - Gold medal cyclist from France 
-  - Bronze medal handball player from the UK 
-  - Gold medal Judo fighter from France 
-  - Gold and silver medal Ice hockey player from Canada 
-  - Bronze medal speed skater from China
----
-#Conclusions
+
+## Obervations from application
+-   At the age of 37 Nicole would have not have had a counter part. 
+-   However, within the range of 29 - 37 we have some: 
+-   Gold medal cyclist from France 
+-   Bronze medal handball player from the UK 
+-   Gold medal Judo fighter from France 
+-   Gold and silver medal Ice hockey player from Canada 
+-   Bronze medal speed skater from China
+
+## Conclusions
+
+
+
+
+
+
