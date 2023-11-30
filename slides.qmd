@@ -343,9 +343,11 @@ The goal of this application is to have fun using family members physical charac
 -   Bronze medal speed skater from China
 
 ## Conclusions
-
-
-
+-   We can observe that global conflict does influence the participation in the Olympic games, particularly for males.
+-   
+-   
+-   Within the application we are limited in our age range up to 66 years, and it is likely that these older ages are less likely to a Olympic counterpart. Therefore, Richard is out of the running.
+-  For the application it may be better to utilize an age range rather than just a single age. This is because if if Nicole's age was set there would be no counterpart. However when we add a range and her physical characteristics we can observe counterparts.
 
 
 
