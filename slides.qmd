@@ -80,7 +80,7 @@ table {
 -   Data was grouped by Nation Olympic Committee Region, year and sex
 -   Data was then summarized as participant number for the country, year of the games, and sex of the participants
 
-## The influence of global conflict on male and female participation in the olympic games
+##
 ```{R fig.align="center", fig.width=14, fig.height=8}
 library(dplyr)
 library(ggplot2)
