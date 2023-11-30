@@ -1,0 +1,78 @@
+---
+Title: "Evaluation of the olympic games from global to family perspective"
+Author: "Addison Carroll and Sydney Graham"
+format: revealjs
+---
+# Introduction
+
+The Olympic games have been a historical icon through the ages. The games represent the best of the best in their given sports. However, the games can sometimes feel out of touch to your average athletic people! As a result, it was our goal to look at the games from a global to personal family level.
+
+## Objectives
+-   Evaluate the influence of historical events on the participation level of the games for both males and females
+-   Explore how participation in track events has changed over time
+-   Determine if the presence of a nickname influences a persons likelihood to medal
+-   See how family physical characteristics stack up with olympic medalists through the ages
+
+## Data Wrangling
+### Import data & Data set description 
+
+```{R echo=FALSE}
+options(readr.show_col_types = FALSE)
+#install.packages("tidytuesdayR")
+library(tidyverse)
+
+olympics <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-07-27/olympics.csv')
+```
+
+#### This dataset contains information about the winter and summer Olympic athletes from the years 1896 to 2016, their team, weight, placing, sport, event, age, height.
+
+-   It was collected from Tidy Tuesday where the data was scraped from www.sports-reference.com.
+
+-   A data dictionary is available on the following slide showing each variable, the type of variable, units, and range of values that are possible
+
+---
+##### Data Dictonary Table
+<style>
+table {
+  font-size: 43%; /* Adjust the percentage to your preference */
+}
+</style>
++---------+-----------------------------------+-----------+---------+---------------------------------------------------------+
+| Name    | Description                       | Type      | Units   | Range/Values                                            |
++=========+===================================+===========+=========+=========================================================+
+| id      | Athlete ID                        | numeric   | NA      | 1 - 135571                                              |
++---------+-----------------------------------+-----------+---------+---------------------------------------------------------+
+| name    | Athlete Name                      | character | NA      | Name and surname(s) (ex. Lawal Kolawole "Kola" Abdulai) |
++---------+-----------------------------------+-----------+---------+---------------------------------------------------------+
+| sex     | Athlete Sex                       | character | NA      | F or M                                                  |
++---------+-----------------------------------+-----------+---------+---------------------------------------------------------+
+| age     | Athlete Age                       | numeric   | years   | 10 - 97                                                 |
+|         |                                   |           |         |                                                         |
+|         |                                   |           |         | NA if unknown                                           |
++---------+-----------------------------------+-----------+---------+---------------------------------------------------------+
+| height  | Athlete Height                    | numeric   | cm      | 127 - 226                                               |
+|         |                                   |           |         |                                                         |
+|         |                                   |           |         | NA if unknown                                           |
++---------+-----------------------------------+-----------+---------+---------------------------------------------------------+
+| weight  | Athlete weight                    | numeric   | kg      | 25 - 214                                                |
+|         |                                   |           |         |                                                         |
+|         |                                   |           |         | NA if unknown                                           |
++---------+-----------------------------------+-----------+---------+---------------------------------------------------------+
+| team    | Country/Team competing for        | character | NA      | country name (ex. Canada)                               |
++---------+-----------------------------------+-----------+---------+---------------------------------------------------------+
+| noc     | National Olympic Committee region | character | NA      | 3 letter code of NOC (ex. CAN)                          |
++---------+-----------------------------------+-----------+---------+---------------------------------------------------------+
+| games   | Olympic games name                | character | NA      | Year and season (ex. 2000 Summer)                       |
++---------+-----------------------------------+-----------+---------+---------------------------------------------------------+
+| year    | Year of Olympics                  | numeric   | YYYY    | 1896 - 2016                                             |
++---------+-----------------------------------+-----------+---------+---------------------------------------------------------+
+| season  | Season                            | character | NA      | winter or summer                                        |
++---------+-----------------------------------+-----------+---------+---------------------------------------------------------+
+| city    | City of Olympic host              | character | NA      | City name (ex. Atlanta)                                 |
++---------+-----------------------------------+-----------+---------+---------------------------------------------------------+
+| sport   | Sport                             | character | NA      | Sport title (ex. Rowing)                                |
++---------+-----------------------------------+-----------+---------+---------------------------------------------------------+
+| event   | Specific event                    | character | NA      | Specific event title (ex. Rowing Men's Coxed Eights)    |
++---------+-----------------------------------+-----------+---------+---------------------------------------------------------+
+| medal   | Medal won (if any)                | character | NA      | (Gold, Silver, Bronze or NA)                            |
++---------+-----------------------------------+-----------+---------+---------------------------------------------------------+

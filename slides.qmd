@@ -33,7 +33,7 @@ olympics <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/t
 ## Data Dictonary Table
 <style>
 table {
-  font-size: 40%; /* Adjust the percentage to your preference */
+  font-size: 40%;
 }
 </style>
 +---------+-----------------------------------+-----------+---------+---------------------------------------------------------+
@@ -87,7 +87,7 @@ countries <- olympics %>%
   summarise(participantnum = n(), .groups = "drop")
 ```
 ---
-```{R fig.align="center", fig.height=9, fig.width=14}
+```{R fig.align="center", fig.width=14, fig.height=9}
  #|echo: false
  #|label: Global conflict and olympic participation
  #|fig-cap: "Exploring the influence of global conflict on olympic participation for both males and females"
@@ -164,23 +164,24 @@ ggplot(countries, aes(x=year, y=participantnum, fill = sex)) +
              fill = "#69b3a2")
 
 ```
+
 ## Analyzing the influence of global conflict on male and female participation in the olympic games
 -   What we can observe is that global conflicts do influence the level of participation in the games, particularly in the 1900's
 -   Female participation may have been less affected by these conflicts
 -   The olympics have had steady attendance since the 1990s
 
 ## How does participation in Track events change over time?
-
-Let's pull out the track events (removing field!) and add some categories based on this table.
-This [wikipedia list](https://en.wikipedia.org/wiki/Track_and_field) was used to categorize events.
+#### Data Wrangling: Let's pull out the track events (removing field!)
+-   Removed events with that contained "Walk", "Jump", "Throw", and "Team" + more!
+-   Now, lets add some categories based on [this table](https://en.wikipedia.org/wiki/Track_and_field)
 
 ![](Track_Field.png)
 ---
 
-```{r echo = F}
+```{R echo=FALSE}
 #Get track and field events
 t_f <- olympics %>% filter(sport == "Athletics")
-unique(t_f$event) #need to remove vaults, throws, puts, and athalons
+#unique(t_f$event) #need to remove vaults, throws, puts, and athalons
 track <- t_f %>% filter(!str_detect(event, "Walk|Jump|Put|Throw|Vault|Decathlon|Pentathlon|Heptathlon"))
 track <- track %>% filter(!str_detect(event, "Around|Team")) #remove team events, and all-around champ
 #unique(track$event)
@@ -213,9 +214,9 @@ for (i in 1:nrow(track)) {
   }
 }
 
-skimr::skim(track)
+#skimr::skim(track)
 ```
----
+
 ### How do events change over time?
 
 ```{r fig.align="center", fig.width=14}
