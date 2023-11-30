@@ -227,6 +227,8 @@ for (i in 1:nrow(track)) {
 library(forcats)
 library(RColorBrewer)
 
+Fem <- track%>% filter(sex == "F")
+
 track %>%
   ggplot(aes(x = year, y = reorder(event, year), color = category)) +
   geom_point(size = 3, na.rm = TRUE) +
@@ -235,34 +237,60 @@ track %>%
   theme(axis.text.x = element_text(angle = 0, vjust = 0.5, hjust = 1, size = 22),
         axis.text.y = element_text(size = 16),
         axis.title = element_text(size=24),
-        plot.title = element_text(size=24),
+        plot.title = element_text(size=28),
         legend.title = element_text(size=24),
         legend.text = element_text(size=16),
         legend.position = "right")
 ```
+
+## Olympic Track Trends through Time
+-   Women's events began in the 1928 while the olypmics have occured since 1896
+-   Women's 3000m steeplechase is the most recent addition to the field (2008)
+-   Many long distance and hurdle events have been added recently while sprint and relay events have persisted longer
+
+#### We can see how events change but, how has athletes participation changed with time?
 ---
 ### Are athletes competing in fewer events more recently? 
-```{r fig.align="center", fig.width=14}
+```{r fig.align="center", fig.width=14, fig.height=9}
 #|echo: false
 #|label: Global conflict and olympic participation
 #|fig-cap: "Exploring the influence of global conflict on olympic participation for both males and females"
 #|warning: FALSE
-track %>% group_by(id, year) %>% summarize(count = n()) %>% ggplot(aes(x = as.factor(year), y = count, fill = as.factor(year))) + labs(title = "Multiple Event Participation", x = "Year", y = "Number of Events by Althlete") +geom_violin() + theme(legend.position="none")
+track %>% 
+  group_by(id, year) %>% 
+  summarize(count = n()) %>% 
+  ggplot(aes(x = as.factor(year), y = count, fill = as.factor(year))) + 
+  labs(title = "Multiple Event Participation", x = "Year", y = "Number of Events by Althlete") +
+  geom_violin() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, size = 22),
+      axis.text.y = element_text(size = 16),
+      axis.title = element_text(size=24),
+      plot.title = element_text(size=24),
+      legend.title = element_text(size=28),
+      legend.text = element_text(size=16),
+      legend.position="none")
 ```
 ---
-## Olympic Track Trends over time
--   Women's events began in the 1930s
--   Women's 3000m steeplechase is the most recent addition to the field
--   While athletes have always been specialized they recent trend is to participate in fewer events, perhaps as they become more specialized
+## Olympic Athlete Specailization through Time
+-   Track athletes participate in 1-5 events during an Olympics
+-   The number of events done by athletes has always been low but there is a trend towards competing in fewer events
+-   It appears that athlete specialization is increasing or events are becoming more competitive!
 
-## We love to give our favorite athletes nicknames, are they more likley to win the olympics if they have one?
+#### We all know how competative the track events are and cheer for our favorites, even giving them nicknames!
 
-We need to figure out if people have nicknames or not, if the althete's name had two " or ', then we assume this indicates their nickname
+## Do these beloved athletes with nicknames win more often?
 
-```{R echo = F}
+#### Data Wrangling: We need to figure out if althetes have nicknames or not
+-   Lets go back to all athlete for this analysis
+-   When the athlete's name had two " or ', then we assume this indicates their nickname
+-   9.2% of all athletes had a nickname 
+
+```{R echo = FALSE}
 library(skimr)
 olympics_nicknames <- olympics %>% mutate(nickname = as.integer(str_count(name, '"') == 2 | str_count(name, "'") == 2))
 olympics_nicknames$nickname <- as.factor(olympics_nicknames$nickname)
+
+olympics_nicknames %>% group_by(nickname) %>% summarize(count = n(), percent = n()/nrow(olympics_nicknames))
 
 nickname <- olympics_nicknames %>% filter(nickname == 1) %>% group_by(medal) %>% summarize(count = n())
 no_nickname <- olympics_nicknames %>% filter(nickname == 0) %>% group_by(medal) %>% summarize(count = n())
