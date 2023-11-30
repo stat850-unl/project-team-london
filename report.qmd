@@ -3,7 +3,7 @@ format: html
 editor: visual
 ---
 
-```{r, eval = F}
+```{r, eval = T}
 # This code chunk contains code to install all of the dependencies
 # necessary to compile and run your report, using if-statements to
 # reduce install time for unnecessary code.
@@ -11,21 +11,29 @@ editor: visual
 # software on someone's computer without their consent.
 
 # This works for packages that are on CRAN
-if (!"dplyr" %in% installed.packages()) {
-  install.packages("dplyr")
+if (!"tidyverse" %in% installed.packages()) {
+  install.packages("tidyverse")
 }
-if (!"remotes" %in% installed.packages()) {
-  install.packages("remotes")
+if (!"skimr" %in% installed.packages()) {
+  install.packages("skimr")
+}
+if (!"cowplot" %in% installed.packages()) {
+  install.packages("cowplot")
 }
 
-# This is how to do it for a package that's only on github
-if (!"emo" %in% installed.packages()) {
-  remotes::install_github("hadley/emo")
-
+library(dplyr) #tidyverse
+library(tidyr) #tidyverse
+library(ggplot2) #tidyverse
+library(stringr) #tidyverse
+library(forcats) #tidyverse
+library(skimr)
+library(cowplot)
 ```
 
-```{r}
+```{R echo=FALSE}
+options(readr.show_col_types = FALSE)
 
+olympics <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-07-27/olympics.csv')
 ```
 
 ## Introduction
@@ -40,15 +48,227 @@ Describe any data cleaning and rearranging you needed to do to get your dataset 
 
 > we used the group-apply-combine paradigm with the `dplyr` functions `group_by` and `summarize` [@dplyr-package] to generate a dataset for each day of the observation period from the 15-minute interval observations in the raw data set.
 
+Below is the code for data wrangling for conflict analysis
+
+```{r, echo = FALSE}
+# create data set that sums the countries by year.This only works for the years up until 1992 where games were held in the same year. 
+countries <- olympics %>%
+  group_by(noc,year,sex) %>%
+  summarise(participantnum = n(), .groups = "drop")
+```
+
+Below is the code for data wrangling for track events over time
+
+```{r, echo = FALSE}
+#Get track and field events
+t_f <- olympics %>% filter(sport == "Athletics")
+#unique(t_f$event) #need to remove vaults, throws, puts, and athalons
+track <- t_f %>% filter(!str_detect(event, "Walk|Jump|Put|Throw|Vault|Decathlon|Pentathlon|Heptathlon"))
+track <- track %>% filter(!str_detect(event, "Around|Team")) #remove team events, and all-around champ
+#unique(track$event)
+
+#Add sub-categories, 60m - 400m sprint, 800m-3000m middle, 5000m-10000m + 5mile + marathon long
+track$category <- NA
+track$distance <- NA
+for (i in 1:nrow(track)) {
+  if(str_detect(track$event[i], "Relay")) {
+    track$category[i] <- "relay"
+  }
+  if(str_detect(track$event[i], "Hurdle|Steeplechase")) {
+    track$category[i] <- "hurdles"
+  }
+  if(str_detect(track$event[i], "Marathon|mile|Cross")) {
+    track$category[i] <- "long"
+  }
+  else{
+    distance <- str_extract(track$event[i], "\\d+(,\\d{3})*") #regex bad for relay but already categorized above
+    track$distance[i] <- as.numeric(gsub(",", "", distance))
+    if (is.na(track$category[i]) && !is.na(track$distance[i]) && track$distance[i] <= 400) {
+      track$category[i] <- "sprint"
+    }
+    if (is.na(track$category[i]) && !is.na(track$distance[i]) && track$distance[i] > 400 && track$distance[i] <= 3000) {
+      track$category[i] <- "middle"
+    }
+    if (is.na(track$category[i]) && !is.na(track$distance[i]) && track$distance[i] > 3000 && track$distance[i] <= 10000) {
+      track$category[i] <- "long"
+    }
+  }
+}
+
+#skimr::skim(track)
+```
+
+Below is the code for data wrangling for nickname analysis
+
+```{r, echo = FALSE}
+olympics_nicknames <- olympics %>% mutate(nickname = as.integer(str_count(name, '"') == 2 | str_count(name, "'") == 2))
+olympics_nicknames$nickname <- as.factor(olympics_nicknames$nickname)
+
+olympics_nicknames %>% group_by(nickname) %>% summarize(count = n(), percent = n()/nrow(olympics_nicknames))
+
+nickname <- olympics_nicknames %>% filter(nickname == 1) %>% group_by(medal) %>% summarize(count = n())
+no_nickname <- olympics_nicknames %>% filter(nickname == 0) %>% group_by(medal) %>% summarize(count = n())
+
+medalcount_nickname <- olympics_nicknames %>% filter(nickname == 1) %>% group_by(name) %>% summarize(Gold = sum(medal == "Gold"), Silver = sum(medal == "Silver"), Bronze = (sum(medal == "Bronze")), None = sum(is.na(medal)))
+
+medalcount_no_nickname <- olympics_nicknames %>% filter(nickname == 0) %>% group_by(name) %>% summarize(Gold = sum(medal == "Gold"), Silver = sum(medal == "Silver"), Bronze = (sum(medal == "Bronze")), None = sum(is.na(medal)))
+
+medalcount_nickname$nickname <- 1
+medalcount_no_nickname$nickname <- 0
+
+MergeMedalCount <- rbind(medalcount_nickname, medalcount_no_nickname)
+
+MergeMedalCount_long_noNA <- MergeMedalCount %>% pivot_longer(cols = `Gold`:`None`, names_to = "Medal", values_to = "Count") %>% filter(!Medal == "None", !is.na(Count))
+
+summary <- MergeMedalCount %>% group_by(nickname) %>% summarize(gold = sum(Gold, na.rm = T), silver = sum(Silver, na.rm = T), bronze = sum(Bronze, na.rm = T), total = n())
+
+data_matrix <- matrix(c(0, 5697, 4990, 4880, 106775,
+                        1, 1219, 804, 722, 9644), ncol = 5, byrow = TRUE)
+
+colnames(data_matrix) <- c("nickname", "gold", "silver", "bronze", "total")
+rownames(data_matrix) <- c("1", "2")
+```
+
 ## Topic of Exploration
 
 Here, you want to introduce the first topic you want to explore with your (newly cleaned up) data. Code to process data should be contained in chunks above this point, and those chunks should *not* be included in the report.
 
-You can add options to executable code like this
+below is the figure for conflict analysis
 
-```{r}
+```{r, echo = FALSE}
 #| echo: false
-2 * 2
+conflict = "Start of Iran and Iraq War,
+                          Soviet-Afgan War,
+                          Cold War tension"
+nowinter = "No winter olympics. (1896-1923)"
+splitup = "Summer and winter olympics split. (1993- current)"
+
+ggplot(countries, aes(x=year, y=participantnum, fill = sex)) +
+  geom_col() +
+  scale_x_continuous(n.breaks = 60) +
+  coord_cartesian(xlim = c(1895, 2017), expand = FALSE) +
+  scale_y_continuous(n.breaks = 35, expand = c(0,0)) +
+  theme(axis.text.x = element_text(angle=90, vjust = 0.5, hjust = 1)) +
+  theme(legend.position = "bottom") +
+  labs(title = "Influence of global conflict on the number of male and female olympic participants", x="Year of olympic games", y= "Total number of participants")+
+   geom_rect(data=NULL,aes(xmin=1895,xmax=1923,ymin=-Inf,ymax=Inf),
+            fill="lightgreen", alpha=0.01) +
+  geom_rect(data=NULL,aes(xmin=1992,xmax=2017,ymin=-Inf,ymax=Inf),
+            fill="lightblue", alpha=0.01)+
+  theme(plot.title = element_text(size = 16, face= "bold", hjust = 0.5)) +
+     geom_label(label = "World War 1", x=1916, y = 4700,
+             label.padding = unit(0.55, "lines"),
+             label.size = 0.35,
+             color = "black",
+             fill = "#69b3a2")+
+      geom_segment(aes(x = 1916, y = 4350, xend = 1916, yend = 500),
+                  arrow = arrow(length = unit(0.5, "cm")))+
+
+     geom_label(label = "Great Depression", x=1932, y = 8000,
+             label.padding = unit(0.55, "lines"),
+             label.size = 0.35,
+             color = "black",
+             fill = "#69b3a2") +
+    geom_segment(aes(x = 1932, y = 7650, xend = 1932, yend = 3500),
+                  arrow = arrow(length = unit(0.5, "cm")))+
+
+  geom_label(label = "World War 2", x=1942, y = 9000,
+             label.padding = unit(0.55, "lines"),
+             label.size = 0.35,
+             color = "black",
+             fill = "#69b3a2")+
+     geom_segment(aes(x = 1942, y = 8650, xend = 1942, yend = 0),
+                  arrow = arrow(length = unit(0.5, "cm")))+
+
+     geom_label(label = "Suez Conflict", x=1956, y = 10000,
+             label.padding = unit(0.55, "lines"),
+             label.size = 0.35,
+             color = "black",
+             fill = "#69b3a2")+
+    geom_segment(aes(x = 1956, y = 9650, xend = 1956, yend = 6500),
+                  arrow = arrow(length = unit(0.5, "cm")))+
+  geom_label(label = str_wrap(conflict,20), x=1980, y = 13000,
+             label.padding = unit(0.55, "lines"),
+             label.size = 0.35,
+             color = "black",
+             fill = "#69b3a2") +
+   geom_segment(aes(x = 1980, y = 12000, xend = 1980, yend = 9500),
+                  arrow = arrow(length = unit(0.5, "cm")))+
+
+     geom_label(label = str_wrap(nowinter,20), x=1909, y = 15500,
+             label.padding = unit(0.55, "lines"),
+             label.size = 0.35,
+             color = "black",
+             fill = "#69b3a2") +
+       geom_label(label = str_wrap(splitup,20), x=2006, y = 15500,
+             label.padding = unit(0.55, "lines"),
+             label.size = 0.35,
+             color = "black",
+             fill = "#69b3a2")
+
+```
+
+below are figures for track over time
+
+```{r, echo = FALSE}
+track %>%
+  ggplot(aes(x = year, y = reorder(event, year), color = category)) +
+  geom_point(size = 3, na.rm = TRUE) +
+  scale_color_manual(values = c("black", "red", "purple", "green", "blue")) +
+  labs(title = "Participation in Track Events Over Time", x = "Year", y = "Event") +
+  theme(axis.text.x = element_text(angle = 0, vjust = 0.5, hjust = 1, size = 22),
+        axis.text.y = element_text(size = 16),
+        axis.title = element_text(size=24),
+        plot.title = element_text(size=28),
+        legend.title = element_text(size=24),
+        legend.text = element_text(size=16),
+        legend.position = "right")
+
+track %>% 
+  group_by(id, year) %>% 
+  summarize(count = n()) %>% 
+  ggplot(aes(x = as.factor(year), y = count, fill = as.factor(year))) + 
+  labs(title = "Multiple Event Participation", x = "Year", y = "Number of Events by Althlete") +
+  geom_violin() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, size = 22),
+      axis.text.y = element_text(size = 16),
+      axis.title = element_text(size=24),
+      plot.title = element_text(size=24),
+      legend.title = element_text(size=28),
+      legend.text = element_text(size=16),
+      legend.position="none")
+```
+
+below are figures for nickname
+
+```{r, echo = FALSE}
+nickname$medal <- factor(nickname$medal, levels = c("gold", "silver", "bronze", "no_medal"))
+
+p1 <- ggplot(nickname, aes(x = "", y = count)) +
+  labs(title = "Athletes with Nicknames") +
+  coord_polar("y", start = 0) +
+  geom_bar(width = 1, stat = "identity", fill = c("gold", "#cd7f32", "#808080", "lightblue")) +
+  theme(plot.title = element_text(size = 20),
+        legend.position = 'none') +
+  theme_void()
+
+no_nickname$medal <- factor(no_nickname$medal, levels = c("gold", "silver", "bronze", "no_medal"))
+
+p2 <- ggplot(no_nickname, aes(x = "", y = count)) +
+  labs(title = "Athletes with Nicknames") +
+  coord_polar("y", start = 0) +
+  geom_bar(width = 1, stat = "identity", fill = c("gold", "#cd7f32", "#808080", "lightblue")) +
+  theme(plot.title = element_text(size = 20),
+        legend.position = 'none') +
+  theme_void()
+
+plot_grid(p1,p2, labels = c("",""))
+
+# Perform the chi-square test
+chi_square_result <- chisq.test(data_matrix)
+
+# Print the result
+print(chi_square_result)
 ```
 
 The `echo: false` option disables the printing of code (only output is displayed).

@@ -221,7 +221,6 @@ for (i in 1:nrow(track)) {
 #|fig-cap: "Exploring the influence of global conflict on olympic participation for both males and females"
 #|warning: FALSE
 library(forcats)
-library(RColorBrewer)
 
 Fem <- track%>% filter(sex == "F")
 
