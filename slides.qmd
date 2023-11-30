@@ -80,14 +80,8 @@ table {
 -   Data was grouped by Nation Olympic Committee Region, year and sex
 -   Data was then summarized as participant number for the country, year of the games, and sex of the participants
 
-## Analyzing the influence of global conflict on male and female participation in the olympic games
+## The influence of global conflict on male and female participation in the olympic games
 ```{R fig.align="center", fig.width=14, fig.height=8}
-
- #|echo: false
- #|label: Global conflict and olympic participation
- #|fig-cap: "Exploring the influence of global conflict on olympic participation for both males and females"
- #|warning: FALSE
-
 library(dplyr)
 library(ggplot2)
 library(stringr)
@@ -166,11 +160,11 @@ ggplot(countries, aes(x=year, y=participantnum, fill = sex)) +
              fill = "#69b3a2")
 
 ```
----
+
 ## Analyzing the influence of global conflict on male and female participation in the olympic games
 -   What we can observe is that global conflicts do influence the level of participation in the games, particularly in the 1900's
 -   Female participation may have been less affected by these conflicts
--   The olympics have had steady attendance since the 1990s
+-   The Olympics have had steady attendance since the 1990s
 
 ## How does participation in Track events change over time?
 #### Data Wrangling: Let's pull out the track events (removing field!)
