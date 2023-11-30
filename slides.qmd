@@ -75,13 +75,13 @@ table {
 +---------+-----------------------------------+-----------+---------+---------------------------------------------------------+
 | medal   | Medal won (if any)                | character | NA      | (Gold, Silver, Bronze or NA)                            |
 +---------+-----------------------------------+-----------+---------+---------------------------------------------------------+
-
 ## Analyzing the influence of global conflict on male and female participation in the olympic games
 ### Data wrangling
 -   Data was grouped by Nation Olympic Committee Region, year and sex
 -   Data was then summarized as participant number for the country, year of the games, and sex of the participants
----
-```{R fig.align="center", fig.width=14, fig.height=9}
+
+## Analyzing the influence of global conflict on male and female participation in the olympic games
+```{R fig.align="center", fig.width=14, fig.height=8}
 
  #|echo: false
  #|label: Global conflict and olympic participation
