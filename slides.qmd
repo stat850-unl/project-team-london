@@ -75,9 +75,13 @@ table {
 +---------+-----------------------------------+-----------+---------+---------------------------------------------------------+
 | medal   | Medal won (if any)                | character | NA      | (Gold, Silver, Bronze or NA)                            |
 +---------+-----------------------------------+-----------+---------+---------------------------------------------------------+
----
 ## Analyzing the influence of global conflict on male and female participation in the olympic games
-```{r echo=FALSE}
+### Data wrangling
+-   Data was grouped by Nation Olympic Committee Region, year and sex
+-   Data was then summarized as participant number for the country, year of the games, and sex of the participants
+
+##
+```{R fig.align="center", fig.width=14, fig.height=8}
 library(dplyr)
 library(ggplot2)
 library(stringr)
@@ -85,15 +89,7 @@ library(stringr)
 countries <- olympics %>%
   group_by(noc,year,sex) %>%
   summarise(participantnum = n(), .groups = "drop")
-```
----
-```{R fig.align="center", fig.width=14, fig.height=9}
- #|echo: false
- #|label: Global conflict and olympic participation
- #|fig-cap: "Exploring the influence of global conflict on olympic participation for both males and females"
- #|warning: FALSE
- 
-#look at adjusting figure dimensions
+
 conflict = "Start of Iran and Iraq War,
                           Soviet-Afgan War,
                           Cold War tension"
@@ -168,7 +164,7 @@ ggplot(countries, aes(x=year, y=participantnum, fill = sex)) +
 ## Analyzing the influence of global conflict on male and female participation in the olympic games
 -   What we can observe is that global conflicts do influence the level of participation in the games, particularly in the 1900's
 -   Female participation may have been less affected by these conflicts
--   The olympics have had steady attendance since the 1990s
+-   The Olympics have had steady attendance since the 1990s
 
 ## How does participation in Track events change over time?
 #### Data Wrangling: Let's pull out the track events (removing field!)
@@ -368,8 +364,12 @@ print(chi_square_result)
 Generally people in families have nicknames. Many are fun and silly. Let's continue that energy.
 
 The goal of this application is to have fun using family members physical characteristics and compare them relative to Olympic athletes who have metaled.
----
-### Home page of this app
+
+## Shiny application
+### Data wrangling
+-  1st drop any people that have NA's within the medal status ie. they didn't metal. Super simple.
+
+## Home page of this app
 ![](Appopeningpage.png)
 
 ## Inital view of selection page
@@ -405,9 +405,11 @@ The goal of this application is to have fun using family members physical charac
 -   Bronze medal speed skater from China
 
 ## Conclusions
-
-
-
+-   We can observe that global conflict does influence the participation in the Olympic games, particularly for males.
+-   
+-   
+-   Within the application we are limited in our age range up to 66 years, and it is likely that these older ages are less likely to a Olympic counterpart. Therefore, Richard is out of the running.
+-  For the application it may be better to utilize an age range rather than just a single age. This is because if if Nicole's age was set there would be no counterpart. However, when we add a range and her physical characteristics we can observe counterparts.
 
 
 
