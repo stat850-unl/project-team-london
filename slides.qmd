@@ -302,6 +302,10 @@ print(chi_square_result)
 Generally people in families have nicknames. Many are fun and silly. Let's continue that energy.
 
 The goal of this application is to have fun using family members physical characteristics and compare them relative to Olympic athletes who have metaled.
+
+## Shiny application
+### Data wrangling
+-  1st drop any people that have NA's within the medal status ie. they didn't metal. Super simple.
 ---
 ### Home page of this app
 ![](Appopeningpage.png)
