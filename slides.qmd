@@ -24,9 +24,9 @@ library(tidyverse)
 olympics <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-07-27/olympics.csv')
 ```
 
-#### This dataset contains information about the winter and summer Olympic athletes from the years 1896 to 2016, their team, weight, placing, sport, event, age, height.
+#### This dataset contains information about the winter and summer Olympic athletes from the years 1896 to 2016, their team, weight, placing, sport, event, age, height
 
--   It was collected from Tidy Tuesday where the data was scraped from www.sports-reference.com.
+-   It was collected from Tidy Tuesday where the data was scraped from www.sports-reference.com
 
 -   A data dictionary is available on the following slide showing each variable, the type of variable, units, and range of values that are possible
 
@@ -359,15 +359,14 @@ print(chi_square_result)
 #could look at residuals to see what deviates from expected but I think this is fine. 
 
 ```
-## Shiny application. 
+## Shiny application
 
-Generally people in families have nicknames. Many are fun and silly. Let's continue that energy.
-
-The goal of this application is to have fun using family members physical characteristics and compare them relative to Olympic athletes who have metaled.
+-  Generally people in families have nicknames. Many are fun and silly. Let's continue that energy
+-  The goal of this application is to have fun using family members physical characteristics and compare them relative to Olympic athletes who have metaled
 
 ## Shiny application
 ### Data wrangling
--  1st drop any people that have NA's within the medal status ie. they didn't metal. Super simple.
+-  1st drop any people that have NA's within the medal status ie. they didn't metal. Super simple
 
 ## Home page of this app
 ![](Appopeningpage.png)
@@ -378,38 +377,38 @@ The goal of this application is to have fun using family members physical charac
 ## Math for us dummies
 ![](Mathopening page.png)
 
-## These are the images from the shiny application output. 
+## These are the images from the shiny application output 
 -   Richard (Addison's dad) is 6'3", weighs 250, and is 66 years young 
 
 ![](RCconversion.jpg) 
 
 ## Unfortunately
--   Richard does not have any Olympic counterparts.
+-   Richard does not have any Olympic counterparts
  
 ![](RColympics.jpg) 
 
 ## Let's look at Addison's sister Nicole
--   Nicole is 5'5, weighs around 155, and has told her sister she is 29 for the past 8 years.. 
--   Lets look at that age range. 
+-   Nicole is 5'5, weighs around 155, and has told her sister she is 29 for the past 8 years
+-   Lets look at that age range
 
 ![](NColympics.jpg) 
 
 ## Obervations from application
--   At the age of 37 Nicole would have not have had a counter part. 
+-   At the age of 37 Nicole would have not have had a counter part 
 
-## However, within the range of 29 - 37 we have some: 
+## However, within the range of 29 - 37 we have some! 
 -   Gold medal cyclist from France 
 -   Bronze medal handball player from the UK 
 -   Gold medal Judo fighter from France 
 -   Gold and silver medal Ice hockey player from Canada 
 -   Bronze medal speed skater from China
 
-## Conclusions
--   We can observe that global conflict does influence the participation in the Olympic games, particularly for males.
--   
--   
--   Within the application we are limited in our age range up to 66 years, and it is likely that these older ages are less likely to a Olympic counterpart. Therefore, Richard is out of the running.
--  For the application it may be better to utilize an age range rather than just a single age. This is because if if Nicole's age was set there would be no counterpart. However, when we add a range and her physical characteristics we can observe counterparts.
+## Conclusions: Analysis 1 & 2
+-   We can observe that global conflict does influence the participation in the Olympic games, particularly for males
+-   We have added more Olympic track events with time, some events were also removed but these don't fall into a single category
+-   Track athletes are specializing in one or two events rather than many
 
-
-
+## Conclusions: Analysis 3 & 4
+-   Athletes are more likely to medal if they have a nickname
+-   Within the application we are limited in our age range up to 66 years, and it is likely that these older ages are less likely to a Olympic counterpart. Therefore, Richard is out of the running
+-  For the application it may be better to utilize an age range rather than just a single age. This is because if if Nicole's age was set there would be no counterpart. However, when we add a range and her physical characteristics we can observe counterparts
