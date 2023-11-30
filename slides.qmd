@@ -3,7 +3,6 @@ Title: "Evaluation of the olympic games from global to family perspective"
 Author: "Addison Carroll and Sydney Graham"
 format: revealjs
 ---
-
 # Introduction
 
 The Olympic games have been a historical icon through the ages. The games represent the best of the best in their given sports. However, the games can sometimes feel out of touch to your average athletic people! As a result, it was our goal to look at the games from a global to personal family level.
@@ -22,19 +21,6 @@ options(readr.show_col_types = FALSE)
 #install.packages("tidytuesdayR")
 library(tidyverse)
 
-# Read in with tidytuesdayR package 
-# Install from CRAN via: install.packages("tidytuesdayR")
-# This loads the readme and all the datasets for the week of interest
-
-# Either ISO-8601 date or year/week works!
-
-# tuesdata <- tidytuesdayR::tt_load('2021-07-27')
-# tuesdata <- tidytuesdayR::tt_load(2021, week = 31)
-# 
-# olympics <- tuesdata$olympics
-
-# Or read in the data manually
-
 olympics <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-07-27/olympics.csv')
 ```
 
@@ -42,10 +28,14 @@ olympics <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/t
 
 -   It was collected from Tidy Tuesday where the data was scraped from www.sports-reference.com.
 
--   Here is a data dictionary showing each variable, the type of variable, units, and range of values that are possible
+-   A data dictionary is available on the following slide showing each variable, the type of variable, units, and range of values that are possible
 
----
-
+## Data Dictonary Table
+<style>
+table {
+  font-size: 40%; /* Adjust the percentage to your preference */
+}
+</style>
 +---------+-----------------------------------+-----------+---------+---------------------------------------------------------+
 | Name    | Description                       | Type      | Units   | Range/Values                                            |
 +=========+===================================+===========+=========+=========================================================+
@@ -85,17 +75,6 @@ olympics <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/t
 +---------+-----------------------------------+-----------+---------+---------------------------------------------------------+
 | medal   | Medal won (if any)                | character | NA      | (Gold, Silver, Bronze or NA)                            |
 +---------+-----------------------------------+-----------+---------+---------------------------------------------------------+
----
-
-+----------+----------------------------+-----------+----------+----------------------------------------+
-| Name     | Description                | Type      | Units    | Range/Values                           |
-+==========+============================+===========+==========+========================================+
-| NOC      | National Olympic Committee | character | NA       | 3 letter code of NOC (ex. CAN)         |
-+----------+----------------------------+-----------+----------+----------------------------------------+
-| region   | Region associated with NOC | character | NA       | Region name (ex. Canada)               |
-+----------+----------------------------+-----------+----------+----------------------------------------+
-| notes    | Comments & alternate names | character | NA       | NA or alternate name (ex. Australasia) |
-+----------+----------------------------+-----------+----------+----------------------------------------+
 ---
 ## Analyzing the influence of global conflict on male and female participation in the olympic games
 ```{r echo=FALSE}
