@@ -291,15 +291,37 @@ olympics_nicknames <- olympics %>% mutate(nickname = as.integer(str_count(name, 
 olympics_nicknames$nickname <- as.factor(olympics_nicknames$nickname)
 
 olympics_nicknames %>% group_by(nickname) %>% summarize(count = n(), percent = n()/nrow(olympics_nicknames))
+```
+
+## Medal Counts for Athletes 
+```{R echo = FALSE}
+#install.packages("cowplot")
+library(cowplot)
 
 nickname <- olympics_nicknames %>% filter(nickname == 1) %>% group_by(medal) %>% summarize(count = n())
 no_nickname <- olympics_nicknames %>% filter(nickname == 0) %>% group_by(medal) %>% summarize(count = n())
 
-ggplot(nickname, aes(x = "", y = count, fill = medal)) + coord_polar("y", start = 0) +
-  geom_bar(width = 1, stat="identity") + theme_void()
+nickname$medal <- factor(nickname$medal, levels = c("gold", "silver", "bronze", "no_medal"))
 
-ggplot(no_nickname, aes(x = "", y = count, fill = medal)) + coord_polar("y", start = 0) +
-  geom_bar(width = 1, stat="identity") + theme_void()
+p1 <- ggplot(nickname, aes(x = "", y = count)) +
+  labs(title = "Athletes with Nicknames") +
+  coord_polar("y", start = 0) +
+  geom_bar(width = 1, stat = "identity", fill = c("gold", "#cd7f32", "#808080", "lightblue")) +
+  theme(plot.title = element_text(size = 20),
+        legend.position = 'none') +
+  theme_void()
+
+no_nickname$medal <- factor(no_nickname$medal, levels = c("gold", "silver", "bronze", "no_medal"))
+
+p2 <- ggplot(no_nickname, aes(x = "", y = count)) +
+  labs(title = "Athletes with Nicknames") +
+  coord_polar("y", start = 0) +
+  geom_bar(width = 1, stat = "identity", fill = c("gold", "#cd7f32", "#808080", "lightblue")) +
+  theme(plot.title = element_text(size = 20),
+        legend.position = 'none') +
+  theme_void()
+
+plot_grid(p1,p2, labels = c("",""))
 
 medalcount_nickname <- olympics_nicknames %>% filter(nickname == 1) %>% group_by(name) %>% summarize(Gold = sum(medal == "Gold"), Silver = sum(medal == "Silver"), Bronze = (sum(medal == "Bronze")), None = sum(is.na(medal)))
 
@@ -314,7 +336,7 @@ MergeMedalCount_long_noNA <- MergeMedalCount %>% pivot_longer(cols = `Gold`:`Non
 
 ```
 ---
-### It looks like there is a trend but is it statistically different?
+### It looks like atletes with nicknames win more frequently, lets test for it!
 ```{r echo=FALSE}
 str(MergeMedalCount)
 summary <- MergeMedalCount %>% group_by(nickname) %>% summarize(gold = sum(Gold, na.rm = T), silver = sum(Silver, na.rm = T), bronze = sum(Bronze, na.rm = T), total = n())
