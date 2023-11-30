@@ -360,6 +360,8 @@ chi_square_result <- chisq.test(data_matrix)
 # Print the result
 print(chi_square_result)
 
+#could look at residuals to see what deviates from expected but I think this is fine. 
+
 ```
 ## Shiny application. 
 
