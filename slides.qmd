@@ -219,15 +219,26 @@ for (i in 1:nrow(track)) {
 
 ### How do events change over time?
 
-```{r fig.align="center", fig.width=14}
+```{R fig.align="center", fig.width=14, fig.height=9}
 #|echo: false
 #|label: Global conflict and olympic participation
 #|fig-cap: "Exploring the influence of global conflict on olympic participation for both males and females"
 #|warning: FALSE
 library(forcats)
-#How has participation in track events changed over time? 
-track %>% ggplot(aes(x = year, y = reorder(event, year))) + geom_point(na.rm=T) +
-  labs(title = "Participation in Track Events Over Time", x = "Year", y = "Event") + theme_minimal()
+library(RColorBrewer)
+
+track %>%
+  ggplot(aes(x = year, y = reorder(event, year), color = category)) +
+  geom_point(size = 3, na.rm = TRUE) +
+  scale_color_manual(values = c("black", "red", "purple", "green", "blue")) +
+  labs(title = "Participation in Track Events Over Time", x = "Year", y = "Event") +
+  theme(axis.text.x = element_text(angle = 0, vjust = 0.5, hjust = 1, size = 22),
+        axis.text.y = element_text(size = 16),
+        axis.title = element_text(size=24),
+        plot.title = element_text(size=24),
+        legend.title = element_text(size=24),
+        legend.text = element_text(size=16),
+        legend.position = "right")
 ```
 ---
 ### Are athletes competing in fewer events more recently? 
