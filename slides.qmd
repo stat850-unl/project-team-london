@@ -337,12 +337,19 @@ MergeMedalCount_long_noNA <- MergeMedalCount %>% pivot_longer(cols = `Gold`:`Non
 ```
 ---
 ### It looks like atletes with nicknames win more frequently, lets test for it!
+-   Lets build a table and perform a chi-square test for independence
+
+| Nickname | Gold | Silver | Bronze | No Medal |
+|----------|------|--------|--------|----------|
+| Yes      | 5697 | 4900   | 4880   | 106775   |
+| No       | 1219 | 804    | 722    | 9644     |
+
 ```{r echo=FALSE}
-str(MergeMedalCount)
+#str(MergeMedalCount)
 summary <- MergeMedalCount %>% group_by(nickname) %>% summarize(gold = sum(Gold, na.rm = T), silver = sum(Silver, na.rm = T), bronze = sum(Bronze, na.rm = T), total = n())
 
-data_matrix <- matrix(c(0, 5697, 4990, 4880, 122342,
-                        1, 1219, 804, 722, 12389), ncol = 5, byrow = TRUE)
+data_matrix <- matrix(c(0, 5697, 4990, 4880, 106775,
+                        1, 1219, 804, 722, 9644), ncol = 5, byrow = TRUE)
 
 colnames(data_matrix) <- c("nickname", "gold", "silver", "bronze", "total")
 rownames(data_matrix) <- c("1", "2")
