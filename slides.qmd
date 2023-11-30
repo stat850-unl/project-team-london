@@ -77,6 +77,10 @@ table {
 +---------+-----------------------------------+-----------+---------+---------------------------------------------------------+
 ---
 ## Analyzing the influence of global conflict on male and female participation in the olympic games
+### Data wrangling
+-   Data was grouped by Nation Olympic Committee Region, year and sex
+-   Data was then summarized as participant number for the country, year of the games, and sex of the participants
+
 ```{r echo=FALSE}
 library(dplyr)
 library(ggplot2)
