@@ -1,6 +1,7 @@
 ---
 format: html
 editor: visual
+bibliography: references.bib
 ---
 
 ```{r, eval = T}
@@ -38,15 +39,17 @@ olympics <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/t
 
 ## Introduction
 
-Introduce your dataset and basic questions for exploration. Explain any unique approaches you will take or any interesting features of your dataset that you have to overcome. Cite the source of your dataset, and briefly discuss how it was collected.
+The Olympic Games is an international sports event that has been an icon through the ages. The games represent the best of the best in their given sports and are held every four years in front of a worldwide audience. However, the Olympics can sometimes feel out of touch to average athletic people. As a result, it was our goal to look at the games from a global perspective all the way down to a personal family level.
 
-Discuss the variables in the dataset and if there are anomalies in the variables, provide some visual assessment of the anomalies and explain how they may have arisen. You should cover most of the information in your proposal data section, but should primarily use paragraphs and not lists/tables (the exception may be a list of e.g. items which were measured).
+We obtained this data from a Tidy Tuesday dataset and it was originally scraped from www.sports-reference.com. The data set contains data from the Olympics from 1896 to 2016. Each athlete's name is listed and they have been assigned an individual ID. Physical characteristics are comprised of their sex, age, height, and weight. Team and National Olympic Committee Region (NOC) are used to denote which region the athlete represents. {ADDISON- WAS THERE SOMETHING WEIRD ABOUT THIS?}. The dataset also contained information about the Olympic Games the athlete competed in, including the year, the season (summer or winter), and the city the games were held in. The sport and event were also included and, of course, which medal the athlete won (if any). No event specific information was included (i.e. time or score).
+
+Given this broad dataset and our goal to make the Olympic games to feel closer to home, our objectives were to 1) Evaluate the influence of historical events on the participation level of the games for both males and females, 2) Explore how participation in track events has changed over time, 3) Determine if the presence of a nickname influences a persons likelihood to medal, and 4) See how family physical characteristics stack up with Olympic medalists through the ages.
+
+> Introduce your dataset and basic questions for exploration. Explain any unique approaches you will take or any interesting features of your dataset that you have to overcome. Cite the source of your dataset, and briefly discuss how it was collected.
+>
+> Discuss the variables in the dataset and if there are anomalies in the variables, provide some visual assessment of the anomalies and explain how they may have arisen. You should cover most of the information in your proposal data section, but should primarily use paragraphs and not lists/tables (the exception may be a list of e.g. items which were measured).
 
 ## Methods
-
-Describe any data cleaning and rearranging you needed to do to get your dataset into a workable form. Make sure to cite any packages which were important in your data cleaning process in this section. For instance, if you used dplyr, then it would be appropriate to say something like
-
-> we used the group-apply-combine paradigm with the `dplyr` functions `group_by` and `summarize` [@dplyr-package] to generate a dataset for each day of the observation period from the 15-minute interval observations in the raw data set.
 
 Below is the code for data wrangling for conflict analysis
 
@@ -128,6 +131,10 @@ data_matrix <- matrix(c(0, 5697, 4990, 4880, 106775,
 colnames(data_matrix) <- c("nickname", "gold", "silver", "bronze", "total")
 rownames(data_matrix) <- c("1", "2")
 ```
+
+> Describe any data cleaning and rearranging you needed to do to get your dataset into a workable form. Make sure to cite any packages which were important in your data cleaning process in this section. For instance, if you used dplyr, then it would be appropriate to say something like
+>
+> > we used the group-apply-combine paradigm with the `dplyr` functions `group_by` and `summarize` [@dplyr-package] to generate a dataset for each day of the observation period from the 15-minute interval observations in the raw data set.
 
 ## Topic of Exploration
 
