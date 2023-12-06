@@ -29,6 +29,22 @@ library(stringr) #tidyverse
 library(forcats) #tidyverse
 library(skimr)
 library(cowplot)
+#library(wordcloud)
+#library(RColorBrewer)
+#library(wordcloud2)
+library(ggwordcloud)
+library(flexdashboard)
+library(tibble)
+library(shiny)
+library(purrr)
+library(DT)
+library(shinydashboard)
+library(rsconnect)
+library(shinythemes)
+library(shinyWidgets)
+library(shinydashboard)
+library(shinydashboardPlus)
+library(tm)
 ```
 
 ```{R echo=FALSE}
@@ -41,7 +57,33 @@ olympics <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/t
 
 The Olympic Games is an international sports event that has been an icon through the ages. The games represent the best of the best in their given sports and are held every four years in front of a worldwide audience. However, the Olympics can sometimes feel out of touch to average athletic people. As a result, it was our goal to look at the games from a global perspective all the way down to a personal family level.
 
-We obtained this data from a Tidy Tuesday dataset and it was originally scraped from www.sports-reference.com. The data set contains data from the Olympics from 1896 to 2016. Each athlete's name is listed and they have been assigned an individual ID. Physical characteristics are comprised of their sex, age, height, and weight. Team and National Olympic Committee Region (NOC) are used to denote which region the athlete represents. {ADDISON- WAS THERE SOMETHING WEIRD ABOUT THIS?}. The dataset also contained information about the Olympic Games the athlete competed in, including the year, the season (summer or winter), and the city the games were held in. The sport and event were also included and, of course, which medal the athlete won (if any). No event specific information was included (i.e. time or score).
+We obtained this data from a Tidy Tuesday dataset and it was originally scraped from www.sports-reference.com. The data set contains data from the Olympics from 1896 to 2016. Each athlete's name is listed and they have been assigned an individual ID. Physical characteristics are comprised of their sex, age, height, and weight. Team and National Olympic Committee Region (NOC) are used to denote which region the athlete represents. However, an observed anomoly was for each nation of interest there were multiple team names over the years and as a result NOC best represented each country of interest. The dataset also contained information about the Olympic Games the athlete competed in, including the year, the season (summer or winter), and the city the games were held in. The sport and event were also included and, of course, which medal the athlete won (gold, silver, bronze), if an athlete did not medal the medal variable was given an NA. No event specific information was included (i.e. time or score).
+```{R echo=FALSE}
+#Add a visualization of the NOC vs country anomaly
+countries1 <- olympics %>%
+  group_by(noc) %>%
+  summarise(participantnum1 = n(), .groups = "drop")
+png("#allofthenations.png", width = 480, height = 480)
+wordcloud(words = countries1$noc, 
+          freq = countries1$participantnum1, 
+          min.freq = 1, max.words=300,
+          random.order=FALSE, 
+          rot.per=0.35, 
+          colors=brewer.pal(8, "Dark2"))
+
+countries2 <- olympics %>%
+  group_by(team) %>%
+  summarise(participantnum2 = n(), .groups = "drop")
+png("#alloftheteams.png", width = 480, height = 480)
+wordcloud(words = countries2$team, 
+          freq = countries2$participantnum2, 
+          min.freq = 1, max.words=1154,
+          random.order=FALSE, 
+          rot.per=0.35, 
+          colors=brewer.pal(8, "Dark2"))
+```
+![all 230 nations](#allofthenations.png)
+![all 1184 teams](#alloftheteams.png)
 
 Given this broad dataset and our goal to make the Olympic games to feel closer to home, our objectives were to 1) Evaluate the influence of historical events on the participation level of the games for both males and females, 2) Explore how participation in track events has changed over time, 3) Determine if the presence of a nickname influences a persons likelihood to medal, and 4) See how family physical characteristics stack up with Olympic medalists through the ages.
 
@@ -144,7 +186,7 @@ medalist <- olympics %>% na.omit()
 
 #Here, you want to introduce the first topic you want to explore with your (newly cleaned up) data. Code to process data should be contained in chunks above this point, and those chunks should *not* be included in the report.
 
-#below is the figure for conflict analysis
+#The first topic of exploration was the influence of conflict on the particpation in the games. We also wanted to see if there was a difference in the change of the different sexs if we did see a participation decrease. 
 
 ```{r, echo = FALSE}
 #| echo: false
@@ -219,7 +261,7 @@ ggplot(countries, aes(x=year, y=participantnum, fill = sex)) +
 
 ```
 
-#below are figures for track over time
+below are figures for track over time
 
 ```{r, echo = FALSE}
 track %>%
@@ -284,22 +326,6 @@ print(chi_square_result)
 
 #Below is the code for the app found under app.R followed by screenshots from the app demonstration. The goal of this app was to explore how our families "stacked up" to olympic counterparts of the same age and physical characteristics.
 ```{R echo=FALSE}
-library(flexdashboard)
-library(dplyr)
-library(tibble)
-library(shiny)
-library(purrr)
-library(DT)
-library(shinydashboard)
-library(rsconnect)
-library(ggplot2)
-library(shinythemes)
-library(shinyWidgets)
-library(shinydashboard)
-library(shinydashboardPlus)
-
-
-
 # start of application
 #Get sidebar ready and tab names set fot the body.
 sidebar <-  dashboardSidebar(
