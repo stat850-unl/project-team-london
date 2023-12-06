@@ -93,7 +93,8 @@ Given this broad dataset and our goal to make the Olympic games to feel closer t
 
 ## Methods
 
-Below is the code for data wrangling for conflict analysis
+The method of data wrangling for the conflict analysis was quite simple. I first utilized the initial data set of the Olympics, and preformed the the group-apply-combine paradigm with the `dplyr` [@dplyr-package]. We utilized the group_by function and grouped the data by noc, year, and sex. This was to develop the participants per country per year per sex. This value was summarized with the summarise function as participantnum .grops = drop within the summarise function is an override.
+
 
 ```{r, echo = FALSE}
 # create data set that sums the countries by year.This only works for the years up until 1992 where games were held in the same year. 
@@ -174,7 +175,7 @@ colnames(data_matrix) <- c("nickname", "gold", "silver", "bronze", "total")
 rownames(data_matrix) <- c("1", "2")
 ```
 
-Below is the code for data wrangling for the application
+The data wrangling associated with the application was just to omit the nas within the entire data set utilizing the na.omit function from base R. This functioned because if a medalist did not get a medal the variable of medal was an na.  
 ```{R echo= FALSE}
 medalist <- olympics %>% na.omit()
 ```
