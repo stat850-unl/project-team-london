@@ -76,6 +76,42 @@ Then, you can reference @fig-iris in the text and the appropriate cross-referenc
 
 You can find additional information about formatting figures generated from code in the [quarto documentation](https://quarto.org/docs/authoring/figures.html#computations).
 
+## Topic of Exploration
+
+Here, you want to introduce the first topic you want to explore with your (newly cleaned up) data. Code to process data should be contained in chunks above this point, and those chunks should *not* be included in the report.
+
+You can add options to executable code like this
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
+
+If you generate a figure, it should have a caption. Here's a demonstration of how to do that:
+
+```{r iris-plot}
+#| label: fig-iris
+#| fig-width: 8
+#| fig-height: 4 # Change the figure dimensions using fig-width/height
+#| out-width: 80% # This changes the size of the figure as rendered in the text. 
+#| fig-cap: "This figure shows the relationship between sepal width and petal width in irises. I've used geom_jitter to combat overplotting, as the data are measured in relatively consistent increments. The figure is drawn with `ggplot2` [@ggplot2-package]."
+#| echo: false
+
+
+data(iris)
+library(ggplot2)
+ggplot(iris, aes(x = Sepal.Width, y = Petal.Width, color = Species)) + 
+  geom_jitter() + 
+  xlab("Sepal Width (cm)") + ylab("Petal Width (cm)") + 
+  ggtitle("Sepal and Petal Dimensions")
+```
+
+Then, you can reference @fig-iris in the text and the appropriate cross-reference will be generated.
+
+You can find additional information about formatting figures generated from code in the [quarto documentation](https://quarto.org/docs/authoring/figures.html#computations).
+
 ## Additional Exploration topic
 
 Add another topic here... as many as you desire, really. Make sure to include a transition between the two sections that connects the two with some sort of logical train of thought.
