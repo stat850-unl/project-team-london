@@ -42,9 +42,7 @@ library(shinydashboard)
 library(rsconnect)
 library(shinythemes)
 library(shinyWidgets)
-library(shinydashboard)
 library(shinydashboardPlus)
-library(tm)
 ```
 
 ```{R echo=FALSE}
@@ -185,9 +183,15 @@ medalist <- olympics %>% na.omit()
 
 ## Topic of Exploration
 
-#Here, you want to introduce the first topic you want to explore with your (newly cleaned up) data. Code to process data should be contained in chunks above this point, and those chunks should *not* be included in the report.
+#Topic 1
 
-#The first topic of exploration was the influence of conflict on the particpation in the games. We also wanted to see if there was a difference in the change of the different sexs if we did see a participation decrease. 
+The first topic of exploration was the influence of conflict on the particpation in the games. We also wanted to see if there was a difference in the change of the different sexs if we did see a participation decrease. In order to graph this with the cleaned data. We utilized `ggplot` [@ggplot2-package]. The asthetics (aes) we year on the x axis, participantnum on the y axis and fill of the sex of the individuals. Then geom_col was utilized. Additions of scale_x_continuous and scale_y_continuous allowed for us to set the breaks to a meaningful level with n.breaks. Also coord_cartesian was used to set the x limits from 1895 to 2017. The theme was used for two aspects of this graph including axis.text.x which then allowed for us to angle the element_text to 90 degrees, to right justify (vjust) by 0.5 and left justify (hjust) by 1. Theme was also used to put the legend.position to the bottom. Labs was then utilized to create the title, and x and y axis titles. 
+
+After this point the goal was to evaluate the data. We first used geom_rect to visually parse out the areas before 1923 and after 1992 when either the winter games were not present and when the Olympic summer and winter games were split into two different years. These were labeled using geom_label with a string wrap since the text was so long, the labels were set at specific x and y coordinates based on visual inspection. The labels were then padded so the wrapped lines were not right on top of one another, label size was set, font color set to black, and background fill was set to a green color.
+
+After evaluating the data we picked out the bars where they were decreased relative to the surrounding bars or non-existent in the case of WW1 and WW2. We found a total of 6 global issues which caused decreases in the participation in the Olympic games including, WW1, The Great Depression, WW2, The Suez Conflict, and the beginning of the Iran and Iraq war/ Soviet-Afgan War / Cold War tension. 
+
+In order to place each of these conflicts on the graph geom_label was used again, and x and y coordinates were set based on the years associated with the conflict and visual inspection of the y axis. Label size was set to 0.55 like previous labels and colors for labels were the same as previous. An arrow was then added to point down to the specific year using geom_segment and the aesthetic for an arrow as set to the corresponding year on the x axis, and y value was adjusted to be a length where the end of the arrow touched the label and the bottom of the arrow was near the end of the specific bar (if there was a bar).
 
 ```{r, echo = FALSE}
 #| echo: false
@@ -325,7 +329,24 @@ chi_square_result <- chisq.test(data_matrix)
 print(chi_square_result)
 ```
 
-#Below is the code for the app found under app.R followed by screenshots from the app demonstration. The goal of this app was to explore how our families "stacked up" to olympic counterparts of the same age and physical characteristics.
+#Topic 4: The app
+
+The app is found under app.R. followed by screenshots from the app demonstration. 
+
+The goal of this app was to explore how our families "stacked up" to olympic counterparts of the same age and physical characteristics. In order to accomplish this goal we utilized the `shinydashboard` [@shinydashboard-package]. First we utilized dashboardSidebar coupled with sidebarMenu in order to create the id of the "tabs" on the sidebar. Within this we also utilized menuItem to then define the tabName and that it would start expanded. Within the dashboard we then create 3 menu items including an "about us", "olympian's physical characteristics", and a "Help desk: imperial to metric conversion." 
+
+Then we moved to the body. We started with the dashboardBody function and then set up our tab "guts" with the tabItemfunciton. Within the about us tab we utilized the userBox function from `shinydashboardPlus` [@shinydashboardPlus-package]. This allowed us to create a user descriptin with title, subtitle, type of box, color of box, gradient effect on the box, status of the box relative to others, a little snippit of information about ourselves and an image of ourselves with the userDescription function. we then created the second tab using the tabItem function and liked it back to the sidebar menu item. We added the next tab item which would comprise our main page. In this tab item we utilized the fluidPage with a title and style of the title. After which this portion was set up with a fluidRow function. The first row covered the entire page as a slider with a shiny and red appearance from the chooseSliderSkin function. This was followed by a slider input of age which came from the cleaned dataset and minimum and maximum age was set to that of the dataset, and the value could range from the minimul to the maximum age. 
+
+The next box bellow was a set up with the wellPanel function. This first well took up half a page and the choices in this pannel where set by using the selectInput function followed by a unique function with as.character and the dataset row of interest this process was used for both sex and season.In order to have the weights and heights the wellPanel function was used again. However instead of selectInput, pickerInput was utilized. The pickerInput allowed for an easier use of numerical values, and choices were created using the unique function, with the sort function. Multiple = FALSE was set as we didn't want people to choose multiple heights and weights. In retrospect this could have been a better option. Interestingly at this point our  background was transparent with a black background and black text so we set the background to white with tags$style. tabsetPanel was coupled with tab panel to create an outcome table. We utilized the function dataTableOutput from the `DT` [@DT-package] to output the table based on the given factors in the well pannels and slider.
+
+The final aspect of the body included the final tab item for the imperial to metric conversion. The wellPanel and numericInput functions were utilized. The numericInput was labeled and given an initial value of one. Each conversion (height and weight) included a different uiOutput so they could be used indpendently of eachother.
+
+The UI was created by pulling the sidebar and body together. For aesthetics, a skin called "midnight" was added with the skin function in shinydashboardPlus. Also a header was added using the dashboardHeader function and a little globe was added to the header with the tagList and icon function.
+
+
+
+
+tabsetPanel(tabPanel("outcome", DT::dataTableOutput("table")
 ```{R echo=FALSE}
 # start of application
 #Get sidebar ready and tab names set fot the body.
@@ -526,7 +547,7 @@ These are the images from the shiny application output
 Unfortunately
 -   Richard does not have any Olympic counterparts
  
-![](RColympics.jpg) 
+![cool](RColympics.jpg) 
 
 Let's look at Addison's sister Nicole
 -   Nicole is 5'5, weighs around 155, and has told her sister she is 29 for the past 8 years
