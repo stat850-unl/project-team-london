@@ -344,10 +344,15 @@ The final aspect of the body included the final tab item for the imperial to met
 The UI was created by pulling the sidebar and body together. For aesthetics, a skin called "midnight" was added with the skin function in shinydashboardPlus. Also a header was added using the dashboardHeader function and a little globe was added to the header with the tagList and icon function.
 
 
-The server was a function of input, output, and session. The data table for the physical characteristics was created using renderDataTable and within that a datatable function. Within this function the first part was to filter data based on the lowest slider input and the highest slider input for age. After this if statements were used to say if the input was "all" then it would show all data, but if not then sex, weight, height and season were equal to the input from the UI. These things together would create the new output data table. At this point in time the data table remained transparent with black text on a black background. To solve this we utilized the function formatStyle from DT where the column names were all of those from the data, and the targets of this color was each cell. Inside formatStyle the backgroundColor function was utilized to set it to white, and the opacity function was set to 1 or 100% opaque.
+The server was a function of input, output, and session. 
+
+The data table for the physical characteristics was created using renderDataTable and within that a datatable function. Within this function the first part was to filter data based on the lowest slider input and the highest slider input for age. After this if statements were used to say if the input was "all" then it would show all data, but if not then sex, weight, height and season were equal to the input from the UI. These things together would create the new output data table. At this point in time the data table remained transparent with black text on a black background. To solve this we utilized the function formatStyle from DT where the column names were all of those from the data, and the targets of this color was each cell. Inside formatStyle the backgroundColor function was utilized to set it to white, and the opacity function was set to 1 or 100% opaque.
+
+As previously state each equation from the UI the each math calculation (height and weight) had a seperate ouput ui for a dynamically generated UI. We used renderUI coupled with tagList to print the final values created by the numericInput function. The numericInput function utilized the input values from the user and the conversion of height in inches to centimeters (multiply by 2.54) or the conversion of weight in lbs to kg (multiply by 0.453592). 
+
+Observe was utlized so that the ouputs were reactive to the inputs from each of the tabs and print the outcomes based on each specific set of criteria. Finally the shinyApp function was called with the inputs of server and ui.
 
 
-DT::formatStyle(colnames(data), target = 'cell', backgroundColor = 'white', opacity = 1)
 
 
 ```{R echo=FALSE}
@@ -534,18 +539,18 @@ shinyApp(ui, server)
 
 #Here are the screenshots from the application demonstration.
 Home page of this app
-![](Appopeningpage.png)
+![opening](Appopeningpage.png)
 
 Inital view of selection page
-![](mainopeningpage.png)
+![selection](mainopeningpage.png)
 
 Math for us dummies
-![](Mathopening page.png)
+![math](Mathopening page.png)
 
 These are the images from the shiny application output 
 -   Richard (Addison's dad) is 6'3", weighs 250, and is 66 years young 
 
-![](RCconversion.jpg) 
+![richard](RCconversion.jpg) 
 
 Unfortunately
 -   Richard does not have any Olympic counterparts
@@ -556,7 +561,7 @@ Let's look at Addison's sister Nicole
 -   Nicole is 5'5, weighs around 155, and has told her sister she is 29 for the past 8 years
 -   Lets look at that age range
 
-![](NColympics.jpg) 
+![nicole](NColympics.jpg) 
 
 Obervations from application
 -   At the age of 37 Nicole would have not have had a counter part 
