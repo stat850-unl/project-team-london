@@ -639,7 +639,13 @@ Add another topic here... as many as you desire, really. Make sure to include a 
 
 ## Conclusion
 
-Here, you want to summarize the main points of what you've learned from this investigation, in paragraph form.
+Utilizing data from the Olympics we were able to explore various factors from a global level to that of our own family. In analysis 1 we observed that global conflict had a marked influence on Olympic game participation, particularly for males through out history.
+
+analysis2
+
+analysis3
+
+Finally in part 4 where we developed an app. We observed within the application we are limited in our age range up to 66 years, and it is likely that these older ages are less likely to a Olympic counterpart. Therefore, Richard is out of the running Also, it may be better to utilize an age range rather than just a single age. This is because if if Nicole's age was set there would be no counterpart. However, when we add a range and her physical characteristics we can observe counterparts.
 
 ## Tips
 
