@@ -24,9 +24,9 @@ library(tidyverse)
 olympics <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-07-27/olympics.csv')
 ```
 
-#### This dataset contains information about the winter and summer Olympic athletes from the years 1896 to 2016, their team, weight, placing, sport, event, age, height.
+#### This dataset contains information about the winter and summer Olympic athletes from the years 1896 to 2016, their team, weight, placing, sport, event, age, height
 
--   It was collected from Tidy Tuesday where the data was scraped from www.sports-reference.com.
+-   It was collected from Tidy Tuesday where the data was scraped from www.sports-reference.com
 
 -   A data dictionary is available on the following slide showing each variable, the type of variable, units, and range of values that are possible
 
@@ -215,48 +215,108 @@ for (i in 1:nrow(track)) {
 
 ### How do events change over time?
 
-```{r fig.align="center", fig.width=14}
+```{R fig.align="center", fig.width=14, fig.height=9}
 #|echo: false
 #|label: Global conflict and olympic participation
 #|fig-cap: "Exploring the influence of global conflict on olympic participation for both males and females"
 #|warning: FALSE
 library(forcats)
-#How has participation in track events changed over time? 
-track %>% ggplot(aes(x = year, y = reorder(event, year))) + geom_point(na.rm=T) +
-  labs(title = "Participation in Track Events Over Time", x = "Year", y = "Event") + theme_minimal()
+
+Fem <- track%>% filter(sex == "F")
+
+track %>%
+  ggplot(aes(x = year, y = reorder(event, year), color = category)) +
+  geom_point(size = 3, na.rm = TRUE) +
+  scale_color_manual(values = c("black", "red", "purple", "green", "blue")) +
+  labs(title = "Participation in Track Events Over Time", x = "Year", y = "Event") +
+  theme(axis.text.x = element_text(angle = 0, vjust = 0.5, hjust = 1, size = 22),
+        axis.text.y = element_text(size = 16),
+        axis.title = element_text(size=24),
+        plot.title = element_text(size=28),
+        legend.title = element_text(size=24),
+        legend.text = element_text(size=16),
+        legend.position = "right")
 ```
+
+## Olympic Track Trends through Time
+-   Women's events began in the 1928 while the olypmics have occured since 1896
+-   Women's 3000m steeplechase is the most recent addition to the field (2008)
+-   Many long distance and hurdle events have been added recently while sprint and relay events have persisted longer
+
+#### We can see how events change but, how has athletes participation changed with time?
 ---
 ### Are athletes competing in fewer events more recently? 
-```{r fig.align="center", fig.width=14}
+```{r fig.align="center", fig.width=14, fig.height=9}
 #|echo: false
 #|label: Global conflict and olympic participation
 #|fig-cap: "Exploring the influence of global conflict on olympic participation for both males and females"
 #|warning: FALSE
-track %>% group_by(id, year) %>% summarize(count = n()) %>% ggplot(aes(x = as.factor(year), y = count, fill = as.factor(year))) + labs(title = "Multiple Event Participation", x = "Year", y = "Number of Events by Althlete") +geom_violin() + theme(legend.position="none")
+track %>% 
+  group_by(id, year) %>% 
+  summarize(count = n()) %>% 
+  ggplot(aes(x = as.factor(year), y = count, fill = as.factor(year))) + 
+  labs(title = "Multiple Event Participation", x = "Year", y = "Number of Events by Althlete") +
+  geom_violin() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, size = 22),
+      axis.text.y = element_text(size = 16),
+      axis.title = element_text(size=24),
+      plot.title = element_text(size=24),
+      legend.title = element_text(size=28),
+      legend.text = element_text(size=16),
+      legend.position="none")
 ```
 ---
-## Olympic Track Trends over time
--   Women's events began in the 1930s
--   Women's 3000m steeplechase is the most recent addition to the field
--   While athletes have always been specialized they recent trend is to participate in fewer events, perhaps as they become more specialized
+## Olympic Athlete Specailization through Time
+-   Track athletes participate in 1-5 events during an Olympics
+-   The number of events done by athletes has always been low but there is a trend towards competing in fewer events
+-   It appears that athlete specialization is increasing or events are becoming more competitive!
 
-## We love to give our favorite athletes nicknames, are they more likley to win the olympics if they have one?
+#### We all know how competative the track events are and cheer for our favorites, even giving them nicknames!
 
-We need to figure out if people have nicknames or not, if the althete's name had two " or ', then we assume this indicates their nickname
+## Do these beloved athletes with nicknames win more often?
 
-```{R echo = F}
+#### Data Wrangling: We need to figure out if althetes have nicknames or not
+-   Lets go back to all athlete for this analysis
+-   When the athlete's name had two " or ', then we assume this indicates their nickname
+-   9.2% of all athletes had a nickname 
+
+```{R echo = FALSE}
 library(skimr)
 olympics_nicknames <- olympics %>% mutate(nickname = as.integer(str_count(name, '"') == 2 | str_count(name, "'") == 2))
 olympics_nicknames$nickname <- as.factor(olympics_nicknames$nickname)
 
+olympics_nicknames %>% group_by(nickname) %>% summarize(count = n(), percent = n()/nrow(olympics_nicknames))
+```
+
+## Medal Counts for Athletes 
+```{R echo = FALSE}
+#install.packages("cowplot")
+library(cowplot)
+
 nickname <- olympics_nicknames %>% filter(nickname == 1) %>% group_by(medal) %>% summarize(count = n())
 no_nickname <- olympics_nicknames %>% filter(nickname == 0) %>% group_by(medal) %>% summarize(count = n())
 
-ggplot(nickname, aes(x = "", y = count, fill = medal)) + coord_polar("y", start = 0) +
-  geom_bar(width = 1, stat="identity") + theme_void()
+nickname$medal <- factor(nickname$medal, levels = c("gold", "silver", "bronze", "no_medal"))
 
-ggplot(no_nickname, aes(x = "", y = count, fill = medal)) + coord_polar("y", start = 0) +
-  geom_bar(width = 1, stat="identity") + theme_void()
+p1 <- ggplot(nickname, aes(x = "", y = count)) +
+  labs(title = "Athletes with Nicknames") +
+  coord_polar("y", start = 0) +
+  geom_bar(width = 1, stat = "identity", fill = c("gold", "#cd7f32", "#808080", "lightblue")) +
+  theme(plot.title = element_text(size = 20),
+        legend.position = 'none') +
+  theme_void()
+
+no_nickname$medal <- factor(no_nickname$medal, levels = c("gold", "silver", "bronze", "no_medal"))
+
+p2 <- ggplot(no_nickname, aes(x = "", y = count)) +
+  labs(title = "Athletes with Nicknames") +
+  coord_polar("y", start = 0) +
+  geom_bar(width = 1, stat = "identity", fill = c("gold", "#cd7f32", "#808080", "lightblue")) +
+  theme(plot.title = element_text(size = 20),
+        legend.position = 'none') +
+  theme_void()
+
+plot_grid(p1,p2, labels = c("",""))
 
 medalcount_nickname <- olympics_nicknames %>% filter(nickname == 1) %>% group_by(name) %>% summarize(Gold = sum(medal == "Gold"), Silver = sum(medal == "Silver"), Bronze = (sum(medal == "Bronze")), None = sum(is.na(medal)))
 
@@ -271,13 +331,20 @@ MergeMedalCount_long_noNA <- MergeMedalCount %>% pivot_longer(cols = `Gold`:`Non
 
 ```
 ---
-### It looks like there is a trend but is it statistically different?
+### It looks like atletes with nicknames win more frequently, lets test for it!
+-   Lets build a table and perform a chi-square test for independence
+
+| Nickname | Gold | Silver | Bronze | No Medal |
+|----------|------|--------|--------|----------|
+| Yes      | 5697 | 4900   | 4880   | 106775   |
+| No       | 1219 | 804    | 722    | 9644     |
+
 ```{r echo=FALSE}
-str(MergeMedalCount)
+#str(MergeMedalCount)
 summary <- MergeMedalCount %>% group_by(nickname) %>% summarize(gold = sum(Gold, na.rm = T), silver = sum(Silver, na.rm = T), bronze = sum(Bronze, na.rm = T), total = n())
 
-data_matrix <- matrix(c(0, 5697, 4990, 4880, 122342,
-                        1, 1219, 804, 722, 12389), ncol = 5, byrow = TRUE)
+data_matrix <- matrix(c(0, 5697, 4990, 4880, 106775,
+                        1, 1219, 804, 722, 9644), ncol = 5, byrow = TRUE)
 
 colnames(data_matrix) <- c("nickname", "gold", "silver", "bronze", "total")
 rownames(data_matrix) <- c("1", "2")
@@ -288,16 +355,17 @@ chi_square_result <- chisq.test(data_matrix)
 # Print the result
 print(chi_square_result)
 
+#could look at residuals to see what deviates from expected but I think this is fine. 
+
 ```
-## Shiny application. 
+## Shiny application
 
-Generally people in families have nicknames. Many are fun and silly. Let's continue that energy.
-
-The goal of this application is to have fun using family members physical characteristics and compare them relative to Olympic athletes who have metaled.
+-  Generally people in families have nicknames. Many are fun and silly. Let's continue that energy
+-  The goal of this application is to have fun using family members physical characteristics and compare them relative to Olympic athletes who have metaled
 
 ## Shiny application
 ### Data wrangling
--  1st drop any people that have NA's within the medal status ie. they didn't metal. Super simple.
+-  1st drop any people that have NA's within the medal status ie. they didn't metal. Super simple
 
 ## Home page of this app
 ![](Appopeningpage.png)
@@ -308,38 +376,38 @@ The goal of this application is to have fun using family members physical charac
 ## Math for us dummies
 ![](Mathopening page.png)
 
-## These are the images from the shiny application output. 
+## These are the images from the shiny application output 
 -   Richard (Addison's dad) is 6'3", weighs 250, and is 66 years young 
 
 ![](RCconversion.jpg) 
 
 ## Unfortunately
--   Richard does not have any Olympic counterparts.
+-   Richard does not have any Olympic counterparts
  
 ![](RColympics.jpg) 
 
 ## Let's look at Addison's sister Nicole
--   Nicole is 5'5, weighs around 155, and has told her sister she is 29 for the past 8 years.. 
--   Lets look at that age range. 
+-   Nicole is 5'5, weighs around 155, and has told her sister she is 29 for the past 8 years
+-   Lets look at that age range
 
 ![](NColympics.jpg) 
 
 ## Obervations from application
--   At the age of 37 Nicole would have not have had a counter part. 
+-   At the age of 37 Nicole would have not have had a counter part 
 
-## However, within the range of 29 - 37 we have some: 
+## However, within the range of 29 - 37 we have some! 
 -   Gold medal cyclist from France 
 -   Bronze medal handball player from the UK 
 -   Gold medal Judo fighter from France 
 -   Gold and silver medal Ice hockey player from Canada 
 -   Bronze medal speed skater from China
 
-## Conclusions
--   We can observe that global conflict does influence the participation in the Olympic games, particularly for males.
--   
--   
--   Within the application we are limited in our age range up to 66 years, and it is likely that these older ages are less likely to a Olympic counterpart. Therefore, Richard is out of the running.
--  For the application it may be better to utilize an age range rather than just a single age. This is because if if Nicole's age was set there would be no counterpart. However, when we add a range and her physical characteristics we can observe counterparts.
+## Conclusions: Analysis 1 & 2
+-   We can observe that global conflict does influence the participation in the Olympic games, particularly for males
+-   We have added more Olympic track events with time, some events were also removed but these don't fall into a single category
+-   Track athletes are specializing in one or two events rather than many
 
-
-
+## Conclusions: Analysis 3 & 4
+-   Athletes are more likely to medal if they have a nickname
+-   Within the application we are limited in our age range up to 66 years, and it is likely that these older ages are less likely to a Olympic counterpart. Therefore, Richard is out of the running
+-  For the application it may be better to utilize an age range rather than just a single age. This is because if if Nicole's age was set there would be no counterpart. However, when we add a range and her physical characteristics we can observe counterparts

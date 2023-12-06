@@ -3,18 +3,21 @@ Title: "Evaluation of the olympic games from global to family perspective"
 Author: "Addison Carroll and Sydney Graham"
 format: revealjs
 ---
+
 # Introduction
 
 The Olympic games have been a historical icon through the ages. The games represent the best of the best in their given sports. However, the games can sometimes feel out of touch to your average athletic people! As a result, it was our goal to look at the games from a global to personal family level.
 
 ## Objectives
+
 -   Evaluate the influence of historical events on the participation level of the games for both males and females
 -   Explore how participation in track events has changed over time
 -   Determine if the presence of a nickname influences a persons likelihood to medal
 -   See how family physical characteristics stack up with olympic medalists through the ages
 
 ## Data Wrangling
-### Import data & Data set description 
+
+### Import data & Data set description
 
 ```{R echo=FALSE}
 options(readr.show_col_types = FALSE)
@@ -30,13 +33,17 @@ olympics <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/t
 
 -   A data dictionary is available on the following slide showing each variable, the type of variable, units, and range of values that are possible
 
----
+------------------------------------------------------------------------
+
 ##### Data Dictonary Table
+
+```{=html}
 <style>
 table {
   font-size: 43%; /* Adjust the percentage to your preference */
 }
 </style>
+```
 +---------+-----------------------------------+-----------+---------+---------------------------------------------------------+
 | Name    | Description                       | Type      | Units   | Range/Values                                            |
 +=========+===================================+===========+=========+=========================================================+
@@ -76,3 +83,11 @@ table {
 +---------+-----------------------------------+-----------+---------+---------------------------------------------------------+
 | medal   | Medal won (if any)                | character | NA      | (Gold, Silver, Bronze or NA)                            |
 +---------+-----------------------------------+-----------+---------+---------------------------------------------------------+
+--- 
+### It looks like atletes with nicknames win more frequently, lets test for it!
+-   Lets build a table and perform a chi-square test for independence
+
+| Nickname | Gold | Silver | Bronze | No Medal |
+|----------|------|--------|--------|----------|
+| Yes      | 5697 | 4900   | 4880   | 106775   |
+| No       | 1219 | 804    | 722    | 9644     |
