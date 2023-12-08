@@ -4,7 +4,7 @@ editor: visual
 bibliography: references.bib
 ---
 
-```{r, eval = T, echo = FALSE, message=FALSE, warning=FALSE}
+```{r, eval = F, echo = FALSE, message=FALSE, warning=FALSE}
 # This code chunk contains code to install all of the dependencies
 # necessary to compile and run your report, using if-statements to
 # reduce install time for unnecessary code.
@@ -45,6 +45,10 @@ if (!"shinythemes" %in% installed.packages()) {
 if (!"shinyWidgets" %in% installed.packages()) {
   install.packages("shinyWidgets")
 }
+
+```
+
+```{r, eval = T, echo = FALSE, message=FALSE, warning=FALSE}
 library(dplyr) #tidyverse
 library(tidyr) #tidyverse
 library(ggplot2) #tidyverse
@@ -75,9 +79,10 @@ olympics <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/t
 
 The Olympic Games is an international sports event that has been an icon through the ages. The games represent the best of the best in their given sports and are held every four years in front of a worldwide audience. However, the Olympics can sometimes feel out of touch to average athletic people. As a result, it was our goal to look at the games from a global perspective all the way down to a personal family level.
 
-We obtained this data from a Tidy Tuesday dataset and it was originally scraped from www.sports-reference.com. The data set contains data from the Olympics from 1896 to 2016. Each athlete's name is listed and they have been assigned an individual ID. Physical characteristics are comprised of their sex, age, height, and weight. Team and National Olympic Committee Region (NOC) are used to denote which region the athlete represents. However, an observed anomoly was for each nation of interest there were multiple team names over the years and as a result NOC best represented each country of interest. In order to show this graphically we utilized `wordcloud` [@R-wordcloud] The dataset also contained information about the Olympic Games the athlete competed in, including the year, the season (summer or winter), and the city the games were held in. The sport and event were also included and, of course, which medal the athlete won (gold, silver, bronze), if an athlete did not medal the medal variable was given an NA. No event specific information was included (i.e. time or score).
+We obtained this data from a Tidy Tuesday dataset and it was originally scraped from www.sports-reference.com. The data set contains data from the Olympics from 1896 to 2016. Each athlete's name is listed and they have been assigned an individual ID. Physical characteristics are comprised of their sex, age, height, and weight. Team and National Olympic Committee Region (NOC) are used to denote which region the athlete represents. However, an observed anomaly was for each nation of interest there were multiple team names over the years and as a result NOC best represented each country of interest. In order to show this graphically we utilized `wordcloud` [@R-wordcloud] The dataset also contained information about the Olympic Games the athlete competed in, including the year, the season (summer or winter), and the city the games were held in. The sport and event were also included and, of course, which medal the athlete won (gold, silver, bronze), if an athlete did not medal the medal variable was given an NA. No event specific information was included (i.e. time or score).
 
-## Visualization of the anomoly between 230 countries (NOC) vs 1184 teams (Team)
+### Visualization of the anomaly between 230 countries (NOC) vs 1184 teams (Team).
+
 ```{R, echo=FALSE, error=FALSE, warning=FALSE, message=FALSE, fig.height=9, fig.width=11}
 
 #Add a visualization of the NOC vs country anomaly
@@ -91,6 +96,12 @@ wordcloud(words = countries1$noc,
           rot.per=0.35, 
           colors=brewer.pal(8, "Dark2"))
 
+
+
+```
+
+```{R, echo=FALSE, error=FALSE, warning=FALSE, message=FALSE, fig.height=9, fig.width=11}
+
 countries2 <- olympics %>%
   group_by(team) %>%
 summarise(participantnum2 = n(), .groups = "drop")
@@ -102,8 +113,6 @@ wordcloud(words = countries2$team,
           colors=brewer.pal(8, "Dark2"))
 
 ```
-
-![Figrue 1: All 230 nations in the original dataset. Figure generated with Package Wordclouds2.](#allofthenations.png) ![Figure 2: All 1184 teams in the original data set.Figure generated with Package Wordclouds2.](#alloftheteams.png)
 
 Given this broad dataset and our goal to make the Olympic games to feel closer to home, our objectives were to 1) Evaluate the influence of historical events on the participation level of the games for both males and females, 2) Explore how participation in track events has changed over time, 3) Determine if the presence of a nickname influences a persons likelihood to medal, and 4) See how family physical characteristics stack up with Olympic medalists through the ages.
 
@@ -161,7 +170,7 @@ for (i in 1:nrow(track)) {
 
 For the data wrangling associated with the nickname analysis the str_count function was used to test for sets of " or ' which was indicative of a nickname [@stringr]. The `dplyr` package was used to group by nickname status and to count the number of medals and similarly to group by althelte and count the number of medals of each type [@dplyr-package]. A matrix was created with the counts of bronze, silver, and gold medals for athletes with nicknames and those without for subsequent analysis.
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, output=FALSE}
 olympics_nicknames <- olympics %>% mutate(nickname = as.integer(str_count(name, '"') == 2 | str_count(name, "'") == 2))
 olympics_nicknames$nickname <- as.factor(olympics_nicknames$nickname)
 
@@ -190,26 +199,13 @@ colnames(data_matrix) <- c("nickname", "gold", "silver", "bronze", "total")
 rownames(data_matrix) <- c("1", "2")
 ```
 
-
 The data wrangling associated with the application was just to omit the NAs within the entire data set utilizing the na.omit function from base R. This functioned because if a medalist did not get a medal the variable of medal was an NA.
 
 ```{R echo= FALSE}
 medalist <- olympics %>% na.omit()
 ```
 
-### Historical Conflict & the Olympics
-
-The data wrangling associated with the application was just to omit the nas within the entire data set utilizing the na.omit function from base R. This functioned because if a medalist did not get a medal the variable of medal was an na.
-
-```{R, echo= FALSE}
-medalist <- olympics %>% na.omit()
-```
-
-> Describe any data cleaning and rearranging you needed to do to get your dataset into a workable form. Make sure to cite any packages which were important in your data cleaning process in this section. For instance, if you used dplyr, then it would be appropriate to say something like
->
-> > we used the group-apply-combine paradigm with the `dplyr` functions `group_by` and `summarize` [@dplyr-package] to generate a dataset for each day of the observation period from the 15-minute interval observations in the raw data set.
-
-## Historical Conflict and The Olympics
+### Historical Conflict and The Olympics
 
 The first topic of exploration was the influence of conflict on the particpation in the games. We also wanted to see if there was a difference in the number of participants between the different sexes if we did see a participation decrease. In order to graph this with the cleaned data, we utilized `ggplot` [@ggplot2-package]. We had the asthetics (aes) of year on the x axis, participantnum on the y axis and fill of the sex of the individuals. Then geom_col was utilized. Additions of scale_x_continuous and scale_y_continuous allowed for us to set the breaks to a meaningful level with n.breaks. Also coord_cartesian was used to set the x limits from 1895 to 2017. The theme was used for two aspects of this graph including axis.text.x which then allowed for us to angle the element_text to 90 degrees, to right justify (vjust) by 0.5 and left justify (hjust) by 1. Theme was also used to put the legend.position to the bottom. Labs was then utilized to create the title, and x and y axis titles.
 
@@ -302,8 +298,8 @@ Several figures were created to look at the changes of track events over time. @
 
 ```{r, echo = FALSE}
 #| label: fig-track_events
-#| fig-width: 8
-#| fig-height: 4 # Change the figure dimensions using fig-width/height
+#| fig-width: 12
+#| fig-height: 7 # Change the figure dimensions using fig-width/height
 #| out-width: 80% # This changes the size of the figure as rendered in the text. 
 #| fig-cap: "This figure shows the change in what events are conducted each year of the Olympics. The figure is drawn with `ggplot2` [@ggplot2-package]."
 #| echo: false
@@ -314,19 +310,19 @@ track %>%
   scale_color_manual(values = c("black", "red", "purple", "green", "blue")) +
   labs(title = "Participation in Track Events Over Time", x = "Year", y = "Event") +
   theme(axis.text.x = element_text(angle = 0, vjust = 0.5, hjust = 1, size = 12),
-        axis.text.y = element_text(size = 16),
+        axis.text.y = element_text(size = 12),
         axis.title = element_text(size=14),
-        plot.title = element_text(size=18),
+        plot.title = element_text(size=14),
         legend.title = element_text(size=14),
-        legend.text = element_text(size=10),
+        legend.text = element_text(size=12),
         legend.position = "right")
 
 ```
 
 ```{r, echo=FALSE}
 #| label: fig-multi_events
-#| #| fig-width: 8
-#| fig-height: 4 # Change the figure dimensions using fig-width/height
+#| #| fig-width: 12
+#| fig-height: 5 # Change the figure dimensions using fig-width/height
 #| out-width: 80% # This changes the size of the figure as rendered in the text. 
 #| fig-cap: "This figure shows the distribution of the number of events competed in by each althlete for each year of the event. The figure is drawn with `ggplot2` [@ggplot2-package]."
 #| echo: false
@@ -337,35 +333,52 @@ track %>%
   ggplot(aes(x = as.factor(year), y = count, fill = as.factor(year))) + 
   labs(title = "Multiple Event Participation", x = "Year", y = "Number of Events by Althlete") +
   geom_violin() +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, size = 22),
-      axis.text.y = element_text(size = 10),
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, size = 12),
+      axis.text.y = element_text(size = 12),
       axis.title = element_text(size=14),
       plot.title = element_text(size=14),
-      legend.title = element_text(size=18),
-      legend.text = element_text(size=10),
+      legend.title = element_text(size=12),
+      legend.text = element_text(size=12),
       legend.position="none")
 ```
 
 ### Nicknames and Olympic Performance
 
 ```{r, echo = FALSE}
+#| label: fig-nickname
+#| #| fig-width: 6
+#| fig-height: 7 # Change the figure dimensions using fig-width/height
+#| out-width: 80% # This changes the size of the figure as rendered in the text. 
+#| fig-cap: " The figure is drawn with `ggplot2` [@ggplot2-package]."
+#| echo: false
 nickname$medal <- factor(nickname$medal, levels = c("gold", "silver", "bronze", "no_medal"))
 
 p1 <- ggplot(nickname, aes(x = "", y = count)) +
   labs(title = "Athletes with Nicknames") +
   coord_polar("y", start = 0) +
   geom_bar(width = 1, stat = "identity", fill = c("gold", "#cd7f32", "#808080", "lightblue")) +
-  theme(plot.title = element_text(size = 20),
+  theme(plot.title = element_text(size = 14),
         legend.position = 'none') +
   theme_void()
 
+
+```
+
+```{r, echo = FALSE}
+#| label: fig-no_nickname
+#| #| fig-width: 6
+#| fig-height: 7 # Change the figure dimensions using fig-width/height
+#| out-width: 80% # This changes the size of the figure as rendered in the text. 
+#| fig-cap: " The figure is drawn with `ggplot2` [@ggplot2-package]."
+#| echo: false
+#| 
 no_nickname$medal <- factor(no_nickname$medal, levels = c("gold", "silver", "bronze", "no_medal"))
 
 p2 <- ggplot(no_nickname, aes(x = "", y = count)) +
   labs(title = "Athletes with Nicknames") +
   coord_polar("y", start = 0) +
   geom_bar(width = 1, stat = "identity", fill = c("gold", "#cd7f32", "#808080", "lightblue")) +
-  theme(plot.title = element_text(size = 20),
+  theme(plot.title = element_text(size = 14),
         legend.position = 'none') +
   theme_void()
 
@@ -399,7 +412,6 @@ The data table for the physical characteristics was created using renderDataTabl
 As previously stated each equation from the imperial to metric conversion had a UI output for each math calculation (height and weight) had a seperate ouput ui for a dynamically generated UI. We used renderUI coupled with tagList to print the final values created by the numericInput function. The numericInput function utilized the input values from the user and the conversion of height in inches to centimeters (multiply by 2.54) or the conversion of weight in lbs to kg (multiply by 0.453592).
 
 Observe was then utilized so that the outputs were reactive to the inputs from each of the tabs and print the outcomes based on each specific set of criteria. Finally the shinyApp function was called with the inputs of server and ui to run the app.
-
 
 ![link to deployed shiny app](https://addisoncarroll.shinyapps.io/FamilyOlympics/)
 
@@ -447,50 +459,6 @@ Obervations from application - At the age of 37 Nicole would have not have had a
 
 However, within the range of 29 - 37 we have some! - Gold medal cyclist from France - Bronze medal handball player from the UK - Gold medal Judo fighter from France - Gold and silver medal Ice hockey player from Canada - Bronze medal speed skater from China
 
-Then, you can reference @fig-iris in the text and the appropriate cross-reference will be generated.
-
-You can find additional information about formatting figures generated from code in the [quarto documentation](https://quarto.org/docs/authoring/figures.html#computations).
-
-## Topic of Exploration
-
-Here, you want to introduce the first topic you want to explore with your (newly cleaned up) data. Code to process data should be contained in chunks above this point, and those chunks should *not* be included in the report.
-
-You can add options to executable code like this
-
-```{r}
-#| echo: false
-2 * 2
-```
-
-The `echo: false` option disables the printing of code (only output is displayed).
-
-If you generate a figure, it should have a caption. Here's a demonstration of how to do that:
-
-```{r iris-plot}
-#| label: fig-iris
-#| fig-width: 8
-#| fig-height: 4 # Change the figure dimensions using fig-width/height
-#| out-width: 80% # This changes the size of the figure as rendered in the text. 
-#| fig-cap: "This figure shows the relationship between sepal width and petal width in irises. I've used geom_jitter to combat overplotting, as the data are measured in relatively consistent increments. The figure is drawn with `ggplot2` [@ggplot2-package]."
-#| echo: false
-
-
-data(iris)
-library(ggplot2)
-ggplot(iris, aes(x = Sepal.Width, y = Petal.Width, color = Species)) + 
-  geom_jitter() + 
-  xlab("Sepal Width (cm)") + ylab("Petal Width (cm)") + 
-  ggtitle("Sepal and Petal Dimensions")
-```
-
-Then, you can reference @fig-iris in the text and the appropriate cross-reference will be generated.
-
-You can find additional information about formatting figures generated from code in the [quarto documentation](https://quarto.org/docs/authoring/figures.html#computations).
-
-## Additional Exploration topic
-
-Add another topic here... as many as you desire, really. Make sure to include a transition between the two sections that connects the two with some sort of logical train of thought.
-
 ## Conclusion
 
 Utilizing data from the Olympics we were able to explore various factors from a global level to that of our own family. In analysis 1 we observed that global conflict had a marked influence on Olympic game participation, particularly for males through out history.
@@ -500,19 +468,3 @@ analysis2
 analysis3
 
 Finally in part 4 where we developed an app. We observed within the application we are limited in our age range up to 66 years, and it is likely that these older ages are less likely to a Olympic counterpart. Therefore, Richard is out of the running Also, it may be better to utilize an age range rather than just a single age. This is because if if Nicole's age was set there would be no counterpart. However, when we add a range and her physical characteristics we can observe counterparts.
-
-## Tips
-
-(delete this section from your report!)
-
-Almost anything you might want to know about how to format output in quarto can be found [here](https://quarto.org/docs/authoring/markdown-basics.html). Feel free to email/come to office hours to figure out how to do XYZ - part of the goal of making you write this report is that I want you to know how to write e.g. a journal paper in Quarto as well, so now's the time to experiment.
-
-If you want to know what the wordcount of your report is, you can run the following command in your terminal:
-
-```         
-pandoc --lua-filter wordcount.lua report.qmd
-```
-
-Notice that I have not pushed `_output/report.html` or the `_output/report_files/` folder to github - this is intentional. I have actually set `_output` to not show up in git, to encourage you all to NOT push the rendered files to github and to instead work from the markdown files directly.
-
-You may find it cleaner to create a figure subdirectory and store any figures that aren't created by R/Python in that folder. I encourage you to organize this repository in a sensible way.
