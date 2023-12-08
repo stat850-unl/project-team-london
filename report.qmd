@@ -4,7 +4,7 @@ editor: visual
 bibliography: references.bib
 ---
 
-```{r, eval = T, echo=FALSE, message=FALSE, warning=FALSE}
+```{r, eval = T, echo = FALSE, message=FALSE, warning=FALSE}
 # This code chunk contains code to install all of the dependencies
 # necessary to compile and run your report, using if-statements to
 # reduce install time for unnecessary code.
@@ -21,7 +21,30 @@ if (!"skimr" %in% installed.packages()) {
 if (!"cowplot" %in% installed.packages()) {
   install.packages("cowplot")
 }
-
+if (!"RColorBrewer" %in% installed.packages()) {
+  install.packages("RColorBrewer")
+}
+if (!"flexdashboard" %in% installed.packages()) {
+  install.packages("flexdashboard")
+}
+if (!"shiny" %in% installed.packages()) {
+  install.packages("shiny")
+}
+if (!"purrr" %in% installed.packages()) {
+  install.packages("purrr")
+}
+if (!"shinydashboard" %in% installed.packages()) {
+  install.packages("shinydashboard")
+}
+if (!"shinydashboardPlus" %in% installed.packages()) {
+  install.packages("shinydashboardPlus")
+}
+if (!"shinythemes" %in% installed.packages()) {
+  install.packages("shinythemes")
+}
+if (!"shinyWidgets" %in% installed.packages()) {
+  install.packages("shinyWidgets")
+}
 library(dplyr) #tidyverse
 library(tidyr) #tidyverse
 library(ggplot2) #tidyverse
@@ -29,23 +52,17 @@ library(stringr) #tidyverse
 library(forcats) #tidyverse
 library(skimr)
 library(cowplot)
-library(wordcloud) #cran
-library(RColorBrewer)
-library(wordcloud2)
-library(ggwordcloud)
-library(flexdashboard)
-library(tibble)
-library(shiny)
-library(purrr)
+library(wordcloud) 
+library(RColorBrewer) #cran
+library(flexdashboard)#cran
+#library(tibble)
+library(shiny)#cran
+library(purrr) #cran
 library(DT)
 library(shinydashboard)
 library(shinythemes)
 library(shinyWidgets)
 library(shinydashboardPlus)
-library(bibtex)
-toBibtex(citation("DT"))
-knitr::write_bib(c("DT"), width = 60)
-
 ```
 
 ```{R echo=FALSE}
@@ -58,20 +75,15 @@ olympics <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/t
 
 The Olympic Games is an international sports event that has been an icon through the ages. The games represent the best of the best in their given sports and are held every four years in front of a worldwide audience. However, the Olympics can sometimes feel out of touch to average athletic people. As a result, it was our goal to look at the games from a global perspective all the way down to a personal family level.
 
-We obtained this data from a Tidy Tuesday dataset and it was originally scraped from www.sports-reference.com. The data set contains data from the Olympics from 1896 to 2016. Each athlete's name is listed and they have been assigned an individual ID. Physical characteristics are comprised of their sex, age, height, and weight. Team and National Olympic Committee Region (NOC) are used to denote which region the athlete represents. However, an observed anomaly was for each nation of interest there were multiple team names over the years and as a result NOC best represented each country of interest. Additionally, the dataset contained information about the Olympic Games the athlete competed in, including the year, the season (summer or winter), and the city the games were held in. The sport and event were also included and, of course, which medal the athlete won (gold, silver, bronze), if an athlete did not medal the medal variable was given an NA. No event specific information was included (i.e. time or score).
-
-```{R eval = FALSE, echo=FALSE}
-=======
 We obtained this data from a Tidy Tuesday dataset and it was originally scraped from www.sports-reference.com. The data set contains data from the Olympics from 1896 to 2016. Each athlete's name is listed and they have been assigned an individual ID. Physical characteristics are comprised of their sex, age, height, and weight. Team and National Olympic Committee Region (NOC) are used to denote which region the athlete represents. However, an observed anomoly was for each nation of interest there were multiple team names over the years and as a result NOC best represented each country of interest. In order to show this graphically we utilized `wordcloud` [@R-wordcloud] The dataset also contained information about the Olympic Games the athlete competed in, including the year, the season (summer or winter), and the city the games were held in. The sport and event were also included and, of course, which medal the athlete won (gold, silver, bronze), if an athlete did not medal the medal variable was given an NA. No event specific information was included (i.e. time or score).
 
+## Visualization of the anomoly between 230 countries (NOC) vs 1184 teams (Team)
+```{R, echo=FALSE, error=FALSE, warning=FALSE, message=FALSE, fig.height=9, fig.width=11}
 
-```{R, echo=FALSE, error=FALSE, warning=FALSE, message=FALSE}
->>>>>>> d486d17653160e3fddb55c85b481e9313683da65
 #Add a visualization of the NOC vs country anomaly
 countries1 <- olympics %>%
   group_by(noc) %>%
   summarise(participantnum1 = n(), .groups = "drop")
-png("#allofthenations.png", width = 480, height = 480)
 wordcloud(words = countries1$noc, 
           freq = countries1$participantnum1, 
           min.freq = 1, max.words=300,
@@ -82,13 +94,13 @@ wordcloud(words = countries1$noc,
 countries2 <- olympics %>%
   group_by(team) %>%
 summarise(participantnum2 = n(), .groups = "drop")
-png("#alloftheteams.png", width = 480, height = 480)
 wordcloud(words = countries2$team, 
           freq = countries2$participantnum2, 
           min.freq = 1, max.words=1154,
           random.order=FALSE, 
           rot.per=0.35, 
           colors=brewer.pal(8, "Dark2"))
+
 ```
 
 ![Figrue 1: All 230 nations in the original dataset. Figure generated with Package Wordclouds2.](#allofthenations.png) ![Figure 2: All 1184 teams in the original data set.Figure generated with Package Wordclouds2.](#alloftheteams.png)
@@ -96,7 +108,6 @@ wordcloud(words = countries2$team,
 Given this broad dataset and our goal to make the Olympic games to feel closer to home, our objectives were to 1) Evaluate the influence of historical events on the participation level of the games for both males and females, 2) Explore how participation in track events has changed over time, 3) Determine if the presence of a nickname influences a persons likelihood to medal, and 4) See how family physical characteristics stack up with Olympic medalists through the ages.
 
 ## Methods
-
 
 The method of data wrangling for the conflict analysis was quite simple. I first utilized the initial data set of the Olympics, and preformed the the group-apply-combine paradigm with the `dplyr` [@R-dplyr]. We utilized the group_by function and grouped the data by noc, year, and sex. This was to develop the participants per country per year per sex. This value was summarized with the summarise function as participantnum .groups = drop within the summarise function is an override.
 
@@ -198,13 +209,13 @@ medalist <- olympics %>% na.omit()
 >
 > > we used the group-apply-combine paradigm with the `dplyr` functions `group_by` and `summarize` [@dplyr-package] to generate a dataset for each day of the observation period from the 15-minute interval observations in the raw data set.
 
-##Topic 1
+## Historical Conflict and The Olympics
 
-The first topic of exploration was the influence of conflict on the particpation in the games. We also wanted to see if there was a difference in the change of the different sexs if we did see a participation decrease. In order to graph this with the cleaned data. We utilized `ggplot` [@ggplot2-package]. The asthetics (aes) we year on the x axis, participantnum on the y axis and fill of the sex of the individuals. Then geom_col was utilized. Additions of scale_x_continuous and scale_y_continuous allowed for us to set the breaks to a meaningful level with n.breaks. Also coord_cartesian was used to set the x limits from 1895 to 2017. The theme was used for two aspects of this graph including axis.text.x which then allowed for us to angle the element_text to 90 degrees, to right justify (vjust) by 0.5 and left justify (hjust) by 1. Theme was also used to put the legend.position to the bottom. Labs was then utilized to create the title, and x and y axis titles.
+The first topic of exploration was the influence of conflict on the particpation in the games. We also wanted to see if there was a difference in the number of participants between the different sexes if we did see a participation decrease. In order to graph this with the cleaned data, we utilized `ggplot` [@ggplot2-package]. We had the asthetics (aes) of year on the x axis, participantnum on the y axis and fill of the sex of the individuals. Then geom_col was utilized. Additions of scale_x_continuous and scale_y_continuous allowed for us to set the breaks to a meaningful level with n.breaks. Also coord_cartesian was used to set the x limits from 1895 to 2017. The theme was used for two aspects of this graph including axis.text.x which then allowed for us to angle the element_text to 90 degrees, to right justify (vjust) by 0.5 and left justify (hjust) by 1. Theme was also used to put the legend.position to the bottom. Labs was then utilized to create the title, and x and y axis titles.
 
-After this point the goal was to evaluate the data. We first used geom_rect to visually parse out the areas before 1923 and after 1992 when either the winter games were not present and when the Olympic summer and winter games were split into two different years. These were labeled using geom_label with a string wrap since the text was so long, the labels were set at specific x and y coordinates based on visual inspection. The labels were then padded so the wrapped lines were not right on top of one another, label size was set, font color set to black, and background fill was set to a green color.
+After this point the goal was to evaluate the data. We first used geom_rect to visually parse out the areas before 1923 and after 1992 where either the winter games were not present or the Olympic summer and winter games were split into two different years. These were labeled using geom_label with a string wrap since the text was so long, the labels were set at specific x and y coordinates based on visual inspection. The labels were then padded so the wrapped lines were not right on top of one another, label size was set, font color set to black, and background fill was set to a green color.
 
-After evaluating the data we picked out the bars where they were decreased relative to the surrounding bars or non-existent in the case of WW1 and WW2. We found a total of 6 global issues which caused decreases in the participation in the Olympic games including, WW1, The Great Depression, WW2, The Suez Conflict, and the beginning of the Iran and Iraq war/ Soviet-Afgan War / Cold War tension.
+After evaluating the data we picked out the bars where they were decreased relative to the surrounding bars or non-existent in the case of WW1 and WW2. We found a total of 6 global issues which caused decreases in the participation in the Olympic games including, WW1, The Great Depression, WW2, The Suez Conflict, and the beginning of the Iran and Iraq war/ Soviet-Afgan War / Cold War tension. We also noticed that for these conflicts the male participants dropped markedly relative to the female participants.
 
 In order to place each of these conflicts on the graph geom_label was used again, and x and y coordinates were set based on the years associated with the conflict and visual inspection of the y axis. Label size was set to 0.55 like previous labels and colors for labels were the same as previous. An arrow was then added to point down to the specific year using geom_segment and the aesthetic for an arrow as set to the corresponding year on the x axis, and y value was adjusted to be a length where the end of the arrow touched the label and the bottom of the arrow was near the end of the specific bar (if there was a bar).
 
@@ -367,15 +378,15 @@ chi_square_result <- chisq.test(data_matrix)
 print(chi_square_result)
 ```
 
-##Topic 4: The app
+## Topic 4: The app
 
-The app is found under app.R. followed by screenshots from the app demonstration.
+The app code is found under app.R. followed by the app link and screenshots from the app demonstration.
 
-The goal of this app was to explore how our families "stacked up" to olympic counterparts of the same age and physical characteristics. In order to accomplish this goal we utilized the `shinydashboard` [@R-shinydashboard]. First we utilized dashboardSidebar coupled with sidebarMenu in order to create the id of the "tabs" on the sidebar. Within this we also utilized menuItem to then define the tabName and that it would start expanded. Within the dashboard we then create 3 menu items including an "about us", "Olympian's physical characteristics", and a "Help desk: imperial to metric conversion."
+The goal of this app was to explore how our families "stacked up" to Olympic counterparts of the same age and physical characteristics. In order to accomplish this goal we utilized the `shinydashboard` [@R-shinydashboard]. First we utilized dashboardSidebar coupled with sidebarMenu in order to create the id of the "tabs" on the sidebar. Within this we also utilized menuItem to then define the tabName and that it would start expanded. Within the dashboard we then create 3 menu items including an "about us", "Olympian's physical characteristics", and a "Help desk: imperial to metric conversion."
 
-Then we moved to the body. We started with the dashboardBody function and then set up our tab "guts" with the tabItemfunciton. Within the about us tab we utilized the userBox function from `shinydashboardPlus` [@R-shinydashboardPlus]. This allowed us to create a user descriptin with title, subtitle, type of box, color of box, gradient effect on the box, status of the box relative to others, a little snippit of information about ourselves and an image of ourselves with the userDescription function. we then created the second tab using the tabItem function and liked it back to the sidebar menu item. We added the next tab item which would comprise our main page. In this tab item we utilized the fluidPage with a title and style of the title. After which this portion was set up with a fluidRow function. The first row covered the entire page as a slider with a shiny and red appearance from the chooseSliderSkin function. This was followed by a slider input of age which came from the cleaned dataset and minimum and maximum age was set to that of the data set, and the value could range from the minimul to the maximum age.
+Then we moved to the body. We started with the dashboardBody function and then set up our tab "guts" with the tabItemfunciton. Within the about us tab we utilized the userBox function from `shinydashboardPlus` [@R-shinydashboardPlus]. This allowed us to create a user description with title, subtitle, type of box, color of box, gradient effect on the box, status of the box relative to others, a little snippet of information about ourselves and an image of ourselves with the userDescription function. We then created the second tab using the tabItem function and linked it back to the sidebar menu item that was previously set up in the sidebar. We added the next tab item which would comprise our main page. In this tab item we utilized the fluidPage with a title and style of the title. After which this portion was set up with a fluidRow function. The first row covered the entire page as a slider with a shiny and red appearance from the chooseSliderSkin function. This was followed by a slider input of age which came from the cleaned dataset and the range of the slider was set to the minimum and maximum age in the data set.
 
-The next box bellow was a set up with the wellPanel function. This first well took up half a page and the choices in this pannel where set by using the selectInput function followed by a unique function with as.character and the data set row of interest this process was used for both sex and season.In order to have the weights and heights the wellPanel function was used again. However instead of selectInput, pickerInput was utilized. The pickerInput allowed for an easier use of numerical values, and choices were created the first choice was an "all" for all data and the second was created using the unique function, with the sort function. Multiple = FALSE was set as we didn't want people to choose multiple heights and weights. In retrospect this could have been a better option. Interestingly at this point our background was transparent with a black background and black text so we set the background to white with tags\$style. tabsetPanel was coupled with tab panel to create an outcome table. We utilized the function dataTableOutput from the `DT` [@R-DT] to output the table based on the given factors in the well pannels and slider.
+The next box bellow in the Olympians physical characteristics tab was a set up with the wellPanel function for the season and sex variables. All wells took up half a page and the choices in this pannels where set by using the selectInput function followed by a unique function with as.character and the data set column of interest (ie. sex or season).In order to have the weights and heights the wellPanel function was used again. However instead of selectInput, pickerInput was utilized. The pickerInput allowed for an easier use of numerical values, and choices were created. The first choice was an "all" for all data and the second was created using the unique function, with the sort function so that numerical inputs were sorted. Multiple = FALSE was set as we didn't want people to choose multiple heights and weights. In retrospect this could have been a better option, and multiple choice could be added in the future. Interestingly at this point our background was transparent with a black background and black text so we set the background to white with tags\$style. TabsetPanel was coupled with tab panel to create an outcome table from the previous variables. We utilized the function dataTableOutput from the `DT` [@R-DT] to output the table based on the given factors in the well pannels and slider.
 
 The final aspect of the body included the final tab item for the imperial to metric conversion. The wellPanel and numericInput functions were utilized. The numericInput was labeled and given an initial value of one. Each conversion (height and weight) included a different uiOutput so they could be used indpendently of eachother.
 
@@ -383,11 +394,11 @@ The UI was created by pulling the sidebar and body together. For aesthetics, a s
 
 The server was a function of input, output, and session.
 
-The data table for the physical characteristics was created using renderDataTable and within that a datatable function. Within this function the first part was to filter data based on the lowest slider input and the highest slider input for age. After this if statements were used to say if the input was "all" then it would show all data, but if not then sex, weight, height and season were equal to the input from the UI. These things together would create the new output data table. At this point in time the data table remained transparent with black text on a black background. To solve this we utilized the function formatStyle from DT where the column names were all of those from the data, and the targets of this color was each cell. Inside formatStyle the backgroundColor function was utilized to set it to white, and the opacity function was set to 1 or 100% opaque.
+The data table for the physical characteristics was created using renderDataTable and within that a datatable function. Within this function the first part was to filter data based on the lowest slider input and the highest slider input for age. After this if statements were used to say if the input was "all" then it would show all data, but if not then sex, weight, height and season were equal to the input from the UI. These things together would create the new output data table. At this point in time the data table remained transparent with black text on a black background. To solve this we utilized the function formatStyle from DT where the column names were all of those from the data, and the targets of this color was each cell. Inside formatStyle the backgroundColor function was utilized to set it to white, and the opacity function was set to 1 or 100% opaque so we could actually see the information from this table.
 
-As previously state each equation from the UI the each math calculation (height and weight) had a seperate ouput ui for a dynamically generated UI. We used renderUI coupled with tagList to print the final values created by the numericInput function. The numericInput function utilized the input values from the user and the conversion of height in inches to centimeters (multiply by 2.54) or the conversion of weight in lbs to kg (multiply by 0.453592).
+As previously stated each equation from the imperial to metric conversion had a UI output for each math calculation (height and weight) had a seperate ouput ui for a dynamically generated UI. We used renderUI coupled with tagList to print the final values created by the numericInput function. The numericInput function utilized the input values from the user and the conversion of height in inches to centimeters (multiply by 2.54) or the conversion of weight in lbs to kg (multiply by 0.453592).
 
-Observe was utlized so that the ouputs were reactive to the inputs from each of the tabs and print the outcomes based on each specific set of criteria. Finally the shinyApp function was called with the inputs of server and ui.
+Observe was then utilized so that the outputs were reactive to the inputs from each of the tabs and print the outcomes based on each specific set of criteria. Finally the shinyApp function was called with the inputs of server and ui to run the app.
 
 
 ![link to deployed shiny app](https://addisoncarroll.shinyapps.io/FamilyOlympics/)
