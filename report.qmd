@@ -126,7 +126,7 @@ countries <- olympics %>%
   summarise(participantnum = n(), .groups = "drop")
 ```
 
-To analyze the track events the filter function from `dplyr` was used to first select the "athletics" category that contained all the track and field events, and then to remove events that did not belong [@dplyr-package]. The events that were removed included any vaults or throws, as well as team and all-around events. A loop was developed to sort these track events into categories, using the str_detect and str_extract functions of the `stringr` package [@stringr].
+To analyze the track events the filter function from `dplyr` was used to first select the "athletics" category that contained all the track and field events, and then events were removed that did not belong [@dplyr-package]. The events that were removed included any vaults or throws, as well as team and all-around events. A loop was developed to sort these track events into categories, using the str_detect and str_extract functions of the `stringr` package [@stringr].
 
 ```{r, echo = FALSE}
 #Get track and field events
@@ -206,7 +206,7 @@ medalist <- olympics %>% na.omit()
 
 ### Historical Conflict and The Olympics
 
-The first topic of exploration was the influence of conflict on the particpation in the games. We also wanted to see if there was a difference in the number of participants between the different sexes if we did see a participation decrease. In order to graph this with the cleaned data, we utilized `ggplot` [@ggplot2-package]. We had the asthetics (aes) of year on the x axis, participantnum on the y axis and fill of the sex of the individuals. Then geom_col was utilized. Additions of scale_x_continuous and scale_y_continuous allowed for us to set the breaks to a meaningful level with n.breaks. Also coord_cartesian was used to set the x limits from 1895 to 2017. The theme was used for two aspects of this graph including axis.text.x which then allowed for us to angle the element_text to 90 degrees, to right justify (vjust) by 0.5 and left justify (hjust) by 1. Theme was also used to put the legend.position to the bottom. Labs was then utilized to create the title, and x and y axis titles.
+The first topic of exploration was the influence of conflict on the particpation in the games. We also wanted to see if there was a difference in the number of participants between the different sexes if we did see a participation decrease. In order to graph this with the cleaned data, we utilized `ggplot` and the result is shown in @fig-conflict [@ggplot2-package]. We had the asthetics (aes) of year on the x axis, participantnum on the y axis and fill of the sex of the individuals. Then geom_col was utilized. Additions of scale_x_continuous and scale_y_continuous allowed for us to set the breaks to a meaningful level with n.breaks. Also coord_cartesian was used to set the x limits from 1895 to 2017. The theme was used for two aspects of this graph including axis.text.x which then allowed for us to angle the element_text to 90 degrees, to right justify (vjust) by 0.5 and left justify (hjust) by 1. Theme was also used to put the legend.position to the bottom. Labs was then utilized to create the title, and x and y axis titles.
 
 After this point the goal was to evaluate the data. We first used geom_rect to visually parse out the areas before 1923 and after 1992 where either the winter games were not present or the Olympic summer and winter games were split into two different years. These were labeled using geom_label with a string wrap since the text was so long, the labels were set at specific x and y coordinates based on visual inspection. The labels were then padded so the wrapped lines were not right on top of one another, label size was set, font color set to black, and background fill was set to a green color.
 
@@ -418,7 +418,7 @@ Here are the screenshots from the application demonstration. Home page of this a
 
 Initial view of selection page ![Initial view of selection page](mainopeningpage.png)
 
-Math for us dummies ![Imperial to Metric Conversion Calculator](Mathopening%20page.png)
+Tool to convert to metric ![Imperial to Metric Conversion Calculator](Mathopening%20page.png)
 
 These are the images from the shiny application output - Richard (Addison's dad) is 6'3", weighs 250, and is 66 years young
 
@@ -454,4 +454,4 @@ We see that Olympic track events have changed with time but they don't fall neat
 
 In our nickname analysis, we saw Olympic Athletes with nicknames were more likely to win! Perhaps this is because we tend to cheer for those in the top of their field.
 
-Finally in part 4 where we developed an app. We observed within the application we are limited in our age range up to 66 years, and it is likely that these older ages are less likely to a Olympic counterpart. Therefore, Richard is out of the running Also, it may be better to utilize an age range rather than just a single age. This is because if if Nicole's age was set there would be no counterpart. However, when we add a range and her physical characteristics we can observe counterparts.
+Finally in part 4 where we developed an app. We observed within the application we are limited in our age range up to 66 years, and it is likely that these older ages are less likely to a Olympic counterpart. Therefore, Richard is out of the running. Also, it may be better to utilize an age range rather than just a single age. This is because if if Nicole's age was set there would be no counterpart. However, when we add a range and her physical characteristics we can observe counterparts.
