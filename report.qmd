@@ -59,7 +59,6 @@ library(cowplot)
 library(wordcloud) 
 library(RColorBrewer) #cran
 library(flexdashboard)#cran
-#library(tibble)
 library(shiny)#cran
 library(purrr) #cran
 library(DT)
@@ -79,7 +78,7 @@ olympics <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/t
 
 The Olympic Games is an international sports event that has been an icon through the ages. The games represent the best of the best in their given sports and are held every four years in front of a worldwide audience. However, the Olympics can sometimes feel out of touch to average athletic people. As a result, it was our goal to look at the games from a global perspective all the way down to a personal family level.
 
-We obtained this data from a Tidy Tuesday dataset and it was originally scraped from www.sports-reference.com. The data set contains data from the Olympics from 1896 to 2016. Each athlete's name is listed and they have been assigned an individual ID. Physical characteristics are comprised of their sex, age, height, and weight. Team and National Olympic Committee Region (NOC) are used to denote which region the athlete represents. However, an observed anomaly was for each nation of interest there were multiple team names over the years and as a result NOC best represented each country of interest. In order to show this graphically we utilized `wordcloud` [@R-wordcloud] The dataset also contained information about the Olympic Games the athlete competed in, including the year, the season (summer or winter), and the city the games were held in. The sport and event were also included and, of course, which medal the athlete won (gold, silver, bronze), if an athlete did not medal the medal variable was given an NA. No event specific information was included (i.e. time or score).
+We obtained this data from a Tidy Tuesday dataset and it was originally scraped from www.sports-reference.com. The data set contains data from the Olympics from 1896 to 2016. Each athlete's name is listed and they have been assigned an individual ID. Physical characteristics are comprised of their sex, age, height, and weight. Team and National Olympic Committee Region (NOC) are used to denote which region the athlete represents. However, an observed anomaly was for each nation of interest there were multiple team names over the years and as a result NOC best represented each country of interest. In order to show this graphically we utilized `wordcloud` [@wordcloud] The dataset also contained information about the Olympic Games the athlete competed in, including the year, the season (summer or winter), and the city the games were held in. The sport and event were also included and, of course, which medal the athlete won (gold, silver, bronze), if an athlete did not medal the medal variable was given an NA. No event specific information was included (i.e. time or score).
 
 ### Visualization of the anomaly between 230 countries (NOC) vs 1184 teams (Team).
 
@@ -118,7 +117,7 @@ Given this broad dataset and our goal to make the Olympic games to feel closer t
 
 ## Methods
 
-The method of data wrangling for the conflict analysis was quite simple. I first utilized the initial data set of the Olympics, and preformed the the group-apply-combine paradigm with the `dplyr` [@R-dplyr]. We utilized the group_by function and grouped the data by noc, year, and sex. This was to develop the participants per country per year per sex. This value was summarized with the summarise function as participantnum .groups = drop within the summarise function is an override.
+The method of data wrangling for the conflict analysis was quite simple. I first utilized the initial data set of the Olympics, and preformed the the group-apply-combine paradigm with the `dplyr` [@dplyr-package]. We utilized the group_by function and grouped the data by noc, year, and sex. This was to develop the participants per country per year per sex. This value was summarized with the summarise function as participantnum .groups = drop within the summarise function is an override.
 
 ```{r, echo = FALSE}
 # create data set that sums the countries by year.This only works for the years up until 1992 where games were held in the same year. 
@@ -294,7 +293,9 @@ ggplot(countries, aes(x=year, y=participantnum, fill = sex)) +
 
 ### Track Events through Time
 
-Several figures were created to look at the changes of track events over time. @fig-track_events is a scatter plot that shows a point for each year the event was hosted at the Olympic Games. The points were color coded so we can see if the changes affects one category more than another. @fig-track_events was generated with `ggplot2` [@ggplot2-package]. @fig-multi_events was also created to show the distribution of the number of events each individual athlete competed, and how this changes over time.
+Several figures were created to look at the changes of track events over time. @fig-track_events is a scatter plot that shows a point for each year the event was hosted at the Olympic Games. The points were color coded so we can see if the changes affects one category more than another. @fig-track_events was generated with `ggplot2`[@ggplot2-package]. As we see in the figure the Women's events began in the 1928 while the Olympics have occurred since 1896. We also see that the Women's 3000m steeplechase is the most recent addition to the field which happened in 2008. By track category but there seems to be recent additions of long distance and hurdle events while sprint and relays have been around longer. We also see the stoppages of the games for both World Wars.
+
+@fig-multi_events was also created to show the distribution of the number of events each individual athlete competed, and how this changes over time. From this we see that track athletes participate in 1-5 events per Olympics. The number of events done by athletes has always been low but there is a trend towards competing in fewer events, which suggests athlete specialization is increasing or events are becoming more competitive!
 
 ```{r, echo = FALSE}
 #| label: fig-track_events
@@ -344,12 +345,16 @@ track %>%
 
 ### Nicknames and Olympic Performance
 
+To compare the performance of Olympic athletes with nicknames to those without we created pie charts that represent the proportion of athletes in each group who earned gold, silver, bronze, or no medal. @fig-nickname was created in `ggplot2` by wrapping a bar chart around polar coordinates [@ggplot2-package]. To combine the two plots into a single figure the plot_grid function from `cowplot` was used [@cowplot]. From this figure we see that a large percentage of athletes go home without a medal, but it does appear that folks with nicknames have slightly better odds of winning!
+
+To further test this we conducted a chi-square test of independence, on the contingency table (matrix) developed in the data wrangling stage. The chi-square statistics was 957.88 with 4 degrees of freedom resulting in a p-value of 2.2e-16. This confirms the trends that we see in the pie charts above.
+
 ```{r, echo = FALSE}
 #| label: fig-nickname
-#| #| fig-width: 6
+#| #| fig-width: 12
 #| fig-height: 7 # Change the figure dimensions using fig-width/height
 #| out-width: 80% # This changes the size of the figure as rendered in the text. 
-#| fig-cap: " The figure is drawn with `ggplot2` [@ggplot2-package]."
+#| fig-cap: "This figure shows pie charts for the type of medal earned, if any, for athletes with nicknames (right) and those without (left). The medal proportions are colored gold, silver, and bronze according to the category. The figure is drawn with `ggplot2` [@ggplot2-package]."
 #| echo: false
 nickname$medal <- factor(nickname$medal, levels = c("gold", "silver", "bronze", "no_medal"))
 
@@ -361,17 +366,6 @@ p1 <- ggplot(nickname, aes(x = "", y = count)) +
         legend.position = 'none') +
   theme_void()
 
-
-```
-
-```{r, echo = FALSE}
-#| label: fig-no_nickname
-#| #| fig-width: 6
-#| fig-height: 7 # Change the figure dimensions using fig-width/height
-#| out-width: 80% # This changes the size of the figure as rendered in the text. 
-#| fig-cap: " The figure is drawn with `ggplot2` [@ggplot2-package]."
-#| echo: false
-#| 
 no_nickname$medal <- factor(no_nickname$medal, levels = c("gold", "silver", "bronze", "no_medal"))
 
 p2 <- ggplot(no_nickname, aes(x = "", y = count)) +
@@ -384,22 +378,27 @@ p2 <- ggplot(no_nickname, aes(x = "", y = count)) +
 
 plot_grid(p1,p2, labels = c("",""))
 
+
+```
+
+```{r, echo = FALSE, output = FALSE}
 # Perform the chi-square test
 chi_square_result <- chisq.test(data_matrix)
 
 # Print the result
 print(chi_square_result)
+
 ```
 
-## Topic 4: The app
+### Stacking up to Olympic Athletes
 
-The app code is found under app.R. followed by the app link and screenshots from the app demonstration.
+The code for this app is found in app.R. This description is followed by a link to the app and screenshots from the app demonstration.
 
-The goal of this app was to explore how our families "stacked up" to Olympic counterparts of the same age and physical characteristics. In order to accomplish this goal we utilized the `shinydashboard` [@R-shinydashboard]. First we utilized dashboardSidebar coupled with sidebarMenu in order to create the id of the "tabs" on the sidebar. Within this we also utilized menuItem to then define the tabName and that it would start expanded. Within the dashboard we then create 3 menu items including an "about us", "Olympian's physical characteristics", and a "Help desk: imperial to metric conversion."
+The goal of this app was to explore how our families "stacked up" to Olympic counterparts of the same age and physical characteristics. In order to accomplish this goal we utilized the `shinydashboard` [@shinydashboard]. First we utilized dashboardSidebar coupled with sidebarMenu in order to create the id of the "tabs" on the sidebar. Within this we also utilized menuItem to then define the tabName and that it would start expanded. Within the dashboard we then create 3 menu items including an "about us", "Olympian's physical characteristics", and a "Help desk: imperial to metric conversion."
 
-Then we moved to the body. We started with the dashboardBody function and then set up our tab "guts" with the tabItemfunciton. Within the about us tab we utilized the userBox function from `shinydashboardPlus` [@R-shinydashboardPlus]. This allowed us to create a user description with title, subtitle, type of box, color of box, gradient effect on the box, status of the box relative to others, a little snippet of information about ourselves and an image of ourselves with the userDescription function. We then created the second tab using the tabItem function and linked it back to the sidebar menu item that was previously set up in the sidebar. We added the next tab item which would comprise our main page. In this tab item we utilized the fluidPage with a title and style of the title. After which this portion was set up with a fluidRow function. The first row covered the entire page as a slider with a shiny and red appearance from the chooseSliderSkin function. This was followed by a slider input of age which came from the cleaned dataset and the range of the slider was set to the minimum and maximum age in the data set.
+Then we moved to the body. We started with the dashboardBody function and then set up our tab "guts" with the tabItemfunciton. Within the about us tab we utilized the userBox function from `shinydashboardPlus` [@shinydashboardPlus]. This allowed us to create a user description with title, subtitle, type of box, color of box, gradient effect on the box, status of the box relative to others, a little snippet of information about ourselves and an image of ourselves with the userDescription function. We then created the second tab using the tabItem function and linked it back to the sidebar menu item that was previously set up in the sidebar. We added the next tab item which would comprise our main page. In this tab item we utilized the fluidPage with a title and style of the title. After which this portion was set up with a fluidRow function. The first row covered the entire page as a slider with a shiny and red appearance from the chooseSliderSkin function. This was followed by a slider input of age which came from the cleaned dataset and the range of the slider was set to the minimum and maximum age in the data set.
 
-The next box bellow in the Olympians physical characteristics tab was a set up with the wellPanel function for the season and sex variables. All wells took up half a page and the choices in this pannels where set by using the selectInput function followed by a unique function with as.character and the data set column of interest (ie. sex or season).In order to have the weights and heights the wellPanel function was used again. However instead of selectInput, pickerInput was utilized. The pickerInput allowed for an easier use of numerical values, and choices were created. The first choice was an "all" for all data and the second was created using the unique function, with the sort function so that numerical inputs were sorted. Multiple = FALSE was set as we didn't want people to choose multiple heights and weights. In retrospect this could have been a better option, and multiple choice could be added in the future. Interestingly at this point our background was transparent with a black background and black text so we set the background to white with tags\$style. TabsetPanel was coupled with tab panel to create an outcome table from the previous variables. We utilized the function dataTableOutput from the `DT` [@R-DT] to output the table based on the given factors in the well pannels and slider.
+The next box bellow in the Olympians physical characteristics tab was a set up with the wellPanel function for the season and sex variables. All wells took up half a page and the choices in this pannels where set by using the selectInput function followed by a unique function with as.character and the data set column of interest (ie. sex or season).In order to have the weights and heights the wellPanel function was used again. However instead of selectInput, pickerInput was utilized. The pickerInput allowed for an easier use of numerical values, and choices were created. The first choice was an "all" for all data and the second was created using the unique function, with the sort function so that numerical inputs were sorted. Multiple = FALSE was set as we didn't want people to choose multiple heights and weights. In retrospect this could have been a better option, and multiple choice could be added in the future. Interestingly at this point our background was transparent with a black background and black text so we set the background to white with tags\$style. TabsetPanel was coupled with tab panel to create an outcome table from the previous variables. We utilized the function dataTableOutput from the `DT` [@DT] to output the table based on the given factors in the well pannels and slider.
 
 The final aspect of the body included the final tab item for the imperial to metric conversion. The wellPanel and numericInput functions were utilized. The numericInput was labeled and given an initial value of one. Each conversion (height and weight) included a different uiOutput so they could be used indpendently of eachother.
 
@@ -413,17 +412,17 @@ As previously stated each equation from the imperial to metric conversion had a 
 
 Observe was then utilized so that the outputs were reactive to the inputs from each of the tabs and print the outcomes based on each specific set of criteria. Finally the shinyApp function was called with the inputs of server and ui to run the app.
 
-![link to deployed shiny app](https://addisoncarroll.shinyapps.io/FamilyOlympics/)
+<https://addisoncarroll.shinyapps.io/FamilyOlympics/>
 
-Here are the screenshots from the application demonstration. Home page of this app ![opening](Appopeningpage.png)
+Here are the screenshots from the application demonstration. Home page of this app ![Home page of this app.](Appopeningpage.png)
 
-Initial view of selection page ![Main page](mainopeningpage.png)
+Initial view of selection page ![Initial view of selection page](mainopeningpage.png)
 
-Math for us dummies ![Imperial to metric conversion](Mathopening%20page.png)
+Math for us dummies ![Imperial to Metric Conversion Calculator](Mathopening%20page.png)
 
 These are the images from the shiny application output - Richard (Addison's dad) is 6'3", weighs 250, and is 66 years young
 
-![Richard's output](RCconversion.jpg)
+![Richard's conversion](RCconversion.jpg)
 
 Unfortunately - Richard does not have any Olympic counterparts
 
@@ -435,36 +434,24 @@ Let's look at Addison's sister Nicole - Nicole is 5'5, weighs around 155, and ha
 
 Observations from application - At the age of 37 Nicole would have not have had a counter part
 
-However, within the range of 29 - 37 we have some! - Gold medal cyclist from France - Bronze medal handball player from the UK - Gold medal Judo fighter from France - Gold and silver medal Ice hockey player from Canada - Bronze medal speed skater from China
+However, within the range of 29 - 37 we have some!
 
-#Here are the screenshots from the application demonstration. Home page of this app ![opening](Appopeningpage.png)
+-   Gold medal cyclist from France
 
-Inital view of selection page ![selection](mainopeningpage.png)
+-   Bronze medal handball player from the UK
 
-Math for us dummies ![math](Mathopening%20page.png)
+-   Gold medal Judo fighter from France
 
-These are the images from the shiny application output - Richard (Addison's dad) is 6'3", weighs 250, and is 66 years young
+-   Gold and silver medal Ice hockey player from Canada
 
-![richard](RCconversion.jpg)
-
-Unfortunately - Richard does not have any Olympic counterparts
-
-![cool](RColympics.jpg)
-
-Let's look at Addison's sister Nicole - Nicole is 5'5, weighs around 155, and has told her sister she is 29 for the past 8 years - Lets look at that age range
-
-![nicole](NColympics.jpg)
-
-Obervations from application - At the age of 37 Nicole would have not have had a counter part
-
-However, within the range of 29 - 37 we have some! - Gold medal cyclist from France - Bronze medal handball player from the UK - Gold medal Judo fighter from France - Gold and silver medal Ice hockey player from Canada - Bronze medal speed skater from China
+-   Bronze medal speed skater from China
 
 ## Conclusion
 
 Utilizing data from the Olympics we were able to explore various factors from a global level to that of our own family. In analysis 1 we observed that global conflict had a marked influence on Olympic game participation, particularly for males through out history.
 
-analysis2
+We see that Olympic track events have changed with time but they don't fall neatly into a single category. We expect that events will continue to change as there is demand and funding for them. We also found that track athletes are competing in fewer events in more recent Olympics. It is unclear if this is due to increased competition or a focus on specialization.
 
-analysis3
+In our nickname analysis, we saw Olympic Athletes with nicknames were more likely to win! Perhaps this is because we tend to cheer for those in the top of their field.
 
 Finally in part 4 where we developed an app. We observed within the application we are limited in our age range up to 66 years, and it is likely that these older ages are less likely to a Olympic counterpart. Therefore, Richard is out of the running Also, it may be better to utilize an age range rather than just a single age. This is because if if Nicole's age was set there would be no counterpart. However, when we add a range and her physical characteristics we can observe counterparts.
