@@ -4,7 +4,7 @@ editor: visual
 bibliography: references.bib
 ---
 
-```{r, eval = T, echo=FALSE, message=FALSE, warning=FALSE}
+```{r, eval = T, echo = FALSE, message=FALSE, warning=FALSE}
 # This code chunk contains code to install all of the dependencies
 # necessary to compile and run your report, using if-statements to
 # reduce install time for unnecessary code.
@@ -21,7 +21,30 @@ if (!"skimr" %in% installed.packages()) {
 if (!"cowplot" %in% installed.packages()) {
   install.packages("cowplot")
 }
-
+if (!"RColorBrewer" %in% installed.packages()) {
+  install.packages("RColorBrewer")
+}
+if (!"flexdashboard" %in% installed.packages()) {
+  install.packages("flexdashboard")
+}
+if (!"shiny" %in% installed.packages()) {
+  install.packages("shiny")
+}
+if (!"purrr" %in% installed.packages()) {
+  install.packages("purrr")
+}
+if (!"shinydashboard" %in% installed.packages()) {
+  install.packages("shinydashboard")
+}
+if (!"shinydashboardPlus" %in% installed.packages()) {
+  install.packages("shinydashboardPlus")
+}
+if (!"shinythemes" %in% installed.packages()) {
+  install.packages("shinythemes")
+}
+if (!"shinyWidgets" %in% installed.packages()) {
+  install.packages("shinyWidgets")
+}
 library(dplyr) #tidyverse
 library(tidyr) #tidyverse
 library(ggplot2) #tidyverse
@@ -29,21 +52,17 @@ library(stringr) #tidyverse
 library(forcats) #tidyverse
 library(skimr)
 library(cowplot)
-library(wordcloud) #cran
-library(RColorBrewer)
-library(flexdashboard)
-library(tibble)
-library(shiny)
-library(purrr)
+library(wordcloud) 
+library(RColorBrewer) #cran
+library(flexdashboard)#cran
+#library(tibble)
+library(shiny)#cran
+library(purrr) #cran
 library(DT)
 library(shinydashboard)
 library(shinythemes)
 library(shinyWidgets)
 library(shinydashboardPlus)
-library(bibtex)
-toBibtex(citation("DT"))
-knitr::write_bib(c("DT"), width = 60)
-
 ```
 
 ```{R echo=FALSE}
